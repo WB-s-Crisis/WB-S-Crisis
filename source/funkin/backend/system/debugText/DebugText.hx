@@ -8,6 +8,7 @@ import openfl.text.TextField
 class DebugText extends TextField {
     public var ID:Int = 0;
     public var delayTime:Float = 1;
+    public var lastTime:Float = Math.NEGATIVE_INFINITY;
     
     public function new(id:Int, ?delayTime:Float) {
         super();
