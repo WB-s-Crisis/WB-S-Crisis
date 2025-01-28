@@ -1,6 +1,6 @@
 package funkin.backend.system.debugText;
 
-import openfl.text.TextField
+import openfl.text.TextField;
 
 /**
  * e......只是图个方便罢了
@@ -15,7 +15,7 @@ class DebugText extends TextField {
         ID = id;
 
         if(delayTime != null) {
-            delayTime = delayTime;
+            this.delayTime = delayTime;
         }
     }
 }
