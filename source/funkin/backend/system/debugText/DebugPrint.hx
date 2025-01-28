@@ -5,10 +5,11 @@ import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
-import openfl.filters.ShaderFilter;
+import openfl.text.TextFieldAutoSize;
 import flixel.FlxG;
 import flixel.util.FlxColor;
-import flixel.system.FlxAssets.FlxShader;
+import flixel.system.FlxAssets;
+import openfl.filters.ShaderFilter;
 
 /**
  * bro，回一句话🙁，空留给你了
@@ -23,7 +24,7 @@ class DebugPrint extends Sprite {
 
 	public var textFormat:TextFormat;
 
-	private var hangju:Float = 8;
+	private var hangju:Float = 2;
 
 	public function new(textFormat:TextFormat, ?downScroll = false, ?defaultValue:{
 		var ?color:FlxColor;
@@ -32,7 +33,7 @@ class DebugPrint extends Sprite {
 	}) {
 		super();
 
-		downscroll = downscroll;
+		downscroll = downScroll;
 		this.textFormat = textFormat;
 
 		outlineShader = new OUTLINE(defaultValue);
@@ -41,6 +42,7 @@ class DebugPrint extends Sprite {
     
 	public function debugPrint(text:String, ?textOptions:TextOptions) {
         var print:DebugText = new DebugText(__children.length, textOptions != null && Reflect.hasField(textOptions, "delayTime") ? textOptions.delayTime : null);
+		print.autoSize = TextFieldAutoSize.LEFT;
 
         if(textOptions != null && Reflect.hasField(textOptions, "style")) {
 			print.textColor = textOptions.style;
@@ -54,39 +56,41 @@ class DebugPrint extends Sprite {
     }
 
 	public override function addChild(child:DisplayObject):DisplayObject {
-		super.addChild(child);
-		
 		if(child is DebugText) {
 			var realChild = cast(child, DebugText);
 
 			realChild.lastTime = Lib.getTimer();
-            realChild.y = (this.downscroll ? FlxG.stage.stageHeight - realChild.height : 0);
-			if(realChild.ID > 0) {
-                realChild.y = __children[realChild.ID - 1].y;
-                realChild.y += (this.downscroll ? -realChild.height - hangju : __children[realChild.ID - 1].width + hangju);
+            realChild.y = this.downscroll ? FlxG.stage.stageHeight - realChild.height : 0;
+            if(realChild.ID > 0) {
+                updateChildrenPos(realChild);
             }
 		}
 		
-		return child;
+		return super.addChild(child);
+	}
+
+	private function updateChildrenPos(child:DebugText):Void {
+		if(__children.length > 0) {
+		    for(_child in __children) {
+			    _child.y += (this.downscroll ? -1 : 1) * (child.height + hangju);
+		    }
+		}
 	}
 
 	@:noCompletion
 	private override function __enterFrame(deltaTime:Float):Void {
 		var elapsed:Float = FlxG.elapsed;
-        var timer:Float = Lib.getTimer();
 		
         if(__children.length > 0) {
 		    for(child in __children) {
                 if(child is DebugText) {
 					var realChild = cast(child, DebugText);
 					
-					if(realChild.lastTime + realChild.delayTime * 1000 < timer) {
-						realChild.alpha -= elapsed / 0.5;
+					if(realChild.lastTime + realChild.delayTime * 1000 < Lib.getTimer()) {
+						realChild.alpha -= elapsed / 0.35;
 						
-						if(realChild.lastTime + realChild.delayTime * 1000 + 500 < timer) {
+						if(realChild.lastTime + realChild.delayTime * 1000 + 350 < Lib.getTimer()) {
                             removeChild(realChild);
-                            
-                            continue;
                         }
 					}
 				}
@@ -95,8 +99,8 @@ class DebugPrint extends Sprite {
 	}
 
 	@:noCompletion
-	private function toString():String {
-		return "滚！！！\t out of here!!!";
+	override function toString():String {
+		return "拜托，这没意思，滚";
 	}
 }
 
@@ -152,6 +156,8 @@ void main()
 		var ?size:Float;
 		var ?fast:Bool;
 	}) {
+		super();
+
 		color.value = [0, 0, 0];
 		size.value = [0.05];
 		samples.value = [8];
@@ -162,11 +168,11 @@ void main()
 			}
 
 			if(Reflect.hasField(defaultValue, "size")) {
-				size.value = [size];
+				size.value = [defaultValue.size];
 			}
 
 			if(Reflect.hasField(defaultValue, "fast")) {
-				samples.value = [(fast ? 4 : 8)];
+				samples.value = [(defaultValue.fast ? 4 : 8)];
 			}
 		}
 	}
@@ -177,7 +183,7 @@ typedef TextOptions = {
 	var ?delayTime:Float;
 }
 
-enum abstract TextStyle(FlxColor) {
+enum abstract TextStyle(FlxColor) from Int to Int {
 	var ERROR:TextStyle = FlxColor.RED;
 	var RIGHT:TextStyle = FlxColor.GREEN;
 	var NORMAL:TextStyle = FlxColor.WHITE;
