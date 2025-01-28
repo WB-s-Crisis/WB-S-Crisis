@@ -1,5 +1,6 @@
 package funkin.backend.system.debugText;
 
+import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
@@ -21,6 +22,8 @@ class DebugPrint extends Sprite {
 
 	public var textFormat:TextFormat;
 
+	private var hangju:Float = 8;
+
 	public function new(textFormat:TextFormat, ?downScroll = false, ?defaultValue:{
 		var ?color:FlxColor;
 		var ?size:Float;
@@ -36,18 +39,32 @@ class DebugPrint extends Sprite {
 	}
     
 	public function debugPrint(text:String, textOptions:TextOptions) {
-        var print:TextField = new TextField();
+        var print:DebugText = new DebugText(__children.length);
 		print.text = text;
 		print.defaultTextFormat = this.textFormat;
-
-		if(this.downscroll) {
-			
-		}else {
-			
-		}
-
 		addChild(print);
     }
+
+	public override function addChild(child:DisplayObject):DisplayObject {
+		super.addChild(child);
+		
+		if(child is DebugText) {
+			var realChild = cast(child, DebugText);
+
+			realChild.y = (this.downscroll ? FlxG.stage.stageHeight - realChild.height : 0);
+			if(realChild.ID > 0) {
+				realChild.y = __children[realChild.ID - 1].y;
+				realChild.y += (this.downscroll ? -realChild.height - hangju : __children[realChild.ID - 1].width) + hangju;
+			}
+		}
+		
+		return child;
+	}
+
+	@:noCompletion
+	private override function __enterFrame(deltaTime:Float):Void {
+		
+	}
 }
 
 /**
