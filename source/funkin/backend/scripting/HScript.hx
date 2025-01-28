@@ -107,9 +107,7 @@ class HScript extends Script {
 			Logs.logText(err, RED)
 		], ERROR);
 
-		#if mobile
-                funkin.backend.utils.NativeAPI.showMessageBox("HSCRIPT ERROR", fn + err, MSG_ERROR);
-	        #end
+		//把这里原本的依托卸了
 	}
 
 	public override function setParent(parent:Dynamic) {
