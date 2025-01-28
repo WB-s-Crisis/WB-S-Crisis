@@ -16,6 +16,10 @@ class GlobalScript {
 		ModsFolder.onModSwitch.add(onModSwitch);
 		#end
 
+		var test = new funkin.backend.system.debugText.DebugPrint();
+		funkin.backend.system.Main.instance.addChild(test);
+		scripts.set("debugPrint", test.debugPrint);
+
 		Conductor.onBeatHit.add(beatHit);
 		Conductor.onStepHit.add(stepHit);
 
