@@ -59,23 +59,56 @@ class DebugPrint extends Sprite {
 		if(child is DebugText) {
 			var realChild = cast(child, DebugText);
 
-			realChild.y = (this.downscroll ? FlxG.stage.stageHeight - realChild.height : 0);
+			realChild.lastTime = Lib.getTimer();
 			if(realChild.ID > 0) {
-				realChild.y = __children[realChild.ID - 1].y;
-				realChild.y += (this.downscroll ? -realChild.height - hangju : __children[realChild.ID - 1].width) + hangju;
-			}
+                __children[realChild.ID - 1].y = realChild.y;
+                __children[realChild.ID - 1].y += realChild.width + hangju
+            }
 		}
 		
 		return child;
 	}
 
+    public override function removeChild(child:DisplayObject):DisplayObject {
+        super.removeChild(child);
+        
+        if(child is DebugText) {
+            var realChild = cast(child, DebugText);
+            
+            updateChildPosition();
+        }
+        
+        return child;
+    }
+
+    private function updateChildPosition():Void {
+        if(__children.length > 0) {
+            for(child in __children) {
+                if()
+            }
+        }
+    }
+
 	@:noCompletion
 	private override function __enterFrame(deltaTime:Float):Void {
+		var elapsed:Float = FlxG.elapsed;
         var timer:Float = Lib.getTimer();
 		
         if(__children.length > 0) {
 		    for(child in __children) {
-                
+                if(child is DebugText) {
+					var realChild = cast(child, DebugText);
+					
+					if(realChild.lastTime + realChild.delayTime * 1000 < timer) {
+						realChild.alpha -= elapsed / 0.5;
+						
+						if(realChild.lastTime + realChild.delayTime * 1000 + 500 < timer) {
+                            removeChild(realChild);
+                            
+                            continue;
+                        }
+					}
+				}
 		    }
 		}
 	}
