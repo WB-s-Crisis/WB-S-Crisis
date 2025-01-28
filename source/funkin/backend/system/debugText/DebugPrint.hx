@@ -1,5 +1,6 @@
 package funkin.backend.system.debugText;
 
+import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.text.TextField;
@@ -38,8 +39,15 @@ class DebugPrint extends Sprite {
 		filters = [new ShaderFilter(outlineShader)];
 	}
     
-	public function debugPrint(text:String, textOptions:TextOptions) {
-        var print:DebugText = new DebugText(__children.length);
+	public function debugPrint(text:String, ?textOptions:TextOptions) {
+        var print:DebugText = new DebugText(__children.length, textOptions != null && Reflect.hasField(textOptions, "delayTime") ? textOptions.delayTime : null);
+
+        if(textOptions != null && Reflect.hasField(textOptions, "style")) {
+			print.textColor = textOptions.style;
+		}else {
+			print.textColor = NORMAL;
+		}
+		
 		print.text = text;
 		print.defaultTextFormat = this.textFormat;
 		addChild(print);
@@ -63,7 +71,18 @@ class DebugPrint extends Sprite {
 
 	@:noCompletion
 	private override function __enterFrame(deltaTime:Float):Void {
+        var timer:Float = Lib.getTimer();
 		
+        if(__children.length > 0) {
+		    for(child in __children) {
+                
+		    }
+		}
+	}
+
+	@:noCompletion
+	private function toString():String {
+		return "滚！！！\t out of here!!!";
 	}
 }
 
