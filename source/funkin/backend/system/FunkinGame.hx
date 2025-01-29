@@ -1,9 +1,22 @@
 package funkin.backend.system;
 
 import flixel.FlxGame;
+import funkin.backend.system.debugText.DebugPrint;
+import openfl.text.TextFormat;
 
 class FunkinGame extends FlxGame {
+	public var debugPrintLog:DebugPrint;
+	
 	var skipNextTickUpdate:Bool = false;
+	
+	override function create(_) {
+		super.create(_);
+
+		var textFormat = new TextFormat("_sans", 32);
+		debugPrintLog = new DebugPrint(textFormat, true);
+		addChild(debugPrintLog);
+	}
+	
 	public override function switchState() {
 		super.switchState();
 		// draw once to put all images in gpu then put the last update time to now to prevent lag spikes or whatever
@@ -16,5 +29,9 @@ class FunkinGame extends FlxGame {
 		if (skipNextTickUpdate != (skipNextTickUpdate = false))
 			_total = ticks = getTicks();
 		super.onEnterFrame(t);
+	}
+
+	public function debugPrint(text:String, ?delayTime:Float = 1) {
+		debugPrintLog.debugPrint(text, {delayTime: delayTime, style: NORMAL});
 	}
 }
