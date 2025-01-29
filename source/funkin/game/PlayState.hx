@@ -128,6 +128,18 @@ class PlayState extends MusicBeatState
 	 */
 	public var canDadDie:Bool = opponentMode && !coopMode;
 	/**
+         * 哭笑
+         */
+	@:isVar public var qqqeb(get, set):Bool;
+	
+	@:noCompletion function get_qqqeb():Bool {
+		return camHUD != null ? camHUD.visible : false;
+	}
+	@:noCompletion function set_qqqeb(val:Bool) {
+		if(camHUD != null) camHUD.visible = val;
+		return val;
+	}
+	/**
 	 * Current scroll speed for all strums.
 	 * To set a scroll speed for a specific strum, use `strum.scrollSpeed`.
 	 */

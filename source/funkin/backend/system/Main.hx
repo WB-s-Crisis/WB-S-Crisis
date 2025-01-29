@@ -39,7 +39,8 @@ class Main extends Sprite
 	public static var noTerminalColor:Bool = false;
 
 	public static var scaleMode:FunkinRatioScaleMode;
-	public static var framerateSprite:funkin.backend.system.framerate.Framerate;
+	
+	public var framerateSprite:funkin.backend.system.framerate.Framerate;
 
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels).
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels).

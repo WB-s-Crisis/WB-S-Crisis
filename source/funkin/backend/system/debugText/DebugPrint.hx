@@ -16,28 +16,17 @@ import openfl.filters.ShaderFilter;
  * 
  */
 class DebugPrint extends Sprite {
-	/**
-     * 描边着色器
-     */
-	public var outlineShader:OUTLINE;
 	public var downscroll:Bool;
 
 	public var textFormat:TextFormat;
 
 	private var hangju:Float = 2;
 
-	public function new(textFormat:TextFormat, ?downScroll = false, ?defaultValue:{
-		var ?color:FlxColor;
-		var ?size:Float;
-		var ?fast:Bool;
-	}) {
+	public function new(textFormat:TextFormat, ?downScroll = false) {
 		super();
 
 		downscroll = downScroll;
 		this.textFormat = textFormat;
-
-		outlineShader = new OUTLINE(defaultValue);
-		filters = [new ShaderFilter(outlineShader)];
 	}
     
 	public function debugPrint(text:String, ?textOptions:TextOptions) {
@@ -56,6 +45,9 @@ class DebugPrint extends Sprite {
     }
 
 	public override function addChild(child:DisplayObject):DisplayObject {
+		var outlineShader = new OUTLINE();
+		child.filters = [new ShaderFilter(outlineShader)];
+		
 		if(child is DebugText) {
 			var realChild = cast(child, DebugText);
 
@@ -158,7 +150,7 @@ void main()
 	}) {
 		super();
 
-		color.value = [0, 0, 0];
+		color.value = [0.1, 0, 0];
 		size.value = [0.05];
 		samples.value = [8];
 		

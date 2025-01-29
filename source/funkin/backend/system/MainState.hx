@@ -21,7 +21,7 @@ class MainState extends FlxState {
 	public override function create() {
 		super.create();
 		#if mobile
-		funkin.backend.system.Main.framerateSprite.setScale();
+		funkin.backend.system.Main.instance.framerateSprite.setScale();
 		#end
 		if (!initiated)
 		{
