@@ -15,21 +15,8 @@ import sys.io.File;
 
 class MobileOptions extends OptionsScreen {
 	var canEnter:Bool = true;
-	#if android
-	final lastStorageType:String = Options.storageType;
-	var externalPaths:Array<String> = MobileUtil.checkExternalPaths(true);
-	var typeNames:Array<String> = ['Data', 'Obb', 'Media', 'External'];
-	var typeVars:Array<String> = ['EXTERNAL_DATA', 'EXTERNAL_OBB', 'EXTERNAL_MEDIA', 'EXTERNAL'];
-	#end
 
 	public override function new() {
-		#if android
-		if (!externalPaths.contains('\n'))
-		{
-			typeNames = typeNames.concat(externalPaths);
-			typeVars = typeVars.concat(externalPaths);
-		}
-		#end
 		dpadMode = 'LEFT_FULL';
 		actionMode = 'A_B';
 		super("Mobile", 'Change Mobile Related Things such as Controls alpha, screen timeout....', null, 'LEFT_FULL', 'A_B');
@@ -55,14 +42,6 @@ class MobileOptions extends OptionsScreen {
 			"If checked, The phone will enter sleep mode if the player is inactive.",
 			"screenTimeOut"));
 		#end
-		#if android
-		add(new ArrayOption(
-			"Storage Type",
-			"Choose which folder Codename Engine should use! (CHANGING THIS MAKES DELETE YOUR OLD FOLDER!!)",
-			typeVars,
-			typeNames,
-			'storageType'));
-		#end
 	}
 
 	override function update(elapsed) {
@@ -71,16 +50,6 @@ class MobileOptions extends OptionsScreen {
 		if (lastScreenTimeOut != Options.screenTimeOut) LimeSystem.allowScreenTimeout = Options.screenTimeOut;
 		#end
 		super.update(elapsed);
-	}
-
-	override public function destroy() {
-		#if android
-		if (lastStorageType != Options.storageType) {
-			onStorageChange();
-			funkin.backend.utils.NativeAPI.showMessageBox('Notice!', 'Storage Type has been changed and you needed restart the game!!\nPress OK to close the game.');
-			LimeSystem.exit(0);
-		}
-		#end
 	}
 
 	function changeControlsAlpha(alpha) {
@@ -97,21 +66,4 @@ class MobileOptions extends OptionsScreen {
 		}
 		#end
 	}
-
-	#if android
-	function onStorageChange():Void
-	{
-		File.saveContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt', Options.storageType);
-	
-		var lastStoragePath:String = StorageType.fromStrForce(lastStorageType) + '/';
-	
-		try
-		{
-			if (Options.storageType != "EXTERNAL")
-				Sys.command('rm', ['-rf', lastStoragePath]);
-		}
-		catch (e:haxe.Exception)
-			trace('Failed to remove last directory. (${e.message})');
-	}
-	#end
 }
