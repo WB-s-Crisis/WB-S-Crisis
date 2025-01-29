@@ -60,7 +60,7 @@ class StoryMenuState extends MusicBeatState {
 			weekBG.setGraphicSize(FlxG.width, 400);
 			weekBG.updateHitbox();
 		}else {
-			weekBG = new FlxSprite(0, 56).makeSolid(FlxG.width, 400, 0xffffff);
+			weekBG = new FlxSprite(0, 56).makeSolid(FlxG.width, 400, 0xFFFFFFFF);
 			weekBG.color = 0xFFF9CF51;
 			weekBG.updateHitbox();
 		}
@@ -187,7 +187,7 @@ class StoryMenuState extends MusicBeatState {
 			weekBG.setGraphicSize(FlxG.width, 400);
 			weekBG.updateHitbox();
 		}else {
-			weekBG.makeSolid(FlxG.width, 400, 0xffffff);
+			weekBG.makeSolid(FlxG.width, 400, 0xFFFFFFFF);
 			weekBG.color = 0xFFF9CF51;
 			weekBG.updateHitbox();
 		}
