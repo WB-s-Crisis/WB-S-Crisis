@@ -41,7 +41,6 @@ class Main extends Sprite
 	public static var scaleMode:FunkinRatioScaleMode;
 	
 	public var framerateSprite:funkin.backend.system.framerate.Framerate;
-	public var beenLog:funkin.backend.system.debugText.DebugPrint;
 
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels).
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels).
@@ -81,10 +80,6 @@ class Main extends Sprite
 
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
-		var preTextFormat = new openfl.text.TextFormat("_sans", 32);
-		beenLog = new funkin.backend.system.debugText.DebugPrint(preTextFormat, false, {color: 0xFF3D0000, size: 0.005});
-		beenLog.x = 100;
-
 		#if android FlxG.android.preventDefaultKeys = [BACK]; #end
 
 		#if !web
@@ -94,8 +89,6 @@ class Main extends Sprite
 		#end
 		SystemInfo.init();
 		#end
-
-		addChild(beenLog);
 	}
 
 	@:dox(hide)
