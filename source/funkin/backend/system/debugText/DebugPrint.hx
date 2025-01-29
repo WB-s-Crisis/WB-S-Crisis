@@ -32,7 +32,7 @@ class DebugPrint extends Sprite {
         var print:DebugText = new DebugText(__children.length, textOptions != null && Reflect.hasField(textOptions, "delayTime") ? textOptions.delayTime : null);
 
         if(textOptions != null && Reflect.hasField(textOptions, "style")) {
-			print.textColor = textOptions;
+			print.textColor = textOptions.style;
 		}else {
 			print.textColor = FlxColor.WHITE;
 		}
