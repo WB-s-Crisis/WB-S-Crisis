@@ -2,6 +2,7 @@ package funkin.backend.system;
 
 import flixel.FlxGame;
 import funkin.backend.system.debugText.DebugPrint;
+import openfl.Assets as OpenflAssets;
 import openfl.text.TextFormat;
 
 class FunkinGame extends FlxGame {
@@ -12,7 +13,7 @@ class FunkinGame extends FlxGame {
 	override function create(_) {
 		super.create(_);
 
-		var textFormat = new TextFormat(Assets.getFont("COMIC.TTF").fontName, 32);
+		var textFormat = new TextFormat(OpenflAssets.getFont("COMIC.TTF").fontName, 32);
 		debugPrintLog = new DebugPrint(textFormat, true, {color: 0xff3d0000, size: 0.005, fast: true});
 		addChild(debugPrintLog);
 	}
@@ -32,6 +33,6 @@ class FunkinGame extends FlxGame {
 	}
 
 	public function debugPrint(text:String, ?delayTime:Float = 1) {
-		debugPrintLog.debugPrint(text, {delayTime: delayTime, style: NORMAL});
+		debugPrintLog.debugPrint(text, {delayTime: delayTime, style: 0xFFFFFF});
 	}
 }
