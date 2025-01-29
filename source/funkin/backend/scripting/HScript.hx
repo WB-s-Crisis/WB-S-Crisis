@@ -1,5 +1,7 @@
 package funkin.backend.scripting;
 
+import funkin.backend.system.FunkinGame;
+
 import haxe.io.Path;
 import hscript.Expr.Error;
 import hscript.Parser;
@@ -44,7 +46,7 @@ class HScript extends Script {
 			for (a in args) v += ", " + Std.string(a);
 			this.trace(v);
 		}));
-		interp.variables.set("debugPrint", FlxG.game.debugPrint);
+		interp.variables.set("debugPrint", Main.game.debugPrint);
 
 		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.call("onScriptCreated", [this, "hscript"]);
@@ -110,8 +112,8 @@ class HScript extends Script {
 
 		//把这里原本的依托卸了
 		#if mobile
-		FlxG.game.debugPrintLog.debugPrint(fn);
-		FlxG.game.debugPrintLog.debugPrint(err);
+	        Main.game.debugPrintLog.debugPrint(fn);
+		Main.game.debugPrintLog.debugPrint(err);
 		#end
 	}
 
