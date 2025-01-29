@@ -35,8 +35,10 @@ class CharterSelection extends EditorTreeMenu {
 							#if TOUCH_CONTROLS
 							if (funkin.backend.system.Controls.instance.touchC)
 							{
-								openSubState(new UIWarningSubstate("Charter: Touch Not Supported!", "Please connect a keyboard and mouse to access this editor.", [
-									{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
+								openSubState(new UIWarningSubstate("Charter: Touch Warning!!!", "You can go to the Charter, but maybe exists bug for reason touch", [
+									{label: "Ok", color: 0xFFFFFF00, onClick: function(t) {
+			                                                        FlxG.switchState(new Charter(s.name, d));
+									}}
 								]));
 							} else
 							#end
@@ -47,8 +49,10 @@ class CharterSelection extends EditorTreeMenu {
 					#if TOUCH_CONTROLS
 					if (funkin.backend.system.Controls.instance.touchC)
 					{
-						openSubState(new UIWarningSubstate("New Difficulty: Touch Not Supported!", "Please connect a keyboard and mouse to access this editor.", [
-							{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
+						openSubState(new UIWarningSubstate("New Difficulty: Touch Warning", "You can go to the Charter, but maybe exists bug for reason touch", [
+							{label: "Ok", color: 0xFFFFFF00, onClick: function(t) {
+								FlxG.state.openSubState(new ChartCreationScreen(saveChart));
+							}}
 						]));
 					} else
 					#end
@@ -62,8 +66,10 @@ class CharterSelection extends EditorTreeMenu {
 			#if TOUCH_CONTROLS
 			if (funkin.backend.system.Controls.instance.touchC)
 			{
-				openSubState(new UIWarningSubstate("New Song: Touch Not Supported!", "Please connect a keyboard and mouse to access this editor.", [
-					{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
+				openSubState(new UIWarningSubstate("New Song: Touch Warning!", "You can go to the Charter, but maybe exists bug for reason touch", [
+					{label: "Ok", color: 0xFFFFFF00, onClick: function(t) {
+						FlxG.state.openSubState(new SongCreationScreen(saveSong));
+					}}
 				]));
 			} else
 			#end
