@@ -154,7 +154,7 @@ void main()
 			}
 
 			if(Reflect.hasField(defaultValue, "size")) {
-				size.value = [size];
+				size.value = [defaultValue.size];
 			}
 
 			if(Reflect.hasField(defaultValue, "fast")) {
