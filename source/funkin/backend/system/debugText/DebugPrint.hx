@@ -69,6 +69,12 @@ class DebugPrint extends Sprite {
 		return super.addChild(child);
 	}
 
+	public override function removeChild(child:DisplayObject):DisplayObject {
+		child.visible = false;
+
+		return super.removeChild(child);
+	}
+
 	private function updateChildrenPos(child:DebugText):Void {
 		if(__children.length > 0) {
 		    for(_child in __children) {
