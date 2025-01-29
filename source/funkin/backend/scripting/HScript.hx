@@ -44,7 +44,7 @@ class HScript extends Script {
 			for (a in args) v += ", " + Std.string(a);
 			this.trace(v);
 		}));
-		interp.variables.set("debugPrint", Main.instance.beenLog.debugPrint);
+		interp.variables.set("debugPrint", FlxG.game.debugPrint);
 
 		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.call("onScriptCreated", [this, "hscript"]);
@@ -110,8 +110,8 @@ class HScript extends Script {
 
 		//把这里原本的依托卸了
 		#if mobile
-		Main.instance.beenLog.debugPrint(fn);
-		Main.instance.beenLog.debugPrint(err);
+		FlxG.game.debugPrintLog.debugPrint(fn);
+		FlxG.game.debugPrintLog.debugPrint(err);
 		#end
 	}
 
