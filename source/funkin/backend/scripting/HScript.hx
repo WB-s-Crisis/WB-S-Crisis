@@ -111,8 +111,8 @@ class HScript extends Script {
 
 		//把这里原本的依托卸了
 		#if mobile
-		Main.instance.beenLog.debugPrint(fn, {style: RIGHT});
-		Main.instance.beenLog.debugPrint(err, {style: ERROR});
+		Main.instance.beenLog.debugPrint(fn);
+		Main.instance.beenLog.debugPrint(err);
 		#end
 	}
 
