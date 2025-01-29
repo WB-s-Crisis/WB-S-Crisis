@@ -158,7 +158,7 @@ void main()
 			}
 
 			if(Reflect.hasField(defaultValue, "fast")) {
-				samples.value = [(fast ? 4 : 8)];
+				samples.value = [(defaultValue.fast ? 4 : 8)];
 			}
 		}
 	}
