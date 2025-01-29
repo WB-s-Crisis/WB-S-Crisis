@@ -112,8 +112,8 @@ class HScript extends Script {
 
 		//把这里原本的依托卸了
 		#if mobile
-	        Main.game.debugPrintLog.debugPrint(fn);
-		Main.game.debugPrintLog.debugPrint(err);
+	        Main.game.debugPrintLog.debugPrint(fn, {delayTime: 2.5, style: 0x0000ff});
+		Main.game.debugPrintLog.debugPrint(err, {delayTime: 2.5, style: 0xff0000}));
 		#end
 	}
 
