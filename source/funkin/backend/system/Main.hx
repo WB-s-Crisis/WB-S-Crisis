@@ -39,7 +39,9 @@ class Main extends Sprite
 	public static var noTerminalColor:Bool = false;
 
 	public static var scaleMode:FunkinRatioScaleMode;
-	public static var framerateSprite:funkin.backend.system.framerate.Framerate;
+	
+	public var framerateSprite:funkin.backend.system.framerate.Framerate;
+	public var beenLog:funkin.backend.system.debugText.DebugPrint;
 
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels).
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels).
@@ -66,6 +68,9 @@ class Main extends Sprite
 
 		instance = this;
 
+		var preTextFormat = new openfl.text.TextFormat(Assets.getFont("assets/fonts/COMIC.TTF", 16, FlxColor.GREY);
+		beenLog = new funkin.backend.system.debugText.DebugPrint(preTextFormat, true, {color: 0xFF3D0000, size: 0.001});
+
 		#if mobile
 		#if android
 		MobileUtil.requestPermissionsFromUser();
@@ -88,6 +93,8 @@ class Main extends Sprite
 		#end
 		SystemInfo.init();
 		#end
+
+		addChild(beenLog);
 	}
 
 	@:dox(hide)
