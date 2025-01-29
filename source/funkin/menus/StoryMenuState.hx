@@ -55,9 +55,15 @@ class StoryMenuState extends MusicBeatState {
 		weekTitle.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 		weekTitle.alpha = 0.7;
 
-		weekBG = new FlxSprite(0, 56).makeSolid(FlxG.width, 400, 0xFFFFFFFF);
-		weekBG.color = 0xFFF9CF51;
-		weekBG.updateHitbox();
+		if(this.weeks[curWeek].bg != null) {
+			weekBG = new FlxSprite(0, 56).loadGraphic(Paths.image('menus/storymenu/${this.weeks[curWeek].bg}'));
+			weekBG.setGraphicSize(FlxG.width, 400);
+			weekBG.updateHitbox();
+		}else {
+			weekBG = new FlxSprite(0, 56).makeSolid(FlxG.width, 400, 0xffffff);
+			weekBG.color = 0xFFF9CF51;
+			weekBG.updateHitbox();
+		}
 
 		weekSprites = new FlxTypedGroup<MenuItem>();
 
@@ -176,6 +182,16 @@ class StoryMenuState extends MusicBeatState {
 		tracklist.text = 'TRACKS\n\n${[for(e in weeks[curWeek].songs) if (!e.hide) e.name.toUpperCase()].join('\n')}';
 		weekTitle.text = weeks[curWeek].name.getDefault("");
 
+		if(this.weeks[curWeek].bg != null) {
+			weekBG.loadGraphic(Paths.image('menus/storymenu/${this.weeks[curWeek].bg}'));
+			weekBG.setGraphicSize(FlxG.width, 400);
+			weekBG.updateHitbox();
+		}else {
+			weekBG.makeSolid(FlxG.width, 400, 0xffffff);
+			weekBG.color = 0xFFF9CF51;
+			weekBG.updateHitbox();
+		}
+
 		for(i in 0...3)
 			characterSprites.members[i].changeCharacter(characters[weeks[curWeek].chars[i]]);
 
@@ -233,6 +249,7 @@ class StoryMenuState extends MusicBeatState {
 			}
 			var weekObj:WeekData = {
 				name: week.att.name,
+				bg: (week.has.bg ? week.att.bg : null),
 				id: weekName,
 				sprite: week.getAtt('sprite').getDefault(weekName),
 				chars: [null, null, null],
@@ -355,6 +372,7 @@ class StoryMenuState extends MusicBeatState {
 typedef WeekData = {
 	var name:String;  // name SHOULD NOT be used for loading week highscores, its just the name on the right side of the week, remember that next time!!  - Nex
 	var id:String;  // id IS instead for saving and loading!!  - Nex
+	var bg:Null<String>;
 	var sprite:String;
 	var chars:Array<String>;
 	var songs:Array<WeekSong>;
