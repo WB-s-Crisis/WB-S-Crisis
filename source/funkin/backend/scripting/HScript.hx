@@ -1,5 +1,7 @@
 package funkin.backend.scripting;
 
+import funkin.backend.system.debugText.DebugPrint;
+
 import haxe.io.Path;
 import hscript.Expr.Error;
 import hscript.Parser;
@@ -108,6 +110,10 @@ class HScript extends Script {
 		], ERROR);
 
 		//把这里原本的依托卸了
+		#if mobile
+		Main.instance.beenLog.debugPrint(fn, {style: RIGHT});
+		Main.instance.beenLog.debugPrint(err, {style: ERROR});
+		#end
 	}
 
 	public override function setParent(parent:Dynamic) {
