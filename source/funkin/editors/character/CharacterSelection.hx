@@ -27,8 +27,10 @@ class CharacterSelection extends EditorTreeMenu
 					#if TOUCH_CONTROLS
 					if (funkin.backend.system.Controls.instance.touchC)
 					{
-						openSubState(new UIWarningSubstate("CharacterEditor: Touch Not Supported!", "Please connect a keyboard and mouse to access this editor.", [
-							{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
+						openSubState(new UIWarningSubstate("CharacterEditor: Touch Warning!", "not warning", [
+							{label: "Ok", color: 0xFFFFFF00, onClick: function(t) {
+			                                        FlxG.switchState(new CharacterEditor(char));
+							}}
 						]));
 					} else
 					#end
