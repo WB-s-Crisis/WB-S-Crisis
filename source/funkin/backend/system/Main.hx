@@ -68,9 +68,6 @@ class Main extends Sprite
 
 		instance = this;
 
-		var preTextFormat = new openfl.text.TextFormat(Assets.getFont("assets/fonts/COMIC.TTF", 16, FlxColor.GREY);
-		beenLog = new funkin.backend.system.debugText.DebugPrint(preTextFormat, true, {color: 0xFF3D0000, size: 0.001});
-
 		#if mobile
 		#if android
 		MobileUtil.requestPermissionsFromUser();
@@ -83,6 +80,10 @@ class Main extends Sprite
 		#if !web framerateSprite = new funkin.backend.system.framerate.Framerate(); #end
 
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
+
+		var preTextFormat = new openfl.text.TextFormat(Assets.getFont("assets/fonts/COMIC.TTF", 16, FlxColor.GREY);
+		beenLog = new funkin.backend.system.debugText.DebugPrint(preTextFormat, true, {color: 0xFF3D0000, size: 0.001});
+		beenLog.x = (FlxG.stage.stageWidth - game.width * scaleMode.scale.x) / 2;
 
 		#if android FlxG.android.preventDefaultKeys = [BACK]; #end
 
