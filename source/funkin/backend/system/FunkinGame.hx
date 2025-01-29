@@ -14,7 +14,7 @@ class FunkinGame extends FlxGame {
 		super.create(_);
 
 		var textFormat = new TextFormat(OpenflAssets.getFont("COMIC.TTF").fontName, 32);
-		debugPrintLog = new DebugPrint(textFormat, true, {color: 0xff3d0000, size: 0.005, fast: true});
+		debugPrintLog = new DebugPrint(textFormat, true);
 		addChild(debugPrintLog);
 	}
 	
