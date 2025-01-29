@@ -23,7 +23,6 @@ import flixel.FlxObject;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxColor;
 
 import funkin.menus.ui.Alphabet;
 import flixel.group.FlxGroup.FlxTypedGroup;
