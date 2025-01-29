@@ -81,7 +81,7 @@ class Main extends Sprite
 
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
-		var preTextFormat = new openfl.text.TextFormat(Assets.getFont("assets/fonts/COMIC.TTF").fontName, 32);
+		var preTextFormat = new openfl.text.TextFormat("_sans", 32);
 		beenLog = new funkin.backend.system.debugText.DebugPrint(preTextFormat, false, {color: 0xFF3D0000, size: 0.001});
 		beenLog.x = (FlxG.stage.stageWidth - game.width * scaleMode.scale.x) / 2;
 
