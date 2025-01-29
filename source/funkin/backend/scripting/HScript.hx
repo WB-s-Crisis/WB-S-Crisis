@@ -1,7 +1,5 @@
 package funkin.backend.scripting;
 
-import funkin.backend.system.debugText.DebugPrint;
-
 import haxe.io.Path;
 import hscript.Expr.Error;
 import hscript.Parser;
@@ -46,6 +44,7 @@ class HScript extends Script {
 			for (a in args) v += ", " + Std.string(a);
 			this.trace(v);
 		}));
+		interp.variables.set("debugPrint", Main.instance.beenLog.debugPrint);
 
 		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.call("onScriptCreated", [this, "hscript"]);
