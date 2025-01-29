@@ -12,8 +12,8 @@ class FunkinGame extends FlxGame {
 	override function create(_) {
 		super.create(_);
 
-		var textFormat = new TextFormat("_sans", 32);
-		debugPrintLog = new DebugPrint(textFormat, true);
+		var textFormat = new TextFormat(Assets.getFont("COMIC.TTF").fontName, 32);
+		debugPrintLog = new DebugPrint(textFormat, true, {color: 0xff3d0000, size: 0.005, fast: true});
 		addChild(debugPrintLog);
 	}
 	
