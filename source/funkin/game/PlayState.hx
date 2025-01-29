@@ -130,16 +130,14 @@ class PlayState extends MusicBeatState
 	/**
          * 哭笑
          */
-	public var qqqeb(get, set):Bool;
+	@:isVar public var qqqeb(get, set):Bool;
 	
 	@:noCompletion function get_qqqeb():Bool {
 		return camHUD != null ? camHUD.visible : false;
 	}
 	@:noCompletion function set_qqqeb(val:Bool) {
-		qqqeb = val;
-
-		if(camHUD != null) camHUD.visible = qqqeb;
-		return qqqeb;
+		if(camHUD != null) camHUD.visible = val;
+		return val;
 	}
 	/**
 	 * Current scroll speed for all strums.
