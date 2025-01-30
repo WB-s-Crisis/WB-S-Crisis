@@ -25,8 +25,8 @@ class LuaScript {
     fileName = Path.withoutDirectory(path);
     extension = Path.extension(path);
     
-    state = LuaL.newState();
-    LuaL.openLibs(state);
+    state = LuaL.newstate();
+    LuaL.openlibs(state);
 
     onCreate(rawPath);
   }
@@ -38,7 +38,7 @@ class LuaScript {
     
     if(!Reflect.isFunction(value)) {
       Convert.toLua(state, value);
-      Lua.setGlobal(state, name);
+      Lua.setglobal(state, name);
     }else {
       Lua_helper.add_callback(state, "name", value);
     }
@@ -55,7 +55,7 @@ class LuaScript {
   private function onCreate(path:String) {
     if(Assets.exists(path)) {
       stringCode = Assets.getText(path);
-      Lua.doString(state, stringCode);
+      Lua.dostring(state, stringCode);
     }
   }
 }
