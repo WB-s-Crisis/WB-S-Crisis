@@ -19,12 +19,16 @@ class DebugPrint extends Sprite {
 	public var downscroll:Bool;
 
 	public var textFormat:TextFormat;
+	public var outline:OUTLINE;
 
 	private var hangju:Float = 2;
 
 	public function new(textFormat:TextFormat, ?downScroll = false) {
 		super();
 
+		outline = new OUTLINE();
+		this.filters = [outline];
+		
 		downscroll = downScroll;
 		this.textFormat = textFormat;
 	}
@@ -45,9 +49,6 @@ class DebugPrint extends Sprite {
     }
 
 	public override function addChild(child:DisplayObject):DisplayObject {
-		var outlineShader = new OUTLINE();
-		child.filters = [new ShaderFilter(outlineShader)];
-		
 		if(child is DebugText) {
 			var realChild = cast(child, DebugText);
 
