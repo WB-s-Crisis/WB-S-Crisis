@@ -48,7 +48,7 @@ class Framerate extends Sprite {
 
     if(outline) {
       this.filters = [new ShaderFilter(new OUTLINE({
-	      size: 0.1,
+	      size: 0.07,
 	      color: 0xFF6A0000
       }))];
     }
