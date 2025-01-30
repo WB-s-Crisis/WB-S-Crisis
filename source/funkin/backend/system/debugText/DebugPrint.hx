@@ -51,6 +51,7 @@ class DebugPrint extends Sprite {
 	public override function addChild(child:DisplayObject):DisplayObject {
 		if(child is DebugText) {
 			var realChild = cast(child, DebugText);
+			this.filters = [new ShaderFilter(outline)];
 
 			realChild.lastTime = Lib.getTimer();
             realChild.y = this.downscroll ? FlxG.stage.stageHeight - realChild.height : 0;
@@ -60,6 +61,12 @@ class DebugPrint extends Sprite {
 		}
 		
 		return super.addChild(child);
+	}
+	
+	public override function removeChild():DisplayObject {
+		this.filters = [new ShaderFilter(outline)];
+		
+		return super.removeChild();
 	}
 
 	private function updateChildrenPos(child:DebugText):Void {
