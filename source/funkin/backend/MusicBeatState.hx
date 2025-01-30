@@ -281,7 +281,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	override function create()
 	{
 		loadScript();
-		Framerate.offset.y = 0;
+		Framerate.instance.offset.y = 0;
 		super.create();
 		call("create");
 	}
