@@ -7,6 +7,7 @@ import openfl.text.TextFormat;
 import openfl.text.TextFieldAutoSize;
 import openfl.filters.ShaderFilter;
 import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
 
 import lime.system.System as LimeSystem;
 
@@ -40,7 +41,7 @@ class Framerate extends Sprite {
     osText = new TextField();
     osText.defaultTextFormat = new TextFormat(fontName, 16, FlxColor.WHITE);
     osText.autoSize = TextFieldAutoSize.LEFT;
-    osText.scrollY = fpsText.height + 2;
+    osText.y = fpsText.height + 2;
 
     osText.text = os;
     addChild(osText);
