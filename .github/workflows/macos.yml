@@ -38,12 +38,12 @@ jobs:
         run: |
           haxelib run lime build mac
       - name: Tar files
-        run: tar -zcvf CodenameEngine.tar.gz -C export/release/macos/bin .
+        run: tar -zcvf WBsCrisis.tar.gz -C export/release/macos/bin .
       - name: Uploading artifact (entire build)
         uses: actions/upload-artifact@v4
         with:
-          name: Codename Engine
-          path: CodenameEngine.tar.gz
+          name: "WB's Crisis"
+          path: WBsCrisis.tar.gz
       # - name: Uploading artifact (executable)
       #   uses: actions/upload-artifact@v4
       #   with:

@@ -22,6 +22,9 @@
 	<!-- <lib name="dox" /> -->
 	<lib name="markdown" />
 
+	<!-- LUA -->
+	<lib name="linc_luajit"version="0.0.7"/>
+
 	<!-- Android Specific -->
 	<git name="extension-androidtools" url="https://github.com/MAJigsaw77/extension-androidtools" ref="main" skipDeps="true" />
 
