@@ -10,10 +10,13 @@ import openfl.filters.ShaderFilter;
 import lime.system.System as LimeSystem
 
 class Framerate extends Sprite {
+	public static var instance:Framerate = null;
   public static var fontName:String = Assets.getFont(Paths.font("Super Cartoon.ttf")).fontName;
   public static final os:String = 'OS Build: ${LimeSystem.platformName}[${LimeSystem.deviceVendor}(${LimeSystem.deviceModel})]-${LimeSystem.platformVersion}.';
 
-  public var fpsText:TextField = null;
+	public var offset:FlxPoint;
+  
+	public var fpsText:TextField = null;
   public var osText:TextField = null;
   
   public var currentFPS:Int;
@@ -44,11 +47,16 @@ class Framerate extends Sprite {
     if(outline) {
       this.filters = [new ShaderFilter(new OUTLINE())];
     }
+
+		instance = this;
   }
 
   override function __enterFrame(deltaTime:Float) {
     currentTime += deltaTime;
 		times.push(currentTime);
+
+		this.x = offset.x;
+		this.y = offset.y;
 
 		while (times[0] < currentTime - 1000)
 		{
@@ -64,7 +72,15 @@ class Framerate extends Sprite {
 		cacheCount = currentCount;
   }
 
+	public inline function setScale(?scale:Float){
+		if(scale == null)
+			scale = Math.min(FlxG.stage.window.width / FlxG.width, FlxG.stage.window.height / FlxG.height);
+		scaleX = scaleY = #if android (scale > 1 ? scale : 1) #else (scale < 1 ? scale : 1) #end;
+	}
+
   private function initVars():Void {
+		offset = FlxPoint.get();
+		
     currentFPS = 0;
     cacheCount = 0;
     currentTime = 0.;
