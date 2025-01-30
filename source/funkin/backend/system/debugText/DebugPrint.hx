@@ -66,10 +66,10 @@ class DebugPrint extends Sprite {
 		return super.addChild(child);
 	}
 	
-	public override function removeChild():DisplayObject {
+	public override function removeChild(child:DisplayObject):DisplayObject {
 		this.filters = [new ShaderFilter(outline)];
 		
-		return super.removeChild();
+		return super.removeChild(child);
 	}
 
 	private function updateChildrenPos(child:DebugText):Void {
