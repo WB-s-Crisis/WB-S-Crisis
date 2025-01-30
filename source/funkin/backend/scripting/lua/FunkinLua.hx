@@ -12,7 +12,7 @@ class LuaScript {
   public var rawPath:String;
   public var path:String;
   public var fileName:String;
-  public var extension:String:
+  public var extension:String;
 
   private var stringCode:String;
 
