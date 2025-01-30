@@ -104,6 +104,11 @@
 		<define name="DISCORD_RPC" if="desktop"/>
 	</section>
 
+	<!-- LUA -->
+	<section if="cpp">
+		<define name="LUAState" if="desktop"/>
+	</section>
+
 	<!-- Comment this out to disable GitHub API integration !-->
 	<define name="GITHUB_API" unless="web || hl"/>
 
@@ -184,6 +189,7 @@
 	<haxelib name="hscript-improved" />
 	<haxelib name="hxdiscord_rpc" if="DISCORD_RPC"/>
 	<haxelib name="markdown" />
+	<haxelib name="linc_luajit" if="LUAState"/>
 
 	<haxelib name="extension-androidtools" if="android" />
 
