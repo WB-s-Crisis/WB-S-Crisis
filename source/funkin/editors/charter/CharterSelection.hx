@@ -22,7 +22,7 @@ class CharterSelection extends EditorTreeMenu {
 
 		super.create();
 
-		Framerate.offset.y = 60;
+		Framerate.instance.offset.y = 60;
 
 		freeplayList = FreeplaySonglist.get(false);
 
