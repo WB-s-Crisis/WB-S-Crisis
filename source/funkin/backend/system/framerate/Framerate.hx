@@ -13,7 +13,7 @@ import lime.system.System as LimeSystem;
 
 class Framerate extends Sprite {
 	public static var instance:Framerate = null;
-  public static var fontName:String = Assets.getFont(Paths.font("Super Cartoon.ttf")).fontName;
+  public static var fontName:String = Paths.font("Super Cartoon.ttf");
   public static final os:String = 'OS Build: ${LimeSystem.platformName}[${LimeSystem.deviceVendor}(${LimeSystem.deviceModel})]-${LimeSystem.platformVersion}.';
 
 	public var offset:FlxPoint;
@@ -57,7 +57,7 @@ class Framerate extends Sprite {
     currentTime += deltaTime;
 		times.push(currentTime);
 
-		this.x = offset.x;
+		this.x = #if mobile 20 + #end offset.x;
 		this.y = offset.y;
 
 		while (times[0] < currentTime - 1000)
