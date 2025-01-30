@@ -27,7 +27,7 @@ class DebugPrint extends Sprite {
 		super();
 
 		outline = new OUTLINE();
-		this.filters = [outline];
+		this.filters = [new ShaderFilter(outline)];
 		
 		downscroll = downScroll;
 		this.textFormat = textFormat;
