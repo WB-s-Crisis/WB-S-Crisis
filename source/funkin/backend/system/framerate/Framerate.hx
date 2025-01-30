@@ -47,7 +47,10 @@ class Framerate extends Sprite {
     addChild(osText);
 
     if(outline) {
-      this.filters = [new ShaderFilter(new OUTLINE())];
+      this.filters = [new ShaderFilter(new OUTLINE({
+	      size: 0.1,
+	      color: 0xFF6A0000
+      }))];
     }
 
 		instance = this;
@@ -57,7 +60,7 @@ class Framerate extends Sprite {
     currentTime += deltaTime;
 		times.push(currentTime);
 
-		this.x = #if mobile 20 + #end offset.x;
+		this.x = #if mobile 75 + #end offset.x;
 		this.y = offset.y;
 
 		while (times[0] < currentTime - 1000)
