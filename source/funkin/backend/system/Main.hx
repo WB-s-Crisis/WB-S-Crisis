@@ -86,7 +86,6 @@ class Main extends Sprite
 		#if mobile
 		FlxG.stage.window.onResize.add((w:Int, h:Int) -> framerateSprite.setScale());
 		#end
-		SystemInfo.init();
 		#end
 	}
 
