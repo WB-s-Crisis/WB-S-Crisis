@@ -30,7 +30,7 @@ class DebugPrint extends Sprite {
 			size: 0.075,
 			color: 0xFFA50000
 		});
-		this.filters = [new ShaderFilter(outline)];
+		//this.filters = [new ShaderFilter(outline)];
 		
 		downscroll = downScroll;
 		this.textFormat = textFormat;
