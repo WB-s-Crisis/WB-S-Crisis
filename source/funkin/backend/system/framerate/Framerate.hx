@@ -8,7 +8,7 @@ import openfl.text.TextFieldAutoSize;
 import openfl.filters.ShaderFilter;
 import flixel.math.FlxPoint;
 
-import lime.system.System as LimeSystem
+import lime.system.System as LimeSystem;
 
 class Framerate extends Sprite {
 	public static var instance:Framerate = null;
