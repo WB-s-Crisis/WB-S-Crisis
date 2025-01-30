@@ -6,6 +6,7 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFieldAutoSize;
 import openfl.filters.ShaderFilter;
+import flixel.math.FlxPoint;
 
 import lime.system.System as LimeSystem
 
