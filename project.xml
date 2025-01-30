@@ -106,7 +106,7 @@
 
 	<!-- LUA -->
 	<section if="cpp">
-		<define name="LUAState" if="desktop"/>
+		<define name="LUAState" if="desktop || mobile"/>
 	</section>
 
 	<!-- Comment this out to disable GitHub API integration !-->
