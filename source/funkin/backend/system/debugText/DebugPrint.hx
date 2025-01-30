@@ -26,7 +26,10 @@ class DebugPrint extends Sprite {
 	public function new(textFormat:TextFormat, ?downScroll = false) {
 		super();
 
-		outline = new OUTLINE();
+		outline = new OUTLINE({
+			size: 0.075,
+			color: 0xFFA50000
+		});
 		this.filters = [new ShaderFilter(outline)];
 		
 		downscroll = downScroll;
