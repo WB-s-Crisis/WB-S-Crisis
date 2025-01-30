@@ -35,7 +35,7 @@ class Framerate extends Sprite {
     fpsText.defaultTextFormat = new TextFormat(fontName, 16, FlxColor.WHITE);
     fpsText.autoSize = TextFieldAutoSize.LEFT;
 
-    fpsText.test = "FPS: 0";
+    fpsText.text = "FPS: 0";
     addChild(fpsText);
 
     osText = new TextField();
