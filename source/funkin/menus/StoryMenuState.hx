@@ -185,6 +185,7 @@ class StoryMenuState extends MusicBeatState {
 		if(this.weeks[curWeek].bg != null) {
 			weekBG.loadGraphic(Paths.image('menus/storymenu/${this.weeks[curWeek].bg}'));
 			weekBG.setGraphicSize(FlxG.width, 400);
+			weekBG.color = 0xFFFFFFFF;
 			weekBG.updateHitbox();
 		}else {
 			weekBG.makeSolid(FlxG.width, 400, 0xFFFFFFFF);
