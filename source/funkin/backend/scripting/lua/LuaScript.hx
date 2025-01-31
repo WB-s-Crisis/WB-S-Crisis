@@ -4,7 +4,6 @@ package funkin.backend.scripting.lua;
 import Type.ValueType;
 import haxe.io.Path;
 import wrapper.LuaWrapper;
-
 import funkin.backend.scripting.lua.implements.*;
 
 class LuaScript extends FlxBasic {
@@ -43,7 +42,7 @@ class LuaScript extends FlxBasic {
     wrapper = new LuaWrapper();
     wrapper.loadLibs();
 
-    BaseCallback.implements(this);
+    BaseCallback.implement(this);
   }
 
   public function load() {
