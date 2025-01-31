@@ -23,6 +23,7 @@ class LuaScript extends FlxBasic {
   public function onCreate(path:String) {
     state = LuaL.newstate();
     LuaL.openlibs(state);
+    Lua.init_callbacks(state);
 
     switch(Path.extension(path)) {
         case "lua":
