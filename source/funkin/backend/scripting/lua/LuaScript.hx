@@ -40,8 +40,6 @@ class LuaScript extends FlxBasic {
 
     wrapper = new LuaWrapper();
     wrapper.loadLibs();
-
-    BaseCallback.implement(this);
   }
 
   public function load() {
