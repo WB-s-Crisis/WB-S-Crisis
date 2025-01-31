@@ -557,6 +557,8 @@ class PlayState extends MusicBeatState
 		var event = scripts.event("onRatingUpdate", EventManager.get(RatingUpdateEvent).recycle(rating, curRating));
 		if (!event.cancelled)
 			curRating = event.rating;
+
+		luaCall("onRatingUpdate", [rating, curRating]);
 	}
 
 	private inline function get_maxHealth()
@@ -645,6 +647,7 @@ class PlayState extends MusicBeatState
 							if (folder == 'data/charts/')
 								Logs.trace('data/charts/ is deprecrated and will be removed in the future. Please move script $file to songs/', WARNING, DARKYELLOW);
 
+							addLuaScript(file);
 							addScript(file);
 						}
 					}
@@ -655,6 +658,7 @@ class PlayState extends MusicBeatState
 					for (file in Paths.getFolderContent('data/events/', true, fromMods ? MODS : BOTH)) {
 						var fileName:String = Path.withoutExtension(Path.withoutDirectory(file));
 						if (EventsData.eventsList.contains(fileName) && songEvents.contains(fileName)) {
+							addLuaScript(file);
 							addScript(file);
 						}
 					}
@@ -683,12 +687,14 @@ class PlayState extends MusicBeatState
 
 		for(noteType in SONG.noteTypes) {
 			var scriptPath = Paths.script('data/notes/${noteType}');
-			if (Assets.exists(scriptPath) && !scripts.contains(scriptPath)) {
+			if (Assets.exists(scriptPath) && !scripts.contains(scriptPathscriptPath)) {
 				var script = Script.create(scriptPath);
 				if (!(script is DummyScript)) {
 					scripts.add(script);
 					script.load();
 				}
+
+				addLuaScript(scriptPath);
 			}
 		}
 
@@ -734,6 +740,8 @@ class PlayState extends MusicBeatState
 		scripts.set("SONG", SONG);
 		scripts.load();
 		scripts.call("create");
+		luaLoad();
+		luaCall("onCreate");
 		#end
 
 		// HUD INITIALIZATION & CAMERA INITIALIZATION
@@ -850,6 +858,7 @@ class PlayState extends MusicBeatState
 		__updateNote_event = EventManager.get(NoteUpdateEvent);
 
 		scripts.call("postCreate");
+		luaCall("onCreatePost");
 	}
 
 	/**
@@ -911,6 +920,7 @@ class PlayState extends MusicBeatState
 			_startCountdownCalled = true;
 			inCutscene = false;
 
+			luaCall("onStartCountdown");
 			if (scripts.event("onStartCountdown", new CancellableEvent()).cancelled) return;
 		}
 
@@ -925,6 +935,7 @@ class PlayState extends MusicBeatState
 			}, introLength);
 		}
 		scripts.call("onPostStartCountdown");
+			luaCall("onStartCountdownPost");
 	}
 
 	/**
@@ -937,6 +948,7 @@ class PlayState extends MusicBeatState
 			introSounds[swagCounter],
 			introSprites[swagCounter],
 			0.6, true, null, null, null));
+		luaCall("countdownTick", [swagCounter]);
 
 		var sprite:FlxSprite = null;
 		var sound:FlxSound = null;
@@ -980,6 +992,7 @@ class PlayState extends MusicBeatState
 	@:dox(hide) function startSong():Void
 	{
 		scripts.call("onSongStart");
+		luaCall("onSongStart");
 		startingSong = false;
 
 		inst.onComplete = endSong;
@@ -1010,6 +1023,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public override function destroy() {
+		luaCall("destroy");
 		scripts.call("destroy");
 		#if mobile lime.system.System.allowScreenTimeout = Options.screenTimeOut; #end
 		for(g in __cachedGraphics)
@@ -1188,6 +1202,7 @@ class PlayState extends MusicBeatState
 	 */
 	public function pauseGame() {
 		var e = scripts.event("onGamePause", new CancellableEvent());
+		luaCall("onPause");
 		if (e.cancelled) return;
 
 		persistentUpdate = false;
@@ -1285,10 +1300,12 @@ class PlayState extends MusicBeatState
 	override public function update(elapsed:Float)
 	{
 		scripts.call("update", [elapsed]);
+		luaCall("onUpdate", [elapsed]);
 
 		if (inCutscene) {
 			super.update(elapsed);
 			scripts.call("postUpdate", [elapsed]);
+			luaCall("onUpdatePost", [elapsed]);
 			return;
 		}
 
@@ -1355,6 +1372,7 @@ class PlayState extends MusicBeatState
 				pos.y /= r;
 
 				var event = scripts.event("onCameraMove", EventManager.get(CamMoveEvent).recycle(pos, strumLines.members[curCameraTarget], r));
+				luaCall("onCameraMove", [curCameraTarget, pos.x, pos.y]);
 				if (!event.cancelled)
 					camFollow.setPosition(pos.x, pos.y);
 			}
@@ -1390,10 +1408,12 @@ class PlayState extends MusicBeatState
 	}
 
 	override function draw() {
+		luaCall("onDraw");
 		var e = scripts.event("draw", EventManager.get(DrawEvent).recycle());
 		if (!e.cancelled)
 			super.draw();
 		scripts.event("postDraw", e);
+		luaCall("onDrawPost");
 	}
 
 	public var scrollSpeedTween:FlxTween = null;
@@ -1402,6 +1422,7 @@ class PlayState extends MusicBeatState
 		if (event == null) return;
 		if (event.params == null) return;
 
+		luaCall("onEvent", [event.name]);
 		if (scripts.event("onEvent", EventManager.get(EventGameEvent).recycle(event)).cancelled) return;
 
 		switch(event.name) {
@@ -1472,6 +1493,7 @@ class PlayState extends MusicBeatState
 			lossSFX.getDefault(this.lossSFX),
 			retrySFX.getDefault(this.retrySFX)
 		));
+		luaCall("onGameOver");
 
 		if (event.cancelled) return;
 
@@ -1500,6 +1522,7 @@ class PlayState extends MusicBeatState
 		#if TOUCH_CONTROLS
 		hitbox.visible = false;
 		#end
+		luaCall("onEndSong");
 		scripts.call("onSongEnd");
 		canPause = false;
 		inst.volume = 0;
@@ -1626,6 +1649,7 @@ class PlayState extends MusicBeatState
 
 		var event:NoteMissEvent = scripts.event("onPlayerMiss", EventManager.get(NoteMissEvent).recycle(note, -10, 1, muteVocalsOnMiss, note != null ? -0.0475 : -0.04, Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2), note == null, combo > 5, "sad", true, true, "miss", strumLines.members[playerID].characters, playerID, note != null ? note.noteType : null, directionID, 0));
 		strumLine.onMiss.dispatch(event);
+		luaCall("onPlayerMiss", [playerID, note.noteType, directionID, note.isSustainNote]);
 		if (event.cancelled) return;
 
 		if (strumLine != null) strumLine.addHealth(event.healthGain);
@@ -1707,10 +1731,14 @@ class PlayState extends MusicBeatState
 		}
 
 		var event:NoteHitEvent;
-		if (strumLine != null && !strumLine.cpu)
+		if (strumLine != null && !strumLine.cpu) {
 			event = EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, null, defaultDisplayRating, defaultDisplayCombo, note, strumLine.characters, true, note.noteType, note.animSuffix.getDefault(note.strumID < strumLine.members.length ? strumLine.members[note.strumID].animSuffix : strumLine.animSuffix), "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, 0.023, daRating, Options.splashesEnabled && !note.isSustainNote && daRating == "sick");
-		else
+		  luaCall("goodNoteHit", [daRating, note.noteType, note.strumID, note.isSustainNote]);
+		}else {
 			event = EventManager.get(NoteHitEvent).recycle(false, false, false, null, defaultDisplayRating, defaultDisplayCombo, note, strumLine.characters, false, note.noteType, note.animSuffix.getDefault(note.strumID < strumLine.members.length ? strumLine.members[note.strumID].animSuffix : strumLine.animSuffix), "game/score/", "", note.strumID, 0, null, 0, daRating, false);
+			luaCall("opponentNoteHit", [daRating, note.noteType, note.strumID, note.isSustainNote]);
+		}
+		
 		event.deleteNote = !note.isSustainNote; // work around, to allow sustain notes to be deleted
 		event = scripts.event(strumLine != null && !strumLine.cpu ? "onPlayerHit" : "onDadHit", event);
 		strumLine.onHit.dispatch(event);
@@ -1849,6 +1877,7 @@ class PlayState extends MusicBeatState
 	{
 		super.stepHit(curStep);
 		scripts.call("stepHit", [curStep]);
+		luaCall("onStepHit", [curStep]);
 	}
 
 	@:dox(hide)
@@ -1856,6 +1885,7 @@ class PlayState extends MusicBeatState
 	{
 		super.measureHit(curMeasure);
 		scripts.call("measureHit", [curMeasure]);
+		luaCall("onMeasureHit", [curMeasure]);
 	}
 
 	@:dox(hide)
@@ -1880,6 +1910,7 @@ class PlayState extends MusicBeatState
 		}
 
 		scripts.call("beatHit", [curBeat]);
+		luaCall("onBeatHit", [curBeat]);
 	}
 
 	public function addScript(file:String) {
@@ -1887,6 +1918,35 @@ class PlayState extends MusicBeatState
 		if (Script.scriptExtensions.contains(ext))
 			scripts.add(Script.create(file));
 	}
+
+  #if LUAState
+  public function addLuaScript(file:String):Int {
+		if(luaArray == null) luaArray = [];
+		
+		var luaScript = new LuaScript(file);
+		
+		return luaArray.push(luaScript);
+	}
+
+  public function luaLoad() {
+		if(luaArray == null) return;
+
+		if(luaArray.length > 0)
+			for(lua in luaArray) {
+				lua.load();
+			}
+	}
+
+  public function luaCall(funcName:String, ?args:Array<Dynamic>, ?ret:Bool = false) {
+		if(luaArray == null) return;
+
+		if(luaArray.length > 0)
+			for(lua in luaArray) {
+				if(!ret) return lua.call(funcName, args, ret);
+				else lua.call(funcName, args, ret);
+			}
+	}
+  #end
 
 	// GETTERS & SETTERS
 	#if REGION
