@@ -4,7 +4,7 @@ package funkin.backend.scripting.lua.implements;
 import funkin.backend.scripting.lua.LuaScript;
 
 class BaseCallback {
-  public static function implements(parent:LuaScript) {
+  public static function implement(parent:LuaScript) {
     parent.set("debugPrint", Main.game.debugPrint);
     parent.set("alert", lime.app.Application.current.window.alert);
   }
