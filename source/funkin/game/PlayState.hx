@@ -32,6 +32,10 @@ import funkin.game.cutscenes.*;
 import funkin.menus.*;
 import funkin.backend.scripting.events.*;
 
+#if LUAState
+import funkin.backend.scripting.lua.LuaScript;
+#end
+
 using StringTools;
 
 @:access(flixel.text.FlxText.FlxTextFormatRange)
@@ -196,6 +200,16 @@ class PlayState extends MusicBeatState
 	 * Player strums.
 	 */
 	public var playerStrums(get, null):StrumLine;
+
+	/**
+   * 用于lua
+   */
+	public var luaVariables:Map<String, Dynamic>;
+
+	#if LUAState
+	public var luaArray:Array<LuaScript>;
+	#end
+	
 	/**
 	 * CPU strums.
 	 */
@@ -570,6 +584,8 @@ class PlayState extends MusicBeatState
 		#if REGION
 		instance = this;
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
+
+		luaVariables = [];
 
 		PauseSubState.script = "";
 		GameOverSubstate.script = "";
