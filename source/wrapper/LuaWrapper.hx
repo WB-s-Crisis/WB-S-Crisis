@@ -1,5 +1,6 @@
 package wrapper;
 
+#if LUAState
 import lua.Lua;
 import lua.LuaL;
 import lua.State;
@@ -538,4 +539,4 @@ class LuaWrapper {
         return ret;
     }
 }
-
+#end
