@@ -30,6 +30,8 @@ class LuaScript extends FlxBasic {
   private var wrapper:LuaWrapper = null;
 
   public function new(path:String) {
+    super();
+    
     rawPath = path;
     wrapper = new LuaWrapper();
 
@@ -68,13 +70,13 @@ class LuaScript extends FlxBasic {
     }else close();
   }
 
-  public function call(funcName:String, ?args:Array<Dynamic>, ?ret:Bool = false):Dynamic {
+  public function call(funcName:String, ?args:Array<Dynamic>, ?ret:Bool = false) {
     if(wrapper == null) return;
     
     if(args == null || args == []) {
-      wrapper.callFunction(funcName, ret);
+      return wrapper.callFunction(funcName, ret);
     }else {
-      wrapper.callFunction_ArrayArgs(funcName, args, ret);
+      return wrapper.callFunction_ArrayArgs(funcName, args, ret);
     }
   }
 
