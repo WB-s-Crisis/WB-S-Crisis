@@ -152,11 +152,6 @@ class Script extends FlxBasic implements IFlxDestroyable {
 				case "pack":
 					var arr = Assets.getText(path).split("________PACKSEP________");
 					fromString(arr[1], arr[0]);
-				case "lua":
-					Logs.trace("Lua is not supported in this engine. Use HScript instead.", ERROR);
-					new DummyScript(path);
-				default:
-					new DummyScript(path);
 			}
 		}
 		return new DummyScript(path);
