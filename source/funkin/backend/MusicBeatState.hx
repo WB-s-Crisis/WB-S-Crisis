@@ -235,7 +235,9 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 		this.scriptName = scriptName != null ? scriptName : lastScriptName;
 		lastScriptName = this.scriptName;
 
-		new LuaState(Paths.getPath("test.lua"));
+		#if LUAState
+		new LuaScript(Paths.getPath("test.lua"));
+		#end
 	}
 
 	function loadScript() {
