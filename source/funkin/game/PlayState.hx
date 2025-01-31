@@ -687,7 +687,7 @@ class PlayState extends MusicBeatState
 
 		for(noteType in SONG.noteTypes) {
 			var scriptPath = Paths.script('data/notes/${noteType}');
-			if (Assets.exists(scriptPath) && !scripts.contains(scriptPathscriptPath)) {
+			if (Assets.exists(scriptPath) && !scripts.contains(scriptPath)) {
 				var script = Script.create(scriptPath);
 				if (!(script is DummyScript)) {
 					scripts.add(script);
@@ -1937,14 +1937,15 @@ class PlayState extends MusicBeatState
 			}
 	}
 
-  public function luaCall(funcName:String, ?args:Array<Dynamic>, ?ret:Bool = false) {
-		if(luaArray == null) return;
+  public function luaCall(funcName:String, ?args:Array<Dynamic>, ?ret:Bool = false):Dynamic {
+		if(luaArray == null) return null;
 
 		if(luaArray.length > 0)
 			for(lua in luaArray) {
 				if(!ret) return lua.call(funcName, args, ret);
 				else lua.call(funcName, args, ret);
 			}
+	        return null
 	}
   #end
 
