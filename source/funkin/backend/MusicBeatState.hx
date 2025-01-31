@@ -6,7 +6,7 @@ import funkin.backend.system.Controls;
 import funkin.backend.scripting.DummyScript;
 
 #if LUAState
-import funkin.backend.scripting.LuaScript;
+import funkin.backend.scripting.lua.LuaScript;
 #end
 
 import flixel.FlxState;
