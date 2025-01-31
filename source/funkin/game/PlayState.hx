@@ -1945,7 +1945,7 @@ class PlayState extends MusicBeatState
 				if(!ret) return lua.call(funcName, args, ret);
 				else lua.call(funcName, args, ret);
 			}
-	        return null
+	        return null;
 	}
   #end
 
