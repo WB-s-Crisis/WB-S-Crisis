@@ -36,7 +36,7 @@ class LuaScript extends FlxBasic {
       Main.game.debugPrint(text, delayTime);
     });
     Lua.getglobal(state, "test");
-    Lua.pcall(state, 3, 0, 1);
+    Lua.pcall(state, 0, 0, 0);
 
     close();
   }
