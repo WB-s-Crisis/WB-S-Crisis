@@ -1,9 +1,9 @@
 package wrapper;
 
-import lua.Lua;
-import lua.LuaL;
-import lua.State;
-import lua.Convert;
+import llua.Lua;
+import llua.LuaL;
+import llua.State;
+import llua.Convert;
 
 @:include('linc_lua.h')
 extern class LDebug {
