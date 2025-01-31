@@ -13,7 +13,7 @@ class FunkinGame extends FlxGame {
 	override function create(_) {
 		super.create(_);
 
-		var textFormat = new TextFormat(OpenflAssets.getFont("COMIC.TTF").fontName, 32);
+		var textFormat = new TextFormat(Paths.font("COMIC.TTF"), 24);
 		debugPrintLog = new DebugPrint(textFormat, true);
 		addChild(debugPrintLog);
 	}

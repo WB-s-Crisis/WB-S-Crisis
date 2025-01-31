@@ -514,11 +514,7 @@ class Charter extends UIState {
 
 		loadSong();
 
-		if(Framerate.isLoaded) {
-			Framerate.fpsCounter.alpha = 0.4;
-			Framerate.memoryCounter.alpha = 0.4;
-			Framerate.codenameBuildField.alpha = 0.4;
-		}
+		Framerate.instance.alpha = 0.4;
 		updateDisplaySprites();
 
 		// ! IF YOU EVER WANNA VIEW IN THE FUTURE, JUST USE A FLXSPRITE :D -lunar
@@ -535,11 +531,7 @@ class Charter extends UIState {
 	override function destroy() {
 		__updatePlaytestInfo();
 
-		if(Framerate.isLoaded) {
-			Framerate.fpsCounter.alpha = 1;
-			Framerate.memoryCounter.alpha = 1;
-			Framerate.codenameBuildField.alpha = 1;
-		}
+		Framerate.instance.alpha = 1;
 		super.destroy();
 	}
 

@@ -252,22 +252,15 @@ class CharacterEditor extends UIState {
 		add(topMenuSpr);
 		add(uiGroup);
 
-		if(Framerate.isLoaded) {
-			Framerate.fpsCounter.alpha = 0.4;
-			Framerate.memoryCounter.alpha = 0.4;
-			Framerate.codenameBuildField.alpha = 0.4;
-		}
+		Framerate.instance.alpha = 0.4;
 
 		DiscordUtil.call("onEditorLoaded", ["Character Editor", __character]);
 	}
 
 	override function destroy() {
 		super.destroy();
-		if(Framerate.isLoaded) {
-			Framerate.fpsCounter.alpha = 1;
-			Framerate.memoryCounter.alpha = 1;
-			Framerate.codenameBuildField.alpha = 1;
-		}
+
+		Framerate.instance.alpha = 1;
 	}
 
 	//private var movingCam:Bool = false;

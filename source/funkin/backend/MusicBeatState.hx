@@ -4,6 +4,11 @@ import funkin.backend.system.framerate.Framerate;
 import funkin.backend.system.GraphicCacheSprite;
 import funkin.backend.system.Controls;
 import funkin.backend.scripting.DummyScript;
+
+#if LUAState
+import funkin.backend.scripting.lua.LuaScript;
+#end
+
 import flixel.FlxState;
 import flixel.FlxSubState;
 import funkin.backend.scripting.events.*;
@@ -281,7 +286,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	override function create()
 	{
 		loadScript();
-		Framerate.offset.y = 0;
+		Framerate.instance.offset.y = 0;
 		super.create();
 		call("create");
 	}

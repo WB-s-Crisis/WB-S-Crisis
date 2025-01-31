@@ -2,7 +2,6 @@ package funkin.backend.system;
 
 import funkin.editors.SaveWarning;
 import funkin.backend.assets.AssetsLibraryList;
-import funkin.backend.system.framerate.SystemInfo;
 import openfl.utils.AssetLibrary;
 import openfl.text.TextFormat;
 import flixel.system.ui.FlxSoundTray;
@@ -87,7 +86,6 @@ class Main extends Sprite
 		#if mobile
 		FlxG.stage.window.onResize.add((w:Int, h:Int) -> framerateSprite.setScale());
 		#end
-		SystemInfo.init();
 		#end
 	}
 

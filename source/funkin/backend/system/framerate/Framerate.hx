@@ -1,177 +1,94 @@
 package funkin.backend.system.framerate;
 
-import openfl.display.Bitmap;
-import openfl.display.BitmapData;
-import flixel.math.FlxPoint;
-import openfl.events.KeyboardEvent;
-import openfl.display.DisplayObject;
+import funkin.backend.system.debugText.DebugPrint.OUTLINE;
 import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
-import openfl.ui.Keyboard;
-import flixel.util.FlxTimer;
+import openfl.text.TextFieldAutoSize;
+import openfl.filters.ShaderFilter;
+import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
+
+import lime.system.System as LimeSystem;
 
 class Framerate extends Sprite {
-	public static var instance:Framerate;
-	public static var isLoaded:Bool = false;
+	public static var instance:Framerate = null;
+  public static var fontName:String = Paths.font("Super Cartoon.ttf");
+  public static final os:String = 'OS Build: ${LimeSystem.platformName}[${LimeSystem.deviceVendor}(${LimeSystem.deviceModel})]-${LimeSystem.platformVersion}.';
 
-	public static var textFormat:TextFormat;
-	public static var fpsCounter:FramerateCounter;
-	public static var memoryCounter:MemoryCounter;
-	#if SHOW_BUILD_ON_FPS
-	public static var codenameBuildField:CodenameBuildField;
-	#end
+	public var offset:FlxPoint;
+  
+	public var fpsText:TextField = null;
+  public var osText:TextField = null;
+  
+  public var currentFPS:Int;
+  private var cacheCount:Int;
+  private var currentTime:Float;
+  private var times:Array<Float>;
 
-	public static var fontName:String = #if windows '${Sys.getEnv("windir")}\\Fonts\\consola.ttf' #else "_sans" #end;
+  public function new(?outline:Bool = true) {
+    super();
 
-	/**
-	 * 0: FPS INVISIBLE
-	 * 1: FPS VISIBLE
-	 * 2: FPS & DEBUG INFO VISIBLE
-	 */
-	public static var debugMode:Int = 1;
-	public static var offset:FlxPoint = new FlxPoint();
+    initVars();
 
-	public var bgSprite:Bitmap;
+    fpsText = new TextField();
+    fpsText.defaultTextFormat = new TextFormat(fontName, 16, FlxColor.WHITE);
+    fpsText.autoSize = TextFieldAutoSize.LEFT;
 
-	public var categories:Array<FramerateCategory> = [];
+    fpsText.text = "FPS: 0";
+    addChild(fpsText);
 
-	@:isVar public static var __bitmap(get, null):BitmapData = null;
+    osText = new TextField();
+    osText.defaultTextFormat = new TextFormat(fontName, 16, FlxColor.WHITE);
+    osText.autoSize = TextFieldAutoSize.LEFT;
+    osText.y = fpsText.height + 2;
 
-	private static function get___bitmap():BitmapData {
-		if (__bitmap == null)
-			__bitmap = new BitmapData(1, 1, 0xFF000000);
-		return __bitmap;
-	}
+    osText.text = os;
+    addChild(osText);
 
-	#if mobile
-	#if android public var presses:Int = 0; #end
-	public var sillyTimer:FlxTimer = new FlxTimer();
-	#end
+    if(outline) {
+      this.filters = [new ShaderFilter(new OUTLINE({
+	      size: 0.07,
+	      color: 0xFF6A0000
+      }))];
+    }
 
-	public function new() {
-		super();
-		if (instance != null) throw "Cannot create another instance";
 		instance = this;
-		textFormat = new TextFormat("Consolas", 12, -1);
+  }
 
-		isLoaded = true;
+  override function __enterFrame(deltaTime:Float) {
+    currentTime += deltaTime;
+		times.push(currentTime);
 
-		x = 10;
-		y = 2;
+		this.x = #if mobile 75 + #end offset.x;
+		this.y = offset.y;
 
-		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, function(e:KeyboardEvent) {
-			switch(e.keyCode) {
-				case #if web Keyboard.NUMBER_3 #else Keyboard.F3 #end: // 3 on web or F3 on windows, linux and other things that runs code
-					debugMode = (debugMode + 1) % 3;
-			}
-		});
-
-		if (__bitmap == null)
-			__bitmap = new BitmapData(1, 1, 0xFF000000);
-
-		bgSprite = new Bitmap(__bitmap);
-		bgSprite.alpha = 0;
-		addChild(bgSprite);
-
-		__addToList(fpsCounter = new FramerateCounter());
-		__addToList(memoryCounter = new MemoryCounter());
-		#if SHOW_BUILD_ON_FPS
-		__addToList(codenameBuildField = new CodenameBuildField());
-		#end
-		__addCategory(new ConductorInfo());
-		__addCategory(new FlixelInfo());
-		__addCategory(new SystemInfo());
-		__addCategory(new AssetTreeInfo());
-
-		#if (gl_stats && !disable_cffi && (!html5 || !canvas))
-		__addCategory(new StatsInfo());
-		#end
-	}
-
-	private function __addCategory(category:FramerateCategory) {
-		categories.push(category);
-		__addToList(category);
-	}
-	private var __lastAddedSprite:DisplayObject = null;
-	private function __addToList(spr:DisplayObject) {
-		spr.x = 0;
-		spr.y = __lastAddedSprite != null ? (__lastAddedSprite.y + __lastAddedSprite.height) : 4;
-		//spr.y += offset.y;
-		__lastAddedSprite = spr;
-		addChild(spr);
-	}
-
-
-	var debugAlpha:Float = 0;
-	public override function __enterFrame(t:Int) {
-		alpha = CoolUtil.fpsLerp(alpha, debugMode > 0 ? 1 : 0, 0.5);
-		debugAlpha = CoolUtil.fpsLerp(debugAlpha, debugMode > 1 ? 1 : 0, 0.5);
-		#if android
-		if(FlxG.android.justReleased.BACK){
-			sillyTimer.cancel();
-			++presses;
-			if(presses >= 3){
-				debugMode = (debugMode + 1) % 3;
-				presses = 0;
-				return;
-			}
-			sillyTimer.start(0.3, (tmr:FlxTimer) -> presses = 0);
-		}
-		#elseif ios
-		for(camera in FlxG.cameras.list) {
-			var pos = FlxG.mouse.getScreenPosition(camera);
-			if (pos.x >= FlxG.game.x + 10 + offset.x &&
-				pos.x <= FlxG.game.x + offset.x + 80 &&
-				pos.y >= FlxG.game.y + 2 + offset.y &&
-				pos.y <= FlxG.game.y + 2 + offset.y + 60)
-			{
-				if(FlxG.mouse.justPressed)
-					sillyTimer.start(0.4, (tmr:FlxTimer) -> debugMode = (debugMode + 1) % 3);
-
-				if(FlxG.mouse.justReleased)
-					sillyTimer.cancel();
-			} else if(sillyTimer.active && !sillyTimer.finished)
-				sillyTimer.cancel();
-		}
-		#end
-
-		if (alpha < 0.05) return;
-		super.__enterFrame(t);
-		bgSprite.alpha = debugAlpha * 0.5;
-
-		x = #if mobile FlxG.game.x + #end 10 + offset.x;
-		y = #if mobile FlxG.game.y + #end 2 + offset.y;
-
-		var width = Math.max(fpsCounter.width, #if SHOW_BUILD_ON_FPS Math.max(memoryCounter.width, codenameBuildField.width) #else memoryCounter.width #end) + (x*2);
-		var height = #if SHOW_BUILD_ON_FPS codenameBuildField.y + codenameBuildField.height #else memoryCounter.y + memoryCounter.height #end;
-		bgSprite.x = -x;
-		bgSprite.y = offset.x;
-		bgSprite.scaleX = width;
-		bgSprite.scaleY = height;
-
-		var selectable = debugMode == 2;
-		{  // idk i tried to make it more lookable:sob:  - Nex
-			memoryCounter.memoryText.selectable = memoryCounter.memoryPeakText.selectable =
-			fpsCounter.fpsNum.selectable = fpsCounter.fpsLabel.selectable =
-			#if SHOW_BUILD_ON_FPS codenameBuildField.selectable = #end selectable;
+		while (times[0] < currentTime - 1000)
+		{
+			times.shift();
 		}
 
-		var y:Float = height + 4;
-		for(c in categories) {
-			c.title.selectable = c.text.selectable = selectable;
-			c.alpha = debugAlpha;
-			c.x = FlxMath.lerp(-c.width - offset.x, 0, debugAlpha);
-			c.y = y;
-			y = c.y + c.height + 4;
-		}
-	}
+		var currentCount = times.length;
+		currentFPS = Math.round((currentCount + cacheCount) / 2);
 
-	#if mobile
+		if (currentCount != cacheCount && fpsText.visible)
+			fpsText.text = "FPS: " + currentFPS;
+
+		cacheCount = currentCount;
+  }
+
 	public inline function setScale(?scale:Float){
 		if(scale == null)
 			scale = Math.min(FlxG.stage.window.width / FlxG.width, FlxG.stage.window.height / FlxG.height);
 		scaleX = scaleY = #if android (scale > 1 ? scale : 1) #else (scale < 1 ? scale : 1) #end;
 	}
-	#end
+
+  private function initVars():Void {
+		offset = FlxPoint.get();
+		
+    currentFPS = 0;
+    cacheCount = 0;
+    currentTime = 0.;
+    times = [];
+  }
 }

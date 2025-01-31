@@ -19,12 +19,19 @@ class DebugPrint extends Sprite {
 	public var downscroll:Bool;
 
 	public var textFormat:TextFormat;
+	public var outline:OUTLINE;
 
 	private var hangju:Float = 2;
 
 	public function new(textFormat:TextFormat, ?downScroll = false) {
 		super();
 
+		outline = new OUTLINE({
+			size: 0.075,
+			color: 0xFFA50000
+		});
+		//this.filters = [new ShaderFilter(outline)];
+		
 		downscroll = downScroll;
 		this.textFormat = textFormat;
 	}
@@ -45,11 +52,9 @@ class DebugPrint extends Sprite {
     }
 
 	public override function addChild(child:DisplayObject):DisplayObject {
-		var outlineShader = new OUTLINE();
-		child.filters = [new ShaderFilter(outlineShader)];
-		
 		if(child is DebugText) {
 			var realChild = cast(child, DebugText);
+			//this.filters = [new ShaderFilter(outline)];
 
 			realChild.lastTime = Lib.getTimer();
             realChild.y = this.downscroll ? FlxG.stage.stageHeight - realChild.height : 0;
@@ -59,6 +64,12 @@ class DebugPrint extends Sprite {
 		}
 		
 		return super.addChild(child);
+	}
+	
+	public override function removeChild(child:DisplayObject):DisplayObject {
+		//this.filters = [new ShaderFilter(outline)];
+		
+		return super.removeChild(child);
 	}
 
 	private function updateChildrenPos(child:DebugText):Void {

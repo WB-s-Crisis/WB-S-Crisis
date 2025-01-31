@@ -100,7 +100,7 @@ class TreeMenu extends UIState {
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
 		
-		Framerate.offset.y = pathBG.height;
+		Framerate.instance.offset.y = pathBG.height;
 
 		// in case path gets so long it goes offscreen
 		pathLabel.x = lerp(pathLabel.x, Math.max(0, FlxG.width - 4 - pathLabel.width), 0.125);
