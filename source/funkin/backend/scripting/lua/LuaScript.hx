@@ -23,7 +23,7 @@ class LuaScript extends FlxBasic {
   private var wrapper:LuaWrapper = null;
 
   public function new(path:String) {
-    rawPath = path
+    rawPath = path;
     this.path = Paths.getFilenameFromLibFile(rawPath);
     fileName = Path.withoutDirectory(path);
     super();
