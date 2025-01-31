@@ -28,9 +28,12 @@ class LuaScript extends FlxBasic {
         case "lua":
           if(Assets.exists(path)) {
             LuaL.dostring(state, Assets.getText(path));
+            lime.app.Application.current.window.alert("loaded ok");
           }else close();
         default: close();
     }
+
+    lime.app.Application.current.window.alert('lua version: ${Lua.version()}');
 
     Lua_helper.add_callback(state, "alert", function(text:String) {
       lime.app.Application.current.window.alert(text);
