@@ -1,3 +1,3 @@
 function test()
-    debugPrint("sbsbsbsbsbsbsbsbsbsbbsbsbsbsbsbbs");
+    alert("sbsbsbsbsbsbsbsbsbsbbsbsbsbsbsbbs");
 end
