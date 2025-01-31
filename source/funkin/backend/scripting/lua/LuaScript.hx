@@ -5,6 +5,8 @@ import Type.ValueType;
 import haxe.io.Path;
 import wrapper.LuaWrapper;
 
+import funkin.backend.scripting.lua.implements.BaseCallback;
+
 class LuaScript extends FlxBasic {
   public static var extension:Array<String> = ["lua", "qqqeb", "oranges"];
   
@@ -34,11 +36,14 @@ class LuaScript extends FlxBasic {
             code = Assets.getText(path);
           default:
             Logs.trace('this file \'${path}\' not support lua extension');
+            close();
       }
-    }
+    }else close();
 
     wrapper = new LuaWrapper();
     wrapper.loadLibs();
+
+    BaseCallback.implements(this);
   }
 
   public function load() {
