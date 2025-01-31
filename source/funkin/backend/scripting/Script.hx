@@ -152,6 +152,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
 				case "pack":
 					var arr = Assets.getText(path).split("________PACKSEP________");
 					fromString(arr[1], arr[0]);
+				default:
+				        new DummyScript(path);
 			}
 		}
 		return new DummyScript(path);
