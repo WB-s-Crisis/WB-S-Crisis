@@ -32,8 +32,8 @@ class LuaScript extends FlxBasic {
         default: close();
     }
 
-    Lua_helper.add_callback(state, "debugPrint", function(text:String, ?delayTime:Float = 1) {
-      Main.game.debugPrint(text, delayTime);
+    Lua_helper.add_callback(state, "alert", function(text:String) {
+      lime.app.Application.current.window.alert(text);
     });
     Lua.getglobal(state, "test");
     Lua.pcall(state, 0, 0, 0);
