@@ -13,15 +13,8 @@ class LuaScript extends FlxBasic {
     "versionJIT__LUA" => LuaWrapper.versionJIT
   ];
   
-  @:isVar public var path(get, never):String;
-  @:noCompletion private inline function get_path():String {
-    return Paths.getFilenameFromLibFile(rawPath);
-  }
-  
-  @:isVar public var fileName(get, never):String;
-  @:noCompletion private inline function get_fileName():String {
-    return Path.withoutDirectory(rawPath);
-  }
+  public var path:String;
+  public var fileName:String;
 
   private var rawPath:String;
   private var code:String;
@@ -30,9 +23,11 @@ class LuaScript extends FlxBasic {
   private var wrapper:LuaWrapper = null;
 
   public function new(path:String) {
+    rawPath = path
+    this.path = Paths.getFilenameFromLibFile(rawPath);
+    fileName = Path.withoutDirectory(path);
     super();
-    
-    rawPath = path;
+
     wrapper = new LuaWrapper();
 
     onCreate(path);
