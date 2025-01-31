@@ -27,16 +27,16 @@ class LuaScript extends FlxBasic {
     switch(Path.extension(path)) {
         case "lua":
           if(Assets.exists(path)) {
-            Lua.dostring(state, Assets.getText(path));
+            LuaL.dostring(state, Assets.getText(path));
           }else close();
         default: close();
     }
 
-    Lua_helper.add_callback(state, debugPrint, function(text:String, ?delayTime:Float = 1) {
+    Lua_helper.add_callback(state, "debugPrint", function(text:String, ?delayTime:Float = 1) {
       Main.game.debugPrint(text, delayTime);
     });
-    Lua.getGlobal(state, "test");
-    Lua.pcall(lua, 3, 0, 1);
+    Lua.getglobal(state, "test");
+    Lua.pcall(state, 3, 0, 1);
 
     close();
   }
