@@ -4,7 +4,6 @@ package funkin.backend.scripting.lua;
 import Type.ValueType;
 import haxe.io.Path;
 import wrapper.LuaWrapper;
-import funkin.backend.scripting.lua.implements.*;
 
 class LuaScript extends FlxBasic {
   public static var extension:Array<String> = ["lua", "qqqeb", "oranges"];
