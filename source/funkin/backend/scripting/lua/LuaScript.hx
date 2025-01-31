@@ -9,8 +9,8 @@ class LuaScript extends FlxBasic {
   public static var baseVariables:Map<String, Dynamic> = [
     "debugPrint" => Main.game.debugPrint,
     "alert" => lime.app.Application.current.window.alert,
-    "__version__" => LuaWrapper.version,
-    "__versionJIT__" => LuaWrapper.versionJIT
+    "version__LUA" => LuaWrapper.version,
+    "versionJIT__LUA" => LuaWrapper.versionJIT
   ];
   
   @:isVar public var path(get, never):String;
@@ -70,14 +70,18 @@ class LuaScript extends FlxBasic {
     }else close();
   }
 
-  public function call(funcName:String, ?args:Array<Dynamic>, ?ret:Bool = false) {
-    if(wrapper == null) return;
+  public function call(funcName:String, ?args:Array<Dynamic>, ?ret:Bool = false):Dynamic {
+    if(wrapper == null) return null;
     
     if(args == null || args == []) {
-      return wrapper.callFunction(funcName, ret);
+      if(ret) return wrapper.callFunction(funcName, ret);
+      wrapper.callFunction(funcName, ret);
     }else {
-      return wrapper.callFunction_ArrayArgs(funcName, args, ret);
+      if(ret) return wrapper.callFunction_ArrayArgs(funcName, args, ret);
+      wrapper.callFunction_ArrayArgs(funcName, args, ret);
     }
+
+    return null;
   }
 
   /**
