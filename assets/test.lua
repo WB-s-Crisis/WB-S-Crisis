@@ -1,3 +1,1 @@
-function test()
-    alert("sbsbsbsbsbsbsbsbsbsbbsbsbsbsbsbbs");
-end
+alert("114514")
