@@ -1,5 +1,5 @@
 package funkin.backend.scripting.lua;
-
+#if LUAState
 import haxe.io.Path;
 
 import llua.*;
@@ -47,3 +47,4 @@ class LuaScript extends FlxBasic {
     Lua.close(state);
   }
 }
+#end
