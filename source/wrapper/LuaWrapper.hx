@@ -1,10 +1,10 @@
 package wrapper;
 
 #if LUAState
-import lua.Lua;
-import lua.LuaL;
-import lua.State;
-import lua.Convert;
+import llua.Lua;
+import llua.LuaL;
+import llua.State;
+import llua.Convert;
 import wrapper.LDebug;
 
 class LuaWrapper {
