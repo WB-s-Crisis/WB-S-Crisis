@@ -1,5 +1,6 @@
 package wrapper;
 
+#if LUAState
 import llua.Lua;
 import llua.LuaL;
 import llua.State;
@@ -14,4 +15,4 @@ extern class LDebug {
     static inline function luaTrace(l:State) : Void {}
     
 }
-
+#end
