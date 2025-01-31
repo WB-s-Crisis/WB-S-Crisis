@@ -35,10 +35,6 @@ class LuaScript extends FlxBasic {
     Lua_helper.add_callback(state, "alert", function(text:String) {
       lime.app.Application.current.window.alert(text);
     });
-    Lua.getglobal(state, "test");
-    Lua.pcall(state, 0, 0, 0);
-
-    close();
   }
 
   public function close():Void {
