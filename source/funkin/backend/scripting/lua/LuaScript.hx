@@ -14,6 +14,7 @@ class LuaScript extends FlxBasic {
   private var rawPath:String;
   private var code:String;
   private var isLoaded:Bool = false;
+  private var isClosed:Bool = false;
 
   private var wrapper:LuaWrapper = null;
 
@@ -22,8 +23,6 @@ class LuaScript extends FlxBasic {
     this.path = Paths.getFilenameFromLibFile(rawPath);
     fileName = Path.withoutDirectory(path);
     super();
-
-    wrapper = new LuaWrapper();
 
     onCreate(path);
   }
@@ -37,6 +36,9 @@ class LuaScript extends FlxBasic {
             Logs.trace('this file \'${path}\' not support lua extension');
       }
     }
+
+    wrapper = new LuaWrapper();
+    wrapper.loadLibs();
   }
 
   public function load() {
@@ -45,14 +47,13 @@ class LuaScript extends FlxBasic {
     if(!isLoaded) execute();
   }
 
-  public function execute(?isClosed:Bool = true) {
+  public function execute() {
     if(wrapper == null) return;
 
     if(code != null) {
       call("new");
       wrapper.execute(code);
 
-      if(isClosed) close();
     }else close();
   }
 
@@ -121,6 +122,7 @@ class LuaScript extends FlxBasic {
     if(wrapper == null) return;
 
     wrapper.close();
+    isClosed = true;
     if(isDestroyed) destroy();
   }
 
