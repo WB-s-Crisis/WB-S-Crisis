@@ -1,0 +1,3 @@
+*.hxs linguist-language=Haxe
+*.hsc linguist-language=Haxe
+*.hscript linguist-language=Haxe
