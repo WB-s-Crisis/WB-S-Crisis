@@ -89,7 +89,7 @@ function create() {
     versionSh_t.y -= versionSh_t.height;
     add(versionSh_t);
 
-    var versionSh_t:FunkinText = new FunkinText(590, FlxG.height - 20, 0, 'WB,s Crisis V1');
+    var versionSh_t:FunkinText = new FunkinText(590, FlxG.height - 20, 0, 'WB,s Crisis V0.5');
     versionSh_t.scrollFactor.set();
     versionSh_t.y -= versionSh_t.height;
     add(versionSh_t);
