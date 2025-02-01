@@ -68,9 +68,9 @@ function postCreate() {
     	event.preventStrumGlow();
     	
     	health -= switch(SONG.meta.name.toLowerCase()) {
-    		case "friendship broken": health > 0.00500001 ? 0.005 : 0;
-    		case "bloody scissors": health > 0.0150000001 ? 0.015 : 0;
-    		case "he died unjustly": health > 0.0300088880011 ? 0.03 : 0;
+    		case "friendship broken": health > 0.45 ? 0.005 : 0;
+    		case "bloody scissors": health > 0.45 ? 0.015 : 0;
+    		case "he died unjustly": health > 0.45 ? 0.022 : 0;
     		default: 0;
     	};
     	
