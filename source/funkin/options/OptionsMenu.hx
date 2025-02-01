@@ -26,11 +26,13 @@ class OptionsMenu extends TreeMenu {
 			desc: 'Change Appearance options such as Flashing menus...',
 			state: AppearanceOptions
 		},
+		#if mobile
 		{
 			name: 'Mobile Options >',
 			desc: 'Change Options Related To Mobile & Touch Controls',
 			state: MobileOptions
 		},
+		#end
 		{
 			name: 'Miscellaneous >',
 			desc: 'Use this menu to reset save data or engine settings.',
