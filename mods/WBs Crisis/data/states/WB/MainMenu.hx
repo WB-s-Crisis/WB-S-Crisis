@@ -235,3 +235,18 @@ function switchState() {
 			FlxG.switchState(new CreditsMain());
 	}
 }
+
+function beatHit()
+	{
+		logoBump();
+	}
+	
+function logoBump()
+	{
+		if (logo != null)
+		{
+			logo.scale.set(0.32, 0.32);
+			FlxTween.cancelTweensOf(logo);
+			FlxTween.tween(logo, {"scale.x": 0.3, "scale.y": 0.3}, 0.28, {});
+		}
+	}
