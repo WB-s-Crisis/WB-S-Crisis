@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="mainmenu.png" width="586" height="240">
+  <SubTexture name="donate white0000" x="297" y="0"  width="289" height="60" frameX="-2" frameY="-0" frameWidth="300" frameHeight="60"/>
+  <SubTexture name="donate basic0000" x="0" y="60"  width="289" height="60" frameX="-2" frameY="-0" frameWidth="300" frameHeight="60"/>
+  <SubTexture name="freeplay white0000" x="289" y="60"  width="289" height="60" frameX="-2" frameY="-0" frameWidth="300" frameHeight="60"/>
+  <SubTexture name="freeplay basic0000" x="0" y="120"  width="289" height="60" frameX="-2" frameY="-0" frameWidth="300" frameHeight="60"/>
+  <SubTexture name="options white0000" x="289" y="120"  width="289" height="60" frameX="-2" frameY="-0" frameWidth="300" frameHeight="60"/>
+  <SubTexture name="options basic0000" x="0" y="180"  width="289" height="60" frameX="-2" frameY="-0" frameWidth="300" frameHeight="60"/>
+  <SubTexture name="story mode white0000" x="0" y="0"  width="297" height="60" frameX="-2" frameY="-0" frameWidth="300" frameHeight="60"/>
+  <SubTexture name="story mode basic0000.png" x="289" y="180"  width="289" height="60" frameX="-2" frameY="-0" frameWidth="300" frameHeight="60"/>
+</TextureAtlas>
