@@ -1,0 +1,13 @@
+<!DOCTYPE codename-engine-character>
+<character x="-250" y="100" sprite="hnbf" scale="0.65" flipX="true" isPlayer="true" icon="hnbf" color="#51CDE1">
+	<anim name="idle" anim="idle" x="0" y="0" fps="24" loop="false"/>
+	<anim name="singLEFT" anim="left" x="0" y="0" fps="24" loop="false"/>
+	<anim name="singRIGHT" anim="right" x="0" y="0" fps="24" loop="false"/>
+	<anim name="singUP" anim="up" x="0" y="0" fps="24" loop="false"/>
+	<anim name="singDOWN" anim="down" x="0" y="0" fps="24" loop="false"/>
+	<anim name="hey" anim="hey" x="0" y="0" fps="24" loop="false"/>
+	<anim name="singLEFTmiss" anim="missLeft" x="0" y="0" fps="24" loop="false" indices="1,1,2,2,2,2,2,2,2,2,2,2,2"/>
+	<anim name="singDOWNmiss" anim="missDown" x="0" y="0" fps="24" loop="false" indices="1,1,2,2,2,2,2,2,2,2,2,2,2,2,2"/>
+	<anim name="singUPmiss" anim="missUp" x="0" y="0" fps="24" loop="false" indices="1,1,2,2,2,2,2,2,2,2,2,2,2,2,2"/>
+	<anim name="singRIGHTmiss" anim="missRight" x="0" y="0" fps="24" loop="false" indices="1,1,2,2,2,2,2,2,2,2,2,2,2,2,2"/>
+</character>
