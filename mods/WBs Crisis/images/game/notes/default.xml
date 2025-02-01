@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="default.png" width="3028" height="2048">
+  <SubTexture name="down confirm0001.png" x="0" y="0"  width="480" height="480" frameX="-0" frameY="-0" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="down confirm0002.png" x="0" y="480"  width="480" height="480" frameX="-0" frameY="-0" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="left confirm0003.png" x="0" y="960"  width="480" height="480" frameX="-0" frameY="-0" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="right confirm0000.png" x="0" y="1440"  width="480" height="480" frameX="-0" frameY="-0" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="blue hold end0000.png" x="0" y="1920"  width="57" height="51" frameX="-0" frameY="-0" frameWidth="57" frameHeight="57"/>
+  <SubTexture name="green hold end0000.png" x="0" y="1971"  width="57" height="51" frameX="-0" frameY="-0" frameWidth="57" frameHeight="57"/>
+  <SubTexture name="pruple end hold0000.png" x="57" y="1920"  width="57" height="51" frameX="-0" frameY="-0" frameWidth="57" frameHeight="57"/>
+  <SubTexture name="red hold end0000.png" x="57" y="1971"  width="57" height="51" frameX="-0" frameY="-0" frameWidth="57" frameHeight="57"/>
+  <SubTexture name="right confirm0001.png" x="480" y="0"  width="480" height="480" frameX="-0" frameY="-0" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="right confirm0002.png" x="480" y="480"  width="480" height="480" frameX="-0" frameY="-0" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="right confirm0003.png" x="480" y="960"  width="480" height="480" frameX="-0" frameY="-0" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="up confirm0001.png" x="480" y="1440"  width="480" height="480" frameX="-0" frameY="-0" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="down confirm0003.png" x="960" y="0"  width="478" height="480" frameX="-2" frameY="-0" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="up confirm0002.png" x="960" y="480"  width="453" height="480" frameX="-4" frameY="-0" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="left confirm0001.png" x="960" y="960"  width="480" height="473" frameX="-0" frameY="-0" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="left confirm0002.png" x="1413" y="480"  width="480" height="464" frameX="-0" frameY="-0" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="down confirm0000.png" x="1438" y="0"  width="446" height="461" frameX="-7" frameY="-0" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="up confirm0003.png" x="1884" y="0"  width="420" height="460" frameX="-32" frameY="-20" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="left confirm0000.png" x="960" y="1433"  width="470" height="459" frameX="-10" frameY="-9" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="purple0000.png" x="960" y="1892"  width="163" height="153" frameX="-19" frameY="-26" frameWidth="200" frameHeight="200"/>
+  <SubTexture name="red0000.png" x="1123" y="1892"  width="163" height="153" frameX="-18" frameY="-26" frameWidth="200" frameHeight="200"/>
+  <SubTexture name="up confirm0000.png" x="1430" y="1433"  width="453" height="453" frameX="-22" frameY="-14" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="blue0000.png" x="1430" y="1886"  width="152" height="161" frameX="-24" frameY="-17" frameWidth="200" frameHeight="200"/>
+  <SubTexture name="green0000.png" x="1582" y="1886"  width="152" height="161" frameX="-24" frameY="-22" frameWidth="200" frameHeight="200"/>
+  <SubTexture name="arrowDOWN0000.png" x="1440" y="944"  width="296" height="313" frameX="-92" frameY="-87" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="arrowUP0000.png" x="1736" y="944"  width="296" height="313" frameX="-92" frameY="-80" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="arrowLEFT0000.png" x="1893" y="460"  width="314" height="297" frameX="-83" frameY="-88" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="arrowRIGHT0000.png" x="2304" y="0"  width="314" height="297" frameX="-83" frameY="-88" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="left press0000.png" x="2618" y="0"  width="298" height="281" frameX="-91" frameY="-96" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="blue hold piece0000.png" x="2916" y="0"  width="57" height="197" frameX="-0" frameY="-0" frameWidth="57" frameHeight="197"/>
+  <SubTexture name="green hold piece0000.png" x="2916" y="197"  width="57" height="197" frameX="-0" frameY="-0" frameWidth="57" frameHeight="197"/>
+  <SubTexture name="right press0000.png" x="2618" y="281"  width="298" height="281" frameX="-91" frameY="-96" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="left press0001.png" x="2304" y="394"  width="286" height="271" frameX="-97" frameY="-101" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="purple hold piece0000.png" x="2207" y="460"  width="57" height="197" frameX="-0" frameY="-0" frameWidth="57" frameHeight="197"/>
+  <SubTexture name="red hold piece0000.png" x="2207" y="657"  width="57" height="197" frameX="-0" frameY="-0" frameWidth="57" frameHeight="197"/>
+  <SubTexture name="right press0001.png" x="2590" y="562"  width="286" height="271" frameX="-97" frameY="-101" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="down press0000.png" x="2264" y="665"  width="280" height="297" frameX="-100" frameY="-95" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="up press0000.png" x="2544" y="833"  width="280" height="297" frameX="-100" frameY="-88" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="down press0001.png" x="2544" y="1130"  width="270" height="285" frameX="-105" frameY="-101" frameWidth="480" frameHeight="480"/>
+  <SubTexture name="up press0001.png" x="2544" y="1415"  width="270" height="285" frameX="-105" frameY="-94" frameWidth="480" frameHeight="480"/>
+</TextureAtlas>
