@@ -1,0 +1,21 @@
+{
+	"beatsPerMeasure": 4,
+	"opponentModeAllowed": false,
+	"coopAllowed": false,
+	"stepsPerBeat": 4,
+	"bpm": 100,
+	"difficulties": [
+		"TOM"
+	],
+	"needsVoices": true,
+	"parsedColor": -12368550,
+	"displayName": "bloody scissors",
+	"icon": "tom",
+	"name": "bloody scissors",
+	"color": "#43455A",
+	"customValues": {
+		"iconAnimated": true,
+		"iconScale": 1.25,
+		"iconOffset": [-25, -95]
+	}
+}
