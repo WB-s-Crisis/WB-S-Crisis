@@ -108,7 +108,7 @@ class AddonsManager {
 
 							if(script.interp.customClasses.exists(sp)) {
 								addonsScripts.add(script);
-								sb.set(sp, script.customClasses.get(sp));
+								sb.set(sp, script.interp.customClasses.get(sp));
 							}else {
 								Application.current.window.alert("不能只导入文件，需要准确的类，或者你可以添加\".*\"来导入此文件的所有类");
 							}
