@@ -43,7 +43,7 @@ class AddonsManager {
 				}
 			
 				if(scWithoutExtension.contains(split[0])) {
-					var script = Script.create(Paths.script("addons/" + split[0]));
+					var script:HScript = Script.create(Paths.script("addons/" + split[0]));
 					script.load();
 				
 					if(script.interp.customClasses.exists(split[0])) {
@@ -75,7 +75,7 @@ class AddonsManager {
 					if(isLockingFile) {
 						var rawPath = curPath;
 					
-						var script = Script.create(Paths.script(rawPath));
+						var script:HScript = Script.create(Paths.script(rawPath));
 						script.load();
 					
 						if(split.length - 1 - i > 1) {
@@ -103,7 +103,7 @@ class AddonsManager {
 					
 						if(i == split.length - 1) {
 							var rawPath = curPath;
-							var script = Script.create(Paths.script(rawPath));
+							var script:HScript = Script.create(Paths.script(rawPath));
 							script.load();
 						
 							if(script.interp.customClasses.exists(sp)) {
@@ -145,7 +145,7 @@ class AddonsManager {
 			var i:Int = -1;
 			while(i < addonsScripts.scripts.length - 1) {
 				i++;
-				addonsScript.pop();
+				addonsScripts.pop();
 			}
 		}
 	}
