@@ -43,10 +43,9 @@ class AddonsManager {
 				}
 			
 				if(scWithoutExtension.contains(split[0])) {
-					var script = Script.create(Paths.script("addons/" + split[0]));
+					var script = cast(Script.create(Paths.script("addons/" + split[0])), HScript);
 					script.load();
 
-					if(script is HScript)
 					if(script.interp.customClasses.exists(split[0])) {
 						addonsScripts.add(script);
 						sb.set(split[0], script.interp.customClasses.get(split[0]));
@@ -76,15 +75,14 @@ class AddonsManager {
 					if(isLockingFile) {
 						var rawPath = curPath;
 					
-						var script = Script.create(Paths.script(rawPath));
+						var script = cast(Script.create(Paths.script(rawPath)), HScript);
 						script.load();
 					
 						if(split.length - 1 - i > 1) {
 							Application.current.window.alert("仅支持导入类，不能再导入类里的东西");
 						}else {
 							addonsScripts.add(script);
-
-							if(script is HScript)
+							
 							if(script.interp.customClasses.exists(sp)) {
 								sb.set(sp, script.interp.customClasses.get(sp));
 							}else if(sp == "*") {
@@ -105,10 +103,9 @@ class AddonsManager {
 					
 						if(i == split.length - 1) {
 							var rawPath = curPath;
-							var script = Script.create(Paths.script(rawPath));
+							var script = cast(Script.create(Paths.script(rawPath)), HScript);
 							script.load();
 
-							if(script is HScript)
 							if(script.interp.customClasses.exists(sp)) {
 								addonsScripts.add(script);
 								sb.set(sp, script.customClasses.get(sp));
@@ -148,7 +145,7 @@ class AddonsManager {
 			var i:Int = -1;
 			while(i < addonsScripts.scripts.length - 1) {
 				i++;
-				addonsScripts.pop();
+				addonsScripts.scripts.pop();
 			}
 		}
 	}
