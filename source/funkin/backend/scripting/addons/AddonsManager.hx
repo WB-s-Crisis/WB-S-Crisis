@@ -5,7 +5,11 @@ import funkin.backend.scripting.Script;
 import flixel.util.FlxDestroyUtil;
 import funkin.backend.assets.ModsFolder;
 import lime.app.Application;
+import haxe.io.Path;
 
+/**
+ * 这依托你爱看吗？
+ */
 class AddonsManager {
 	private static var addonsScripts:ScriptPack;
 	
