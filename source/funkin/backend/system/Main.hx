@@ -179,7 +179,7 @@ class Main extends Sprite
 
 		ModsFolder.init();
 		#if MOD_SUPPORT
-		ModsFolder.switchMod("WBs Crisis");
+		ModsFolder.switchMod(modToLoad.getDefault(Options.lastLoadedMod));
 		#end
 
 		initTransition();
