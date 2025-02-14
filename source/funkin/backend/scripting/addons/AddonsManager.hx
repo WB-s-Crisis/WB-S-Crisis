@@ -143,7 +143,7 @@ class AddonsManager {
 		if(addonsScripts.scripts.length > 0) {
 			var i:Int = -1;
 			while(i < addonsScripts.scripts.length - 1) {
-				var i++;
+				i++;
 				addonsScript.pop();
 			}
 		}
