@@ -2,6 +2,7 @@ package funkin.backend.scripting.addons;
 
 import funkin.backend.scripting.ScriptPack;
 import funkin.backend.scripting.Script;
+import funkin.backend.scripting.HScript;
 import flixel.util.FlxDestroyUtil;
 import funkin.backend.assets.ModsFolder;
 import lime.app.Application;
@@ -20,7 +21,7 @@ class AddonsManager {
 		#end
 	}
 	
-	public static function importScriptAddons(addonsPath:String, sb:Script) {
+	public static function importScriptAddons(addonsPath:String, sb:HScript) {
 		if(addonsScripts == null) return;
 		
 		var split:Array<String> = addonsPath.split(".");
