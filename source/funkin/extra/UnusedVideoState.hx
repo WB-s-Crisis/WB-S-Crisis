@@ -136,7 +136,7 @@ class UnusedVideoState extends FlxState {
 			this.callbackOptions.onFinish(this);
 		}
 		
-		if(skipText.alpha != 0)
+		if(skipText.alpha != 0) {
 			for(sb in [skipText, video]) {
 				FlxTween.tween(sb, {alpha: 0}, 0.75, {onComplete: function(tween:FlxTween) {
 					new FlxTimer().start(1.2, function(tmr:FlxTimer) {
@@ -148,7 +148,7 @@ class UnusedVideoState extends FlxState {
 			FlxTween.num(100, 0, 0.75, function(val:Float) {
 				video.bitmap.volume = Math.floor(val);
 			});
-		else {
+		}else {
 			new FlxTimer().start(1.2, function(tmr:FlxTimer) {
 				FlxG.switchState(nextState);
 			});
