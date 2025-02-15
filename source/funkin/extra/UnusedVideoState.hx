@@ -1,7 +1,7 @@
 package funkin.extra;
 
 import flixel.FlxState;
-import hxvlc.flixel.Video;
+import hxvlc.openfl.Video;
 import hxvlc.flixel.FlxVideoSprite;
 import flixel.util.FlxTimer;
 
