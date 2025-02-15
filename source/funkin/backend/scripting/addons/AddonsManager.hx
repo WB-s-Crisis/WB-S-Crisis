@@ -58,10 +58,7 @@ class AddonsManager {
 			
 				if(sd.contains(split[0])) {
 					Application.current.window.alert("不能只导入目录，你需要指定一份确切的脚本文件");
-					return;
 				}
-
-				Application.current.window.alert('不存在此文件或目录"${split[0]}"');
 			}else {
 				var isLockingFile:Bool = false;
 				var curPath = "addons";
