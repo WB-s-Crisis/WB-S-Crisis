@@ -52,7 +52,7 @@ class UnusedVideoState extends FlxState {
 			}
 		});
 	
-		if(video.load(Paths.video("XSWL5")))
+		if(video.load(this.path))
 			new FlxTimer().start(this.startDelay, function(tmr:FlxTimer) {
 				video.play();
 			});
