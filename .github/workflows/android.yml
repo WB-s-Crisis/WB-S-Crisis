@@ -33,6 +33,10 @@ jobs:
       - name: Installing/Updating libraries
         run: |
           haxe -cp commandline -D analyzer-optimize --run Main setup -s --lib=./libs.mobile.xml
+      - name: copy hxvlc
+        #我需要这么做！！！
+        run: |
+          cp -r ./hxvlc/ ./.haxelib/hxvlc/1,9,3/source/hxvlc/
       - name: Configuring Android
         run: |
           haxelib run lime config ANDROID_SDK $ANDROID_HOME
