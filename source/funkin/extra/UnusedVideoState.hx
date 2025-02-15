@@ -19,7 +19,8 @@ class UnusedVideoState extends FlxState {
 			Reflect.setField(save.data, "canSkip", val);
 			save.flush();
 		}
-		
+
+		canSkip = val;
 		return val;
 	}
 	
