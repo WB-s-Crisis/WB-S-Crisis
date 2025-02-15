@@ -1,4 +1,4 @@
-name: Android Build
+name: AndroidBuild
 on:
   push:
     branches: [ main ]
