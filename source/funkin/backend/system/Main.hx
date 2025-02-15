@@ -136,6 +136,8 @@ class Main extends Sprite
 		ShaderResizeFix.init();
 		Logs.init();
 		Paths.init();
+		//我是废物
+		funkin.extra.UnusedVideoState.init();
 		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.init();
 		#end
