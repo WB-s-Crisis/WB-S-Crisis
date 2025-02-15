@@ -170,7 +170,7 @@ class FlxVideo extends Video
 	}
 
 	@:noCompletion
-	private override function update(deltaTime:Int):Void
+	private override function update(deltaTime:Float):Void
 	{
 		if ((autoResizeMode.x || autoResizeMode.y) && bitmapData != null)
 		{
