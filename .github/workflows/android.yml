@@ -32,7 +32,6 @@ jobs:
             cache-build-android
       - name: Installing/Updating libraries
         run: |
-          haxelib remove hxvlc
           haxe -cp commandline -D analyzer-optimize --run Main setup -s --lib=./libs.mobile.xml
       - name: Configuring Android
         run: |
