@@ -136,9 +136,12 @@ class Main extends Sprite
 		ShaderResizeFix.init();
 		Logs.init();
 		Paths.init();
+		//我是废物
+		funkin.extra.UnusedVideoState.init();
 		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.init();
 		#end
+		funkin.backend.scripting.addons.AddonsManager.init();
 
 		#if (sys && TEST_BUILD)
 			trace("Used cne test / cne build. Switching into source assets.");
@@ -179,7 +182,7 @@ class Main extends Sprite
 
 		ModsFolder.init();
 		#if MOD_SUPPORT
-		ModsFolder.switchMod("WBs Crisis");
+		ModsFolder.switchMod(modToLoad.getDefault(Options.lastLoadedMod));
 		#end
 
 		initTransition();

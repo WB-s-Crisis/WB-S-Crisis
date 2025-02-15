@@ -3,7 +3,7 @@
 	<!-- _________________________ Application Settings _________________________ -->
 	<app
 		title="Friday Night Funkin' - WB's Crisis" main="funkin.backend.system.Main"
-		file="WBsCrisisV0.5" packageName="com.myZYANG.WBsCrisis"
+		file="WBsCrisis" packageName="com.myZYANG.WBsCrisis"
 		package="com.myZYANG.WBsCrisis"
 		version="0.1.0" company="WBsCrisis Studio" />
 
