@@ -1084,7 +1084,7 @@ class Video extends Bitmap
 	}
 
 	@:noCompletion
-	private function update(deltaTime:Int):Void
+	private function update(deltaTime:Float):Void
 	{
 		eventsMutex.acquire();
 
@@ -1502,7 +1502,7 @@ class Video extends Bitmap
 	}
 
 	@:noCompletion
-	private override function __enterFrame(deltaTime:Int):Void {}
+	private override function __enterFrame(deltaTime:Float):Void {}
 
 	@:noCompletion
 	private override function set_bitmapData(value:BitmapData):BitmapData
