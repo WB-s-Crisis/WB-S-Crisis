@@ -79,7 +79,7 @@ class UnusedVideoState extends FlxState {
 			}
 			
 			if(canSkip) {
-				FlxTween.tween(skipText, {alpha: 1}, 0.25, {startDelay: 2.5, onComplete: function(tween:FlxTween) {
+				FlxTween.tween(skipText, {alpha: 1}, 0.25, {startDelay: 1.5, onComplete: function(tween:FlxTween) {
 					realCanSkip = true;
 				}});
 			}else canSkip = true;
@@ -92,11 +92,11 @@ class UnusedVideoState extends FlxState {
 	
 		add(video);
 		
-		skipText = new FlxText(0, 0, FlxG.width, "臭人机", 32);
-		skipText.setFormat(Paths.font("vcr.ttf"), 32, 0xFFFFFFFF, CENTER, OUTLINE, 0xFF6A0000);
+		skipText = new FlxText(0, 0, FlxG.width, "臭人机", 24);
+		skipText.setFormat(Paths.font("vcr.ttf"), #if mobile 24 #else 18 #end, 0xFFFFFFFF, CENTER, OUTLINE, 0xFF6A0000);
 		//skipText.screenCenter(FlxAxes.X);
-		skipText.y = 325;
-		skipText.borderSize = 4;
+		skipText.y = 520;
+		skipText.borderSize = 2;
 		skipText.alpha = 0;
 		skipText.text = #if TOUCH_CONTROLS 'Touch Screen To Skip' #else 'Press Enter To Skip' #end;
 		add(skipText);
