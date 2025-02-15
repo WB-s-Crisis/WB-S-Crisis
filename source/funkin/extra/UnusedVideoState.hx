@@ -40,6 +40,7 @@ class UnusedVideoState extends FlxState {
 	public var video:FlxVideoSprite;
 	var started:Bool = false;
 	var finished:Bool = false;
+	var preFinished:Bool = false;
 	
 	private var realCanSkip:Bool = false;
 	
@@ -95,7 +96,7 @@ class UnusedVideoState extends FlxState {
 		skipText = new FlxText(0, 0, FlxG.width, "臭人机", 24);
 		skipText.setFormat(Paths.font("vcr.ttf"), #if mobile 24 #else 18 #end, 0xFFFFFFFF, CENTER, OUTLINE, 0xFF6A0000);
 		//skipText.screenCenter(FlxAxes.X);
-		skipText.y = 520;
+		skipText.y = 615;
 		skipText.borderSize = 2;
 		skipText.alpha = 0;
 		skipText.text = #if TOUCH_CONTROLS 'Touch Screen To Skip' #else 'Press Enter To Skip' #end;
@@ -107,7 +108,7 @@ class UnusedVideoState extends FlxState {
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
 		
-		if(started && !finished) {
+		if(started && (!finished || !preFinished)) {
 			if(Reflect.hasField(this.callbackOptions, "onUpdate") && this.callbackOptions.onUpdate != null) {
 				this.callbackOptions.onUpdate(this, elapsed);
 			}
@@ -116,12 +117,14 @@ class UnusedVideoState extends FlxState {
 				#if TOUCH_CONTROLS
 				for(touch in FlxG.touches.list) {
 					if(touch.justPressed) {
+						preFinished = true;
 						finish();
 						realCanSkip = false;
 					}
 				}
 				#else
 				if(FlxG.keys.justPressed.ENTER) {
+					preFinished = true;
 					finish();
 					realCanSkip = false;
 				}
@@ -131,13 +134,14 @@ class UnusedVideoState extends FlxState {
 	}
 	
 	private function finish():Void {
-		finished = true;
-
-		if(Reflect.hasField(this.callbackOptions, "onFinish") && this.callbackOptions.onFinish != null) {
-			this.callbackOptions.onFinish(this);
-		}
+		if(!preFinished)
+		        finished = true;
 		
-		if(skipText.alpha != 0) {
+		if(preFinished) {
+			if(Reflect.hasField(this.callbackOptions, "onFinish") && this.callbackOptions.onFinish != null) {
+			        this.callbackOptions.onFinish(this);
+		        }
+			
 			for(sb in [skipText, video]) {
 				FlxTween.tween(sb, {alpha: 0}, 0.75, {onComplete: function(tween:FlxTween) {
 					new FlxTimer().start(1.2, function(tmr:FlxTimer) {
@@ -150,6 +154,10 @@ class UnusedVideoState extends FlxState {
 				video.bitmap.volume = Math.floor(val);
 			});
 		}else {
+			if(Reflect.hasField(this.callbackOptions, "onFinish") && this.callbackOptions.onFinish != null) {
+			        this.callbackOptions.onFinish(this);
+		        }
+			
 			new FlxTimer().start(1.2, function(tmr:FlxTimer) {
 				FlxG.switchState(nextState);
 			});
