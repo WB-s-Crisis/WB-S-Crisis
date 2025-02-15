@@ -15,7 +15,7 @@
 	<!-- Other Libraries -->
 	<git name="hscript-improved" url="https://github.com/CodenameCrew/hscript-improved" ref="custom-classes" />
 	<git name="flxanimate" url="https://github.com/CodenameCrew/cne-flxanimate" />
-	<lib name="hxvlc" version="1.9.3" skipDeps="true" />
+	<git name="hxvlc" url="https://github.com/VapireMox/hxvlc" />
 
 	<!-- Documentation and other features -->
 	<git name="away3d" url="https://github.com/CodenameCrew/away3d" />
