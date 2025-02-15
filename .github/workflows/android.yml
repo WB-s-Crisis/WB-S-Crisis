@@ -36,7 +36,8 @@ jobs:
       - name: copy hxvlc
         #我需要这么做！！！
         run: |
-          cp -R hxvlc/ .haxelib/hxvlc/1,9,3/source/hxvlc/
+          cp hxvlc/openfl/Video.hx .haxelib/hxvlc/1,9,3/source/hxvlc/openfl/
+          cp hxvlc/flixel/FlxVideo.hx .haxelib/hxvlc/1,9,3/source/hxvlc/flixel/
       - name: Configuring Android
         run: |
           haxelib run lime config ANDROID_SDK $ANDROID_HOME
