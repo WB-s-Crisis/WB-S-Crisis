@@ -36,7 +36,7 @@ jobs:
       - name: copy hxvlc
         #我需要这么做！！！
         run: |
-          cp home/runner/work/WB-s-Crisis/WB-s-Crisis/hxvlc/openfl/Video.hx home/runner/work/WB-s-Crisis/WB-s-Crisis/.haxelib/hxvlc/1,9,3/source/hxvlc/openfl/
+          cp ~/runner/work/WB-s-Crisis/WB-s-Crisis/hxvlc/openfl/Video.hx ~/runner/work/WB-s-Crisis/WB-s-Crisis/.haxelib/hxvlc/1,9,3/source/hxvlc/openfl/
       - name: Configuring Android
         run: |
           haxelib run lime config ANDROID_SDK $ANDROID_HOME
