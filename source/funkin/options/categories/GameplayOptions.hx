@@ -2,6 +2,7 @@ package funkin.options.categories;
 
 import flixel.util.FlxTimer;
 import funkin.backend.system.Conductor;
+import haxe.io.Path;
 
 class GameplayOptions extends OptionsScreen {
 	var __metronome = FlxG.sound.load(Paths.sound('editors/charter/metronome'));
@@ -9,6 +10,12 @@ class GameplayOptions extends OptionsScreen {
 	var offsetSetting:NumOption;
 
 	public override function new() {
+		var rawSplashArray = Paths.getFolderContent("data/splashes");
+		var splashArray = [];
+		for(goodPath in rawSplashArray) {
+			splashArray.push(Path.withoutExtension(goodPath));
+		}
+		
 		super("Gameplay", 'Change Gameplay options such as Downscroll, Scroll Speed, Naughtyness...', null, 'LEFT_FULL', 'A_B');
 		add(new Checkbox(
 			"Downscroll",
@@ -26,6 +33,13 @@ class GameplayOptions extends OptionsScreen {
 			1, // change
 			"songOffset", // save name or smth
 			__changeOffset)); // callback
+		add(new ArrayOption(
+			"Default Splash",
+			"Changes the Game Splash Skin",
+			splashArray,
+			splashArray,
+			"splashSkin"
+		));
 		add(new Checkbox(
 			"Naughtyness",
 			"If unchecked, will censor the Week 7 cutscenes.",
