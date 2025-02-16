@@ -34,7 +34,7 @@ class GameplayOptions extends OptionsScreen {
 			"songOffset", // save name or smth
 			__changeOffset)); // callback
 		add(new ArrayOption(
-			"Default Splash",
+			"Def Splash",
 			"Changes the Game Splash Skin",
 			splashArray,
 			splashArray,
