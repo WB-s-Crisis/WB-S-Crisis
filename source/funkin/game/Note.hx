@@ -56,7 +56,7 @@ class Note extends FlxSprite
 	/**
 	 * Name of the splash.
 	 */
-	public var splash:String = "default";
+	public var splash:String = Options.splashSkin;
 
 	public var strumID(get, never):Int;
 	private function get_strumID() {
