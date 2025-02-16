@@ -43,6 +43,7 @@ class UnusedVideoState extends FlxState {
 	var preFinished:Bool = false;
 	
 	private var realCanSkip:Bool = false;
+	private var autoVolumeHandle:Bool = false;
 	
 	var startDelay:Float = 0.001;
 
@@ -51,11 +52,12 @@ class UnusedVideoState extends FlxState {
 	
 	var nextState:FlxState;
 
-	public function new(path:String, nextState:FlxState, ?startDelay:Float = 0.001, ?callbackOptions:CallbackOptions) {
+	public function new(path:String, nextState:FlxState, ?startDelay:Float = 0.001, ?autoVolumeHandle:Bool = false, ?callbackOptions:CallbackOptions) {
 		super();
 		
 		this.path = path;
 		this.nextState = nextState;
+		this.autoVolumeHandle = autoVolumeHandle;
 		if(callbackOptions != null)
 			this.callbackOptions = callbackOptions;
 		
@@ -66,6 +68,7 @@ class UnusedVideoState extends FlxState {
 	public override function create() {
 		video = new FlxVideoSprite(0, 0);
 		video.antialiasing = true;
+		video.autoVolumeHandle = this.autoVolumeHandle;
 		video.bitmap.onFormatSetup.add(function() {
 			if(video.bitmap != null && video.bitmap.bitmapData != null) {
 				video.setGraphicSize(FlxG.width, FlxG.height);
