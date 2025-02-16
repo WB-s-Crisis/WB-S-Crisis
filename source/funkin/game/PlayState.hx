@@ -1577,16 +1577,30 @@ class PlayState extends MusicBeatState
 	}
 
 	public function registerSmoothTransition() {
-		smoothTransitionData = {
-			stage: curStage,
-			camX: FlxG.camera.scroll.x,
-			camY: FlxG.camera.scroll.y,
-			camFollowX: camFollow.x,
-			camFollowY: camFollow.y,
-			camZoom: FlxG.camera.zoom
-		};
-		MusicBeatState.skipTransIn = true;
-		MusicBeatState.skipTransOut = true;
+		var event:RegisterSmoothEvent = scripts.event("onRegisterSmoothTransition", EventManager.get(RegisterSmoothEvent).recycle(
+			{
+			        stage: curStage,
+			        camX: FlxG.camera.scroll.x,
+			        camY: FlxG.camera.scroll.y,
+			        camFollowX: camFollow.x,
+			        camFollowY: camFollow.y,
+			        camZoom: FlxG.camera.zoom
+		        },
+			true,
+			true
+		));
+
+		if(event.cancelled) return;
+		
+		smoothTransitionData = event.smoothTransition;
+
+		if(event.skipTransCancelled) {
+			MusicBeatState.skipTransIn = false;
+		        MusicBeatState.skipTransOut = false;
+		}else {
+		        MusicBeatState.skipTransIn = event.skipTransIn;
+		        MusicBeatState.skipTransOut = event.skipTransOut;
+		}
 	}
 
 	private inline function keyShit():Void
