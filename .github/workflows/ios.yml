@@ -32,6 +32,11 @@ jobs:
       - name: Installing/Updating libraries
         run: |
           haxe -cp commandline -D analyzer-optimize --run Main setup -s --lib=./libs.mobile.xml
+      - name: copy hxvlc
+        #我需要这么做！！！
+        run: |
+          cp hxvlc/openfl/Video.hx .haxelib/hxvlc/1,9,3/source/hxvlc/openfl/
+          cp hxvlc/flixel/FlxVideo.hx .haxelib/hxvlc/1,9,3/source/hxvlc/flixel/
       - name: Building the game
         run: haxelib run lime build ios -nosign
       - name: Clearing already existing cache
