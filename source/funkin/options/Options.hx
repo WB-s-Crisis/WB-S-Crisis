@@ -31,6 +31,7 @@ class Options
 	public static var lowMemoryMode:Bool = false;
 	public static var betaUpdates:Bool = false;
 	public static var splashesEnabled:Bool = true;
+	public static var splashSkin:String = "default";
 	public static var hitWindow:Float = 250;
 	public static var songOffset:Float = 0;
 	public static var framerate:Int = #if !mobile 120 #else 60 #end;
