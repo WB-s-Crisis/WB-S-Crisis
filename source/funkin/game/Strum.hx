@@ -70,10 +70,6 @@ class Strum extends FlxSprite {
 			if (lastHit + (Conductor.crochet / 2) < Conductor.songPosition && getAnim() == "confirm") {
 				playAnim("static");
 			}
-		}else if(PlayState.instance.cpuControlled) {
-			if (getAnim() == "confirm" && lastHit + animation.curAnim.numFrames * (1 / animation.curAnim.frameRate) < Conductor.songPosition) {
-				playAnim("static");
-			}
 		}
 	}
 
