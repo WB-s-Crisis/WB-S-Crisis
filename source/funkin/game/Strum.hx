@@ -71,7 +71,7 @@ class Strum extends FlxSprite {
 				playAnim("static");
 			}
 		}else if(PlayState.instance.cpuControlled) {
-			if (getAnim() == "confirm" && lastHit + animation.curAnim.numFrames * (1 / animation.curAnim.framerate) < Conductor.songPosition) {
+			if (getAnim() == "confirm" && lastHit + animation.curAnim.numFrames * (1 / animation.curAnim.frameRate) < Conductor.songPosition) {
 				playAnim("static");
 			}
 		}
