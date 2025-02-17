@@ -107,7 +107,7 @@ class StoryMenuState extends MusicBeatState {
 
 			for(e in week.difficulties) {
 				var le = e.toLowerCase();
-				if (difficultySprites[le] == null) {
+				if (!difficultySprites.exists(le) || difficultySprites[le] == null) {
 					var diffSprite = new FlxSprite(leftArrow.x + leftArrow.width, leftArrow.y);
 					diffSprite.loadAnimatedGraphic(Paths.image('menus/storymenu/difficulties/${le}'));
 					diffSprite.setUnstretchedGraphicSize(Std.int(rightArrow.x - leftArrow.x - leftArrow.width), Std.int(leftArrow.height), false, 1);
@@ -115,7 +115,7 @@ class StoryMenuState extends MusicBeatState {
 					diffSprite.scrollFactor.set();
 					add(diffSprite);
 
-					difficultySprites[le] = diffSprite;
+					difficultySprites.set(le, diffSprite);
 				}
 			}
 		}
