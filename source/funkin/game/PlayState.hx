@@ -140,6 +140,10 @@ class PlayState extends MusicBeatState
 		return val;
 	}
 	/**
+         * E.....
+         */
+	public var cpuControlled:Bool = false;
+	/**
 	 * Current scroll speed for all strums.
 	 * To set a scroll speed for a specific strum, use `strum.scrollSpeed`.
 	 */
