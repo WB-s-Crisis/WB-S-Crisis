@@ -72,6 +72,7 @@
 	<haxeflag name="--macro" value="funkin.backend.system.macros.NewHaxeWarning.warn()" />
 
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
+	<haxedef name="FLX_RENDER_TRIANGLE" />
 
 	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
