@@ -7,57 +7,59 @@ import openfl.text.TextFormat;
 import openfl.text.TextFieldAutoSize;
 import openfl.filters.ShaderFilter;
 import flixel.math.FlxPoint;
+import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 
 import lime.system.System as LimeSystem;
 
 class Framerate extends Sprite {
 	public static var instance:Framerate = null;
-  public static var fontName:String = Paths.font("Super Cartoon.ttf");
-  public static final os:String = 'OS Build: ${LimeSystem.platformName}[${LimeSystem.deviceVendor}(${LimeSystem.deviceModel})]-${LimeSystem.platformVersion}.';
+	public static var fontName:String = Paths.font("Super Cartoon.ttf");
+	public static final os:String = 'OS Build: ${(LimeSystem.platformName}[${LimeSystem.deviceVendor}(${LimeSystem.deviceModel})]-${LimeSystem.platformVersion}.';
 
 	public var offset:FlxPoint;
-  
+
 	public var fpsText:TextField = null;
-  public var osText:TextField = null;
-  
-  public var currentFPS:Int;
-  private var cacheCount:Int;
-  private var currentTime:Float;
-  private var times:Array<Float>;
+	public var osText:TextField = null;
 
-  public function new(?outline:Bool = true) {
-    super();
+	public var currentFPS:Int;
+	private var cacheCount:Int;
+	private var currentTime:Float;
+	private var times:Array<Float>;
 
-    initVars();
+	public function new(?outline:Bool = true) {
+		super();
 
-    fpsText = new TextField();
-    fpsText.defaultTextFormat = new TextFormat(fontName, 16, FlxColor.WHITE);
-    fpsText.autoSize = TextFieldAutoSize.LEFT;
+		initVars();
 
-    fpsText.text = "FPS: 0";
-    addChild(fpsText);
+		fpsText = new TextField();
+		fpsText.defaultTextFormat = new TextFormat(fontName, 16, FlxColor.WHITE);
+		fpsText.autoSize = TextFieldAutoSize.LEFT;
 
-    osText = new TextField();
-    osText.defaultTextFormat = new TextFormat(fontName, 16, FlxColor.WHITE);
-    osText.autoSize = TextFieldAutoSize.LEFT;
-    osText.y = fpsText.height + 2;
+		fpsText.text = "FPS: 0";
+		addChild(fpsText);
 
-    osText.text = os;
-    addChild(osText);
+		osText = new TextField();
+		osText.defaultTextFormat = new TextFormat(fontName, 16, FlxColor.WHITE);
+		osText.autoSize = TextFieldAutoSize.LEFT;
+		osText.y = fpsText.height + 2;
 
-    if(outline) {
-      this.filters = [new ShaderFilter(new OUTLINE({
-	      size: 0.07,
-	      color: 0xFF6A0000
-      }))];
-    }
+		final dddd:String = os.replace("null", "*NoResults");
+		osText.text = dddd;
+		addChild(osText);
+
+		if(outline) {
+			this.filters = [new ShaderFilter(new OUTLINE({
+				size: 0.07,
+				color: 0xFF6A0000
+			}))];
+		}
 
 		instance = this;
-  }
+	}
 
-  override function __enterFrame(deltaTime:Float) {
-    currentTime += deltaTime;
+	override function __enterFrame(deltaTime:Float) {
+		currentTime += deltaTime;
 		times.push(currentTime);
 
 		this.x = #if mobile 75 + #end offset.x;
@@ -72,10 +74,10 @@ class Framerate extends Sprite {
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
 
 		if (currentCount != cacheCount && fpsText.visible)
-			fpsText.text = "FPS: " + currentFPS;
+			fpsText.text = "FPS: " + FlxMath.bound(currentFPS, 0, FlxG.drawFramerate);
 
 		cacheCount = currentCount;
-  }
+	}
 
 	public inline function setScale(?scale:Float){
 		if(scale == null)
@@ -83,12 +85,12 @@ class Framerate extends Sprite {
 		scaleX = scaleY = #if android (scale > 1 ? scale : 1) #else (scale < 1 ? scale : 1) #end;
 	}
 
-  private function initVars():Void {
+	private function initVars():Void {
 		offset = FlxPoint.get();
 		
-    currentFPS = 0;
-    cacheCount = 0;
-    currentTime = 0.;
-    times = [];
-  }
+		currentFPS = 0;
+		cacheCount = 0;
+		currentTime = 0.;
+		times = [];
+	}
 }
