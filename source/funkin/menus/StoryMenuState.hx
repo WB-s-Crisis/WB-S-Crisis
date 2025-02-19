@@ -136,8 +136,8 @@ class StoryMenuState extends MusicBeatState {
 		addVirtualPad('LEFT_FULL', 'A_B');
 	}
 	
-	public override function postCreate() {
-		super.postCreate();
+	public override function createPost() {
+		super.createPost();
 		Framerate.instance.offset.y = weekBG.y;
 	}
 
