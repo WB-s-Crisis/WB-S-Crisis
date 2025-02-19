@@ -15,7 +15,7 @@ import lime.system.System as LimeSystem;
 class Framerate extends Sprite {
 	public static var instance:Framerate = null;
 	public static var fontName:String = Paths.font("Super Cartoon.ttf");
-	public static final os:String = 'OS Build: ${(LimeSystem.platformName}[${LimeSystem.deviceVendor}(${LimeSystem.deviceModel})]-${LimeSystem.platformVersion}.';
+	public static final os:String = 'OS Build: ${LimeSystem.platformName}[${LimeSystem.deviceVendor}(${LimeSystem.deviceModel})]-${LimeSystem.platformVersion}.';
 
 	public var offset:FlxPoint;
 
