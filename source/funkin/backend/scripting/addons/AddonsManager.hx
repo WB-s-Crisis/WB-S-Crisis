@@ -253,7 +253,7 @@ class AddonsManager {
 		#if desktop
 		Logs.trace(content, ERROR);
 		#elseif mobile
-		lime.Application.current.window.alert(content, "错误！！！");
+		lime.app.Application.current.window.alert(content, "错误！！！");
 		#end
 	}
 }
