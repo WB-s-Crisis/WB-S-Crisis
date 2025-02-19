@@ -7,6 +7,7 @@ import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import funkin.backend.system.framerate.Framerate;
 import funkin.backend.FunkinText;
 import haxe.xml.Access;
 import flixel.text.FlxText;
@@ -40,6 +41,7 @@ class StoryMenuState extends MusicBeatState {
 
 	public override function create() {
 		super.create();
+		
 		loadXMLs();
 		persistentUpdate = persistentDraw = true;
 
@@ -132,6 +134,11 @@ class StoryMenuState extends MusicBeatState {
 		CoolUtil.playMenuSong();
 
 		addVirtualPad('LEFT_FULL', 'A_B');
+	}
+	
+	public override function postCreate() {
+		super.postCreate();
+		Framerate.instance.offset.y = weekBG.y;
 	}
 
 	var __lastDifficultyTween:FlxTween;
