@@ -279,7 +279,6 @@ class TitleState extends MusicBeatState
 								titleText = spr;
 							default:
 								titleScreenSprites.add(spr);
-								stateScripts.set(node.name, spr);
 						}
 					}
 				}
