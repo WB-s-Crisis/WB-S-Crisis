@@ -372,6 +372,8 @@ class IntroText {
 				sprite.updateHitbox();
 				sprite.screenCenter(X);
 				state.textGroup.add(sprite);
+				
+				state.stateScripts.set(lines.name, sprite);
 			}
 		}
 	}
