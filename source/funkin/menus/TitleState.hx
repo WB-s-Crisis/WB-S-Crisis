@@ -279,6 +279,7 @@ class TitleState extends MusicBeatState
 								titleText = spr;
 							default:
 								titleScreenSprites.add(spr);
+								stateScripts.set(node.name, spr);
 						}
 					}
 				}
@@ -372,8 +373,6 @@ class IntroText {
 				sprite.updateHitbox();
 				sprite.screenCenter(X);
 				state.textGroup.add(sprite);
-				
-				state.stateScripts.set(image.name, sprite);
 			}
 		}
 	}
