@@ -373,7 +373,7 @@ class IntroText {
 				sprite.screenCenter(X);
 				state.textGroup.add(sprite);
 				
-				state.stateScripts.set(e.name, sprite);
+				state.stateScripts.set(image.name, sprite);
 			}
 		}
 	}
