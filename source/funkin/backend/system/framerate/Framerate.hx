@@ -5,10 +5,12 @@ import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFieldAutoSize;
+import funkin.backend.utils.MemoryUtil;
 import openfl.filters.ShaderFilter;
 import flixel.math.FlxPoint;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
+import flixel.util.FlxStringUtil;
 
 import lime.system.System as LimeSystem;
 
@@ -21,36 +23,57 @@ class Framerate extends Sprite {
 
 	public var fpsText:TextField = null;
 	public var osText:TextField = null;
+	public var memoryText:TextField = null;
+	public var memoryPeakText:TextField = null;
 
 	public var currentFPS:Int;
 	private var cacheCount:Int;
 	private var currentTime:Float;
 	private var times:Array<Float>;
 
+	private var memoryPeak:Float = 0;
+
 	public function new(?outline:Bool = true) {
 		super();
 
 		initVars();
 
+		final jiange:Float = 2;
+
 		fpsText = new TextField();
-		fpsText.defaultTextFormat = new TextFormat(fontName, 16, FlxColor.WHITE);
+		fpsText.defaultTextFormat = new TextFormat(fontName, #if mobile 16 #else 12 #end, FlxColor.WHITE);
 		fpsText.autoSize = TextFieldAutoSize.LEFT;
 
 		fpsText.text = "FPS: 0";
 		addChild(fpsText);
 
-		osText = new TextField();
-		osText.defaultTextFormat = new TextFormat(fontName, 16, FlxColor.WHITE);
-		osText.autoSize = TextFieldAutoSize.LEFT;
-		osText.y = fpsText.height + 2;
+		memoryText = new TextField();
+		memoryText.defaultTextFormat = new TextFormat(fontName, #if mobile 16 #else 12 #end, FlxColor.WHITE);
+		memoryText.autoSize = TextFieldAutoSize.LEFT;
+		memoryText.y = fpsText.height + jiange;
 
-		final dddd:String = os.replace("null", "*NoResults");
+		memoryPeakText = new TextField();
+		memoryPeakText.defaultTextFormat = new TextFormat(fontName, #if mobile 16 #else 12 #end, FlxColor.WHITE);
+		memoryPeakText.autoSize = TextFieldAutoSize.LEFT;
+		memoryPeakText.y = memoryText.y + fpsText.height + jiange;
+
+		memoryText.text = "Memory: 0.00MB/0.00MB";
+		memoryPeakText.text = "Memory Peak: 0.00MB";
+		addChild(memoryText);
+		addChild(memoryPeakText);
+
+		osText = new TextField();
+		osText.defaultTextFormat = new TextFormat(fontName, #if mobile 16 #else 12 #end, FlxColor.WHITE);
+		osText.autoSize = TextFieldAutoSize.LEFT;
+		osText.y = memoryPeakText.y + fpsText.height + jiange;
+
+		final dddd:String = os.replace("null", "{* No Revice}");
 		osText.text = dddd;
 		addChild(osText);
 
 		if(outline) {
 			this.filters = [new ShaderFilter(new OUTLINE({
-				size: 0.07,
+				size: #if mobile 0.07 #else 0.02 #end,
 				color: 0xFF6A0000
 			}))];
 		}
@@ -77,6 +100,11 @@ class Framerate extends Sprite {
 			fpsText.text = "FPS: " + FlxMath.bound(currentFPS, 0, FlxG.drawFramerate);
 
 		cacheCount = currentCount;
+
+		final qqqebIsALazyBoy:Float = MemoryUtil.currentMemUsage();
+		if(qqqebIsALazyBoy > memoryPeak) memoryPeak = qqqebIsALazyBoy;
+		memoryText.text = 'Memory: ${FlxStringUtil.formatBytes(qqqebIsALazyBoy)}/${FlxStringUtil.formatBytes(MemoryUtil.getTotalMem())}';
+		memoryPeakText.text = 'Memory Peak: ${FlxStringUtil.formatBytes(memoryPeak)}';
 	}
 
 	public inline function setScale(?scale:Float){
