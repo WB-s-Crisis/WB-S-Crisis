@@ -1574,6 +1574,8 @@ class PlayState extends MusicBeatState
 			else
 				FlxG.switchState(new FreeplayState());
 		}
+		
+		scripts.call("onNextSong", []);
 	}
 
 	public function registerSmoothTransition() {
