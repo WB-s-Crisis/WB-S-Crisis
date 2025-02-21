@@ -103,7 +103,7 @@ class Framerate extends Sprite {
 
 		final qqqebIsALazyBoy:Float = MemoryUtil.currentMemUsage();
 		if(qqqebIsALazyBoy > memoryPeak) memoryPeak = qqqebIsALazyBoy;
-		memoryText.text = 'Memory: ${FlxStringUtil.formatBytes(qqqebIsALazyBoy)}/${FlxStringUtil.formatBytes(MemoryUtil.getTotalMem() * 1000000)}';
+		memoryText.text = 'Memory: ${FlxStringUtil.formatBytes(qqqebIsALazyBoy)}/${FlxStringUtil.formatBytes(MemoryUtil.getTotalMem() * 1024^2)}';
 		memoryPeakText.text = 'Memory Peak: ${FlxStringUtil.formatBytes(memoryPeak)}';
 	}
 
