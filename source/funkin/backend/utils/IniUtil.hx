@@ -1,40 +1,43 @@
 package funkin.backend.utils;
 
+//你需要一份这个
+import hxIni.IniManager;
+
 
 /**
  * DOESNT SUPPORT CATEGORIES YET!!
  */
-class IniUtil {
+ @:allow(funkin.backend.utils.CoolUtil) class IniUtil {
 	public static inline function parseAsset(assetPath:String, ?defaultVariables:Map<String, String>)
 		return parseString(Assets.getText(assetPath), defaultVariables);
 
-	public static function parseString(data:String, ?defaultVariables:Map<String, String>) {
-		var trimmed:String;
-		var splitContent = [for(e in data.split("\n")) if ((trimmed = e.trim()) != "") trimmed];
-
-		var finalMap:Map<String, String> = [];
-		if (defaultVariables != null)
-			for(k=>e in defaultVariables)
-				finalMap[k] = e;
-
-		for(line in splitContent) {
-			// comment
-			if (line.startsWith(";")) continue;
-			// categories; not supported yet
-			if (line.startsWith("[") && line.endsWith("]")) continue;
-
-			var index = line.indexOf("=");
-			var name = line.substr(0, index).trim();
-			var value = line.substr(index+1).trim();
-
-			if (value.startsWith("\"") && value.endsWith("\""))
-				value = value.substr(1, value.length - 2);
-
-			if (value.length == 0 || name.length == 0)
-				continue;
-
-			finalMap[name] = value;
+	/**
+	 * 仅提供与CoolUtil
+	 * @param data 歌曲信息
+	 * @param defaultVariables def
+	 */
+	private static function parseString(data:String, ?defaultVariables:Map<String, String>):Map<String, String> {
+		try {
+			return parseStringFromGlobal(data);
+		}catch(e:Dynamic) {
+			trace("parse ini failed");
+			return defaultVariables;
 		}
-		return finalMap;
+	}
+
+	public static function parseStringFromGlobal(data:String) {
+		return parseStringFromCategories(data, "Global");
+	}
+
+	public static function parseStringFromCategories(data:String, categories:String = "Global") {
+		var iniData = IniManager.loadFromString(data);
+
+		if(!iniData.exists(categories)) {
+			trace('not exists categories "$categories"');
+
+			return null;
+		}
+
+		return iniData.get(categories);
 	}
 }
