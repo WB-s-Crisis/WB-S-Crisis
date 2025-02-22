@@ -186,6 +186,7 @@
 	<haxelib name="away3d" if="THREE_D_SUPPORT" />
 	<haxelib name="format" />
 	<haxelib name="flxanimate" />
+	<haxelib name="hxIni" />
 
 	<haxelib name="hscript-improved" />
 	<haxelib name="hxdiscord_rpc" if="DISCORD_RPC"/>
