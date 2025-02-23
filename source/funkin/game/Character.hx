@@ -16,6 +16,7 @@ import funkin.backend.scripting.events.DirectionAnimEvent;
 import funkin.backend.scripting.events.PlayAnimEvent;
 import funkin.backend.scripting.events.PlayAnimEvent.PlayAnimContext;
 import funkin.backend.scripting.events.PointEvent;
+import funkin.backend.scripting.events.TryDanceEvent;
 import funkin.backend.system.Conductor;
 import funkin.backend.system.interfaces.IBeatReceiver;
 import funkin.backend.system.interfaces.IOffsetCompatible;
@@ -160,6 +161,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	}
 
 	public function tryDance() {
+		//我超爱的啦
 		var event = EventManager.get(TryDanceEvent).recycle(lastAnimContext, Conductor.stepCrochet * holdTime);
 		scripts.call("onTryDance", [event]);
 
