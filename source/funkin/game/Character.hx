@@ -78,7 +78,8 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 		var globalScript:Script = null;
 		if(!disableScripts) {
-			globalScript = Script.create(Paths.script("characters/global"));
+			//角色全局脚本，使用谨慎！
+			globalScript = Script.create(Paths.script("data/characters/global"));
 			script = Script.create(Paths.script(Path.withoutExtension(Paths.xml('characters/$curCharacter')), null, true));
 		}else
 			script = new DummyScript(curCharacter);
