@@ -1,6 +1,6 @@
 package funkin.backend.scripting.events;
 
-import PlayAnimEvent.PlayAnimContext;
+import funkin.backend.scripting.events.PlayAnimEvent.PlayAnimContext;
 
 final class TryDanceEvent extends CancellableEvent {
 	public var lastAnimContext:PlayAnimContext;
