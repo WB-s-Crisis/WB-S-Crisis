@@ -75,10 +75,15 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 		xml = getXMLFromCharName(this);
 
-		if(!disableScripts)
+		var globalScript:Script = null;
+		if(!disableScripts) {
+			globalScript = Script.create(Paths.script("characters/global"));
 			script = Script.create(Paths.script(Path.withoutExtension(Paths.xml('characters/$curCharacter')), null, true));
-		else
+		}else
 			script = new DummyScript(curCharacter);
+		if(globalScript != null) {
+			globalScript.load();
+		}
 		script.load();
 
 		buildCharacter(xml);
