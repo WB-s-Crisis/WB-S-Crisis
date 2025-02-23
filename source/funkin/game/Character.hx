@@ -87,6 +87,8 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		script.load();
 
 		buildCharacter(xml);
+		if(globalScript != null)
+			scripts.add(globalScript);
 		scripts.call("create");
 
 		if (script == null)
@@ -138,6 +140,8 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			tryDance();
 
 		__lockAnimThisFrame = false;
+
+		scripts.call("postUpdate", [elapsed]);
 	}
 
 	private var danced:Bool = false;
@@ -156,18 +160,27 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	}
 
 	public function tryDance() {
-		switch (lastAnimContext) {
+		var event = EventManager.get(TryDanceEvent).recycle(lastAnimContext, Conductor.stepCrochet * holdTime);
+		scripts.call("onTryDance", [event]);
+
+		if(event.cancelled) return;
+		
+		switch (event.lastAnimContext) {
 			case SING | MISS:
-				if (lastHit + (Conductor.stepCrochet * holdTime) < Conductor.songPosition)
-					dance();
+				if(!event.singAnimCancelled)
+				        if (lastHit + (event.singHoldTime) < Conductor.songPosition)
+					        dance();
 			case DANCE:
-				dance();
+				if(!event.danceAnimCancelled)
+				        dance();
 			case LOCK:
-				if (getAnimName() == null)
-					dance();
+				if(!event.lockAnimCancelled)
+				        if (getAnimName() == null)
+					        dance();
 			default:
-				if (getAnimName() == null || isAnimFinished())
-					dance();
+				if(!event.defaultAnimCancelled)
+				        if (getAnimName() == null || isAnimFinished())
+					        dance();
 		}
 	}
 
