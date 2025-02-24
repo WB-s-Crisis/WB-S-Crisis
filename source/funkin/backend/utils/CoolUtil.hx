@@ -206,7 +206,7 @@ class CoolUtil
 	}
 
 	@:noUsing public static function covertToBase64(v:Dynamic):String {
-		if(v is ByteArray) {
+		if(v is ByteArrayData) {
 			return Base64.encodeByteArray(v);
 		}else if(v is String) {
 			return Base64.encode(v);
