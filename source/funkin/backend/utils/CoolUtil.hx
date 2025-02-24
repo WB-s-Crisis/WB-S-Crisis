@@ -22,6 +22,8 @@ import flixel.animation.FlxAnimation;
 import flixel.util.FlxColor;
 import flixel.util.FlxAxes;
 import openfl.geom.ColorTransform;
+import com.hurlant.util.Base64;
+import com.hurlant.util.ByteArray;
 import haxe.CallStack;
 
 using StringTools;
@@ -201,6 +203,17 @@ class CoolUtil
 		if (v is Float || v is Int)
 			return Math.isNaN(cast(v, Float));
 		return false;
+	}
+
+	@:noUsing public static function covertToBase64(v:Dynamic):String {
+		if(v is ByteArray) {
+			return Base64.encodeByteArray(v);
+		}else if(v is String) {
+			return Base64.encode(v);
+		}else {
+			trace("Not Support This Type");
+			return null;
+		}
 	}
 
 	/**
