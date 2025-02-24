@@ -14,7 +14,7 @@
 	<git name="hxdiscord_rpc" url="https://github.com/CodenameCrew/cne-hxdiscord_rpc" />
 	<lib name="hxvlc" version="1.9.3" skipDeps="true" />
 	<lib name="hxIni" version="" />
-	<git name="haxe-crypto" url="https://github.com/Jens-G/haxe-crypto" />
+	<lib name="crypto" version="1.0.4" />
 
 	<!-- LUA -->
 	<lib name="linc_luajit"version="0.0.7"/>
