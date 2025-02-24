@@ -17,7 +17,7 @@
 	<git name="flxanimate" url="https://github.com/CodenameCrew/cne-flxanimate" />
 	<lib name="hxvlc" version="1.9.3" skipDeps="true" />
 	<lib name="hxIni" version="" />
-	<git name="haxe-crypto" url="https://github.com/Jens-G/haxe-crypto" />
+	<lib name="crypto" version="1.0.4" />
 
 	<!-- Documentation and other features -->
 	<git name="away3d" url="https://github.com/CodenameCrew/away3d" />
