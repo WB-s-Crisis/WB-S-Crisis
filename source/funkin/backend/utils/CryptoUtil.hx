@@ -1,4 +1,4 @@
-package function.backend.utils;
+package funkin.backend.utils;
 
 import haxe.crypto.*;
 
