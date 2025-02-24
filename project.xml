@@ -187,6 +187,7 @@
 	<haxelib name="format" />
 	<haxelib name="flxanimate" />
 	<haxelib name="hxIni" />
+	<haxelib name="haxe-crypto" />
 
 	<haxelib name="hscript-improved" />
 	<haxelib name="hxdiscord_rpc" if="DISCORD_RPC"/>
