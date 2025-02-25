@@ -90,6 +90,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 
 			"CoolUtil"		  => funkin.backend.utils.CoolUtil,
 			"IniUtil"		   => funkin.backend.utils.IniUtil,
+			#if ALLOW_CRYPTO "CryptoUtil" => funkin.backend.utils.CryptoUtil, #end
 			"XMLUtil"		   => funkin.backend.utils.XMLUtil,
 			#if sys "ZipUtil"   => funkin.backend.utils.ZipUtil, #end
 			"MarkdownUtil"	  => funkin.backend.utils.MarkdownUtil,
