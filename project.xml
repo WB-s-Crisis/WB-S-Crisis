@@ -167,7 +167,6 @@
 	<haxedef name="SHOW_BUILD_ON_FPS" if="SHOW_BUILD_ON_FPS" />
 	<haxedef name="SOFTCODED_CLASSES" if="SOFTCODED_CLASSES" />
 	<haxedef name="openfl_dpi_aware" if="openfl_dpi_aware" />
-	<haxedef name="ALLOW_CRYPTO" />
 
 	<haxedef name="EXPERIMENTAL_FLXGRAPHIC_DESTROY_FIX" />
 
