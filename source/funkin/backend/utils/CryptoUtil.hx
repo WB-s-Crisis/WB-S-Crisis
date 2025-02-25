@@ -1,7 +1,7 @@
 package funkin.backend.utils;
 
 #if ALLOW_CRYPTO
-import com.hurlant.util.*;
+import com.hurlant.util.Base64;
 #end
 
 class CryptoUtil {
