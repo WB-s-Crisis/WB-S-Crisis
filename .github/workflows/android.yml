@@ -26,6 +26,7 @@ jobs:
       - name: Installing/Updating libraries
         run: |
           haxe -cp commandline -D analyzer-optimize --run Main setup -s --lib=./libs.mobile.xml
+          haxelib set haxe-crypto 0.0.8
       
       - name: Configuring Android
         run: |
