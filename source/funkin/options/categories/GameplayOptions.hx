@@ -13,6 +13,9 @@ class GameplayOptions extends OptionsScreen {
 		var rawSplashArray = Paths.getFolderContent("data/splashes");
 		var splashArray = [];
 		for(goodPath in rawSplashArray) {
+			var withoutExtension = Path.withoutExtension(goodPath);
+
+			if(withoutExtension.contains("secret") || withoutExtension.contains("pixel")) continue;
 			splashArray.push(Path.withoutExtension(goodPath));
 		}
 		
