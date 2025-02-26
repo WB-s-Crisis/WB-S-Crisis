@@ -137,7 +137,20 @@ class PlayState extends MusicBeatState
 	}
 	@:noCompletion function set_qqqeb(val:Bool) {
 		if(camHUD != null) camHUD.visible = val;
-		return val;
+		return qqqeb = val;
+	}
+
+	/**
+	 * xswl
+	 */
+	@:isVar public var msZY(get, set):Float;
+
+	@:noCompletion function get_msZY():Float {
+		return camHUD != null ? camHUD.alpha : 1;
+	}
+	@:noCompletion function set_msZY(val:Float):Float {
+		if(camHUD != null) camHUD.alpha = val;
+		return msZY = val;
 	}
 	/**
 	 * Current scroll speed for all strums.
