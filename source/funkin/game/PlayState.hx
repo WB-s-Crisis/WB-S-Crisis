@@ -278,7 +278,14 @@ class PlayState extends MusicBeatState
 	/**
 	 * Current health. Goes from 0 to maxHealth (defaults to 2)
 	 */
-	public var health:Float = 1;
+	public var health(default, set):Float = 1;
+	
+	@:noCompletion private function set_health(val:Float):Float {
+		health = val;
+		if(scripts != null) scripts.call("onSetVariable", ["health", val]);
+		
+		return val;
+	}
 
 	/**
 	 * Maximum health the player can have. Defaults to 2.
@@ -331,11 +338,25 @@ class PlayState extends MusicBeatState
 	/**
 	 * The player's current score.
 	 */
-	public var songScore:Int = 0;
+	public var songScore(default, set):Int = 0;
+	
+	@:noCompletion private function set_songScore(val:Int):Int {
+		songScore = val;
+		if(scripts != null) scripts.call("onSetVariable", ["songScore", val]);
+		
+		return val;
+	}
 	/**
 	 * The player's amount of misses.
 	 */
-	public var misses:Int = 0;
+	public var misses(default, set):Int = 0;
+	
+	@:noCompletion private function set_misses(val:Int):Int {
+		misses = val;
+		if(scripts != null) scripts.call("onSetVariable", ["misses", val]);
+		
+		return val;
+	}
 	/**
 	 * The player's accuracy (shortcut to `accuracyPressedNotes / totalAccuracyAmount`).
 	 */
