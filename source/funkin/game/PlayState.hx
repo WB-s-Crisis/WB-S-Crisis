@@ -84,7 +84,7 @@ class PlayState extends MusicBeatState
 	/**
 	 * 意义不大，只是图个方便
 	 */
-	public var onSetVariable:FlxTypedSignal<String->Dynamic->Void> = new FlxTypedSignal<String->Dynamic->Void>();
+	public var onSetVariable:FlxTypedSignal<String->Dynamic->Bool->Void> = new FlxTypedSignal<String->Dynamic->Bool->Void>();
 	/**
 	 * Script Pack of all the scripts being ran.
 	 */
@@ -286,9 +286,11 @@ class PlayState extends MusicBeatState
 	public var health(default, set):Float = 1;
 	
 	@:noCompletion private function set_health(val:Float):Float {
-		if(onSetVariable != null) onSetVariable.dispatch("health", val);
+		if(onSetVariable != null) onSetVariable.dispatch("health", val, false);
 	
 		health = val;
+		if(onSetVariable != null) onSetVariable.dispatch("health", val, true);
+		
 		return val;
 	}
 
@@ -346,9 +348,11 @@ class PlayState extends MusicBeatState
 	public var songScore(default, set):Int = 0;
 	
 	@:noCompletion private function set_songScore(val:Int):Int {
-		if(onSetVariable != null) onSetVariable.dispatch("songScore", val);
+		if(onSetVariable != null) onSetVariable.dispatch("songScore", val, false);
 	
 		songScore = val;
+		if(onSetVariable != null) onSetVariable.dispatch("songScore", val, true);
+		
 		return val;
 	}
 	/**
@@ -357,9 +361,11 @@ class PlayState extends MusicBeatState
 	public var misses(default, set):Int = 0;
 	
 	@:noCompletion private function set_misses(val:Int):Int {
-		if(onSetVariable != null) onSetVariable.dispatch("misses", val);
+		if(onSetVariable != null) onSetVariable.dispatch("misses", val, false);
 	
 		misses = val;
+		if(onSetVariable != null) onSetVariable.dispatch("misses", val, true);
+
 		return val;
 	}
 	/**
