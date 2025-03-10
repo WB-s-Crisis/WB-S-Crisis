@@ -25,6 +25,7 @@ import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
+import flixel.util.FlxSignal.FlxTypedSignal;
 import haxe.io.Path;
 import funkin.backend.system.Conductor;
 import funkin.game.cutscenes.*;
@@ -79,7 +80,11 @@ class PlayState extends MusicBeatState
 	 * Whenever the song has been started with co-op mode on.
 	 */
 	public static var coopMode:Bool = false;
-
+	
+	/**
+	 * 意义不大，只是图个方便
+	 */
+	public var onSetVariable:FlxTypedSignal<String->Dynamic->Void> = new FlxTypedSignal<String->Dynamic->Void>();
 	/**
 	 * Script Pack of all the scripts being ran.
 	 */
@@ -281,9 +286,9 @@ class PlayState extends MusicBeatState
 	public var health(default, set):Float = 1;
 	
 	@:noCompletion private function set_health(val:Float):Float {
+		if(onSetVariable != null) onSetVariable.dispatch("health", val);
+	
 		health = val;
-		if(scripts != null) scripts.call("onSetVariable", ["health", val]);
-		
 		return val;
 	}
 
@@ -341,9 +346,9 @@ class PlayState extends MusicBeatState
 	public var songScore(default, set):Int = 0;
 	
 	@:noCompletion private function set_songScore(val:Int):Int {
+		if(onSetVariable != null) onSetVariable.dispatch("songScore", val);
+	
 		songScore = val;
-		if(scripts != null) scripts.call("onSetVariable", ["songScore", val]);
-		
 		return val;
 	}
 	/**
@@ -352,9 +357,9 @@ class PlayState extends MusicBeatState
 	public var misses(default, set):Int = 0;
 	
 	@:noCompletion private function set_misses(val:Int):Int {
+		if(onSetVariable != null) onSetVariable.dispatch("misses", val);
+	
 		misses = val;
-		if(scripts != null) scripts.call("onSetVariable", ["misses", val]);
-		
 		return val;
 	}
 	/**
