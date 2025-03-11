@@ -7,17 +7,7 @@ import openfl.Assets as OpenflAssets;
 import openfl.text.TextFormat;
 
 class FunkinGame extends FlxGame {
-	public var debugPrintLog:DebugPrint;
-	
 	var skipNextTickUpdate:Bool = false;
-
-	public function new(gameWidth = 0, gameHeight = 0, ?initialState:Class<FlxState>, updateFramerate = 60, drawFramerate = 60, skipSplash = false, startFullscreen = false) {
-		super(gameWidth, gameHeight, initialState, updateFramerate, drawFramerate, skipSplash, startFullscreen);
-		
-		var textFormat = new TextFormat(Paths.font("COMIC.TTF"), 24);
-		debugPrintLog = new DebugPrint(textFormat, true);
-		addChild(debugPrintLog);
-	}
 	
 	public override function switchState() {
 		super.switchState();
@@ -31,9 +21,5 @@ class FunkinGame extends FlxGame {
 		if (skipNextTickUpdate != (skipNextTickUpdate = false))
 			_total = ticks = getTicks();
 		super.onEnterFrame(t);
-	}
-
-	public function debugPrint(text:String, ?delayTime:Float = 1) {
-		debugPrintLog.debugPrint(text, {delayTime: delayTime, style: 0xFFFFFF});
 	}
 }
