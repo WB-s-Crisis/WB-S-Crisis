@@ -49,7 +49,8 @@ class HScript extends Script {
 		interp.variables.set("importAddons", (addonsPath:String) -> {
 			funkin.backend.scripting.addons.AddonsManager.importScriptAddons(addonsPath, this);
 		});
-		interp.variables.set("debugPrint", Main.game.debugPrint);
+		@:privateAccess
+		interp.variables.set("debugPrint", Main.debugPrintLog.debugPrint);
 
 		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.call("onScriptCreated", [this, "hscript"]);
