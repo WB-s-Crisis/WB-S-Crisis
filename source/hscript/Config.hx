@@ -7,6 +7,7 @@ class Config {
 		"flixel",
 
 		"funkin",
+		"openfl.display.Sprite",
 		#end
 	];
 
