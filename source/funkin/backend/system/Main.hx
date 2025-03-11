@@ -86,14 +86,14 @@ class Main extends Sprite
 
 		#if !web
 		addChild(framerateSprite);
-
-		var textFormat = new TextFormat(Paths.font("COMIC.TTF"), 24);
-		addChild(debugPrintLog = new DebugPrint(textFormat, true));
-		debugPrintLog.x = game.x;
 		#if mobile
 		FlxG.stage.window.onResize.add((w:Int, h:Int) -> framerateSprite.setScale());
 		#end
 		#end
+
+		var textFormat = new TextFormat("assets/fonts/COMIC.TTF", 24);
+		debugPrintLog = new DebugPrint(textFormat, true);
+		addChild(debugPrintLog);
 	}
 
 	@:dox(hide)
