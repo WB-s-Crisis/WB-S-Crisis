@@ -89,7 +89,10 @@ class Main extends Sprite
 		#if !web
 		addChild(framerateSprite);
 		#if mobile
-		FlxG.stage.window.onResize.add((w:Int, h:Int) -> framerateSprite.setScale());
+		FlxG.stage.window.onResize.add((w:Int, h:Int) -> {
+			framerateSprite.setScale();
+			debugPrintLog.resizePosition(2, 0);
+		});
 		#end
 		#end
 	}
