@@ -49,7 +49,7 @@ class Main extends Sprite
 
 	public static var game:FunkinGame;
 
-	private var debugPrintLog:DebugPrint;
+	public var debugPrintLog:DebugPrint = new DebugPrint(new TextFormat("assets/fonts/COMIC.TTF", 24), true);
 
 	/**
 	 * The time since the game was focused last time in seconds.
@@ -84,16 +84,14 @@ class Main extends Sprite
 
 		#if android FlxG.android.preventDefaultKeys = [BACK]; #end
 
+		addChild(debugPrintLog);
+
 		#if !web
 		addChild(framerateSprite);
 		#if mobile
 		FlxG.stage.window.onResize.add((w:Int, h:Int) -> framerateSprite.setScale());
 		#end
 		#end
-
-		var textFormat = new TextFormat("assets/fonts/COMIC.TTF", 24);
-		debugPrintLog = new DebugPrint(textFormat, true);
-		addChild(debugPrintLog);
 	}
 
 	@:dox(hide)
