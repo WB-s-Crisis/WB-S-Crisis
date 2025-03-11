@@ -1,1 +1,20 @@
+#分号前面对应要显示的名字，后面是对应名字的文件夹，用于方便读取
+#msZ杨;MSZYang;痔疮
+闸总不是洗洁精;Xi Jie Jing;副痔疮
+被晒干的橙子;Dry Orange;副副痔疮
 
+尘月;Chen Yue;牢曲师
+Wacky;Wacker;屌曲师
+Cair;Cair;曲师
+
+BLACKSILENCE00;BLACKSILENCE;牢猪妹
+是祝稿不食猪肝;Pig Liver;猪肝画师
+蓝影懒得说;Blue Shadow;画南梁的画师
+
+周三;Wednesday;耐拖王（谱师）
+
+qqqeb;QQQEB;耐拖王（编程）
+翻垃圾的雪溪;Xue Xi;福瑞编程
+
+吉祥物;Sawrd Tom;微距了
+XG;XG;真的是万能的
