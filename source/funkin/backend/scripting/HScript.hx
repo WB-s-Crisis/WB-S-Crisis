@@ -115,8 +115,10 @@ class HScript extends Script {
 
 		//把这里原本的依托卸了
 		#if mobile
-	        Main.game.debugPrintLog.debugPrint(fn, {delayTime: 2.5, style: 0x00ff00});
-		Main.game.debugPrintLog.debugPrint(err, {delayTime: 2.5, style: 0xff0000});
+		@:privateAccess {
+			Main.debugPrintLog.debugPrint(fn, {delayTime: 3.5, style: 0x00ff00});
+			Main.debugPrintLog.debugPrint(err, {delayTime: 3.5, style: 0xff0000});
+		}
 		#end
 	}
 
