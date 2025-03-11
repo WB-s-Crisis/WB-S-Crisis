@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+肥肠的好
+🟦🟦🟦🟦🟫🟫🟫🟦🟦🟦🟦
+🟦🟦🟦🟫🟫🟫🟫🟫🟦🟦🟦
+🟦🟦🟦🟫⬛️🟫⬛️🟫🟦🟦🟦
+🟦🟦🟦🟫🟫🟫🟫🟫🟦🟦🟦
+🟦🟦🟦🟫🟫🟫🟫🟫🟦🟦🟦
+🟦🟦🟦🟦🟫🟫🟫🟦🟦🟦🟦
+🟦🟨🟨🟫🟫🟫🟫🟫🟨🟨🟦
+🟫🟨🟨🟨🟫🟫🟫🟨🟨🟨🟫
+🟫🟨🟨🟨🟨🟨🟨🟨🟨🟨🟫
+🟫🟨🟨🟨🟨🟨🟨🟨🟨🟨🟫
+🟫🟨🟪🟪🟪🟨🟪🟨🟪🟨🟫
+🟫🟨🟨🟨🟪🟨🟪🟨🟪🟨🟫
+🟫🟨🟪🟪🟪🟨🟪🟪🟪🟨🟫
+🟫🟨🟪🟨🟨🟨🟨🟨🟪🟨🟫
+🟫🟨🟪🟪🟪🟨🟨🟨🟪🟨🟫
+🟫🟨🟨🟨🟨🟨🟨🟨🟨🟨🟫
+-->
+<TextureAtlas imagePath="Tom1-3.png" width="3853" height="4138">
+  <SubTexture name="attack0005.png" x="0" y="0"  width="651" height="855" frameX="-182" frameY="-210" frameWidth="1080" frameHeight="1080"/>
+  <SubTexture name="attack0001.png" x="651" y="0"  width="727" height="762" frameX="-274" frameY="-287" frameWidth="1080" frameHeight="1080"/>
+  <SubTexture name="attack0003.png" x="651" y="762"  width="662" height="729" frameX="-236" frameY="-350" frameWidth="1080" frameHeight="1080"/>
+  <SubTexture name="attack0004.png" x="0" y="855"  width="650" height="634" frameX="-183" frameY="-232" frameWidth="1080" frameHeight="1080"/>
+  <SubTexture name="idle0004.png" x="1313" y="762"  width="624" height="620" frameX="-224" frameY="-240" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="idle0007.png" x="1378" y="0"  width="598" height="602" frameX="-195" frameY="-258" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="idle0009.png" x="0" y="1489"  width="598" height="602" frameX="-195" frameY="-258" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="right0006.png" x="598" y="1491"  width="803" height="448" frameX="-276" frameY="-414" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="attack0007.png" x="1401" y="1382"  width="768" height="467" frameX="-302" frameY="-389" frameWidth="1080" frameHeight="1080"/>
+  <SubTexture name="right0004.png" x="1937" y="602"  width="803" height="446" frameX="-276" frameY="-416" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="right0005.png" x="1401" y="1849"  width="803" height="445" frameX="-276" frameY="-417" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="idle0008.png" x="1976" y="0"  width="591" height="600" frameX="-198" frameY="-260" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="right0003.png" x="598" y="1939"  width="798" height="443" frameX="-281" frameY="-419" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="attack0006.png" x="1396" y="2294"  width="767" height="459" frameX="-313" frameY="-395" frameWidth="1080" frameHeight="1080"/>
+  <SubTexture name="right0001.png" x="0" y="2382"  width="792" height="442" frameX="-287" frameY="-420" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="right0002.png" x="2567" y="0"  width="789" height="440" frameX="-290" frameY="-422" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="left0002.png" x="792" y="2382"  width="558" height="621" frameX="-87" frameY="-243" frameWidth="1078" frameHeight="1078"/>
+  <SubTexture name="idle0001.png" x="2163" y="2294"  width="600" height="571" frameX="-227" frameY="-289" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="idle0006.png" x="2169" y="1048"  width="575" height="594" frameX="-217" frameY="-266" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="idle0003.png" x="2740" y="440"  width="637" height="536" frameX="-243" frameY="-324" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="left0006.png" x="2204" y="1642"  width="548" height="620" frameX="-109" frameY="-244" frameWidth="1078" frameHeight="1078"/>
+  <SubTexture name="idle0002.png" x="2744" y="976"  width="610" height="555" frameX="-243" frameY="-305" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="down0001.png" x="2752" y="1531"  width="503" height="670" frameX="-248" frameY="-307" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="up0003.png" x="2763" y="2201"  width="510" height="659" frameX="-159" frameY="-190" frameWidth="1078" frameHeight="1078"/>
+  <SubTexture name="left0003.png" x="2763" y="2860"  width="558" height="598" frameX="-96" frameY="-266" frameWidth="1078" frameHeight="1078"/>
+  <SubTexture name="left0001.png" x="0" y="2824"  width="539" height="616" frameX="-89" frameY="-248" frameWidth="1078" frameHeight="1078"/>
+  <SubTexture name="down0004.png" x="1350" y="2753"  width="545" height="606" frameX="-200" frameY="-371" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="idle0005.png" x="539" y="3003"  width="564" height="585" frameX="-240" frameY="-275" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="down0005.png" x="1895" y="2865"  width="491" height="670" frameX="-254" frameY="-307" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="down0002.png" x="3255" y="1531"  width="513" height="631" frameX="-241" frameY="-346" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="left0005.png" x="3273" y="2162"  width="529" height="610" frameX="-104" frameY="-254" frameWidth="1078" frameHeight="1078"/>
+  <SubTexture name="left0004.png" x="3321" y="2772"  width="532" height="598" frameX="-100" frameY="-266" frameWidth="1078" frameHeight="1078"/>
+  <SubTexture name="up0001.png" x="3377" y="0"  width="472" height="668" frameX="-195" frameY="-181" frameWidth="1078" frameHeight="1078"/>
+  <SubTexture name="up0002.png" x="3377" y="668"  width="470" height="667" frameX="-196" frameY="-182" frameWidth="1078" frameHeight="1078"/>
+  <SubTexture name="up0004.png" x="0" y="3440"  width="470" height="657" frameX="-200" frameY="-192" frameWidth="1078" frameHeight="1078"/>
+  <SubTexture name="up0005.png" x="3321" y="3370"  width="470" height="654" frameX="-202" frameY="-195" frameWidth="1078" frameHeight="1078"/>
+  <SubTexture name="up0006.png" x="1103" y="3359"  width="472" height="649" frameX="-201" frameY="-200" frameWidth="1078" frameHeight="1078"/>
+  <SubTexture name="attack0002.png" x="470" y="3588"  width="556" height="550" frameX="-273" frameY="-314" frameWidth="1080" frameHeight="1080"/>
+  <SubTexture name="down0006.png" x="2386" y="3458"  width="491" height="620" frameX="-258" frameY="-357" frameWidth="1079" frameHeight="1079"/>
+  <SubTexture name="down0003.png" x="1575" y="3535"  width="491" height="573" frameX="-255" frameY="-404" frameWidth="1079" frameHeight="1079"/>
+</TextureAtlas>

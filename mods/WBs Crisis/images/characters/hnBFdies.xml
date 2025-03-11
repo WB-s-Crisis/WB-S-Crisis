@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+别看了！还是你XG大跌写的xml！！！
+-->
+<TextureAtlas imagePath="hnBFdies.png" width="5000" height="3500">
+  <SubTexture name="confirm0001.png" x="0" y="0"  width="2156" height="1617" frameX="-0" frameY="-0" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="confirm0002.png" x="0" y="1617"  width="2156" height="1617" frameX="-0" frameY="-0" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0009.png" x="2156" y="0"  width="1087" height="639" frameX="-805" frameY="-585" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0011.png" x="3243" y="0"  width="1087" height="639" frameX="-805" frameY="-585" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0003.png" x="4330" y="0"  width="589" height="744" frameX="-779" frameY="-459" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0008.png" x="2156" y="639"  width="1055" height="640" frameX="-814" frameY="-585" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0007.png" x="3211" y="639"  width="996" height="624" frameX="-814" frameY="-580" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0004.png" x="4207" y="744"  width="750" height="794" frameX="-840" frameY="-409" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0006.png" x="3211" y="1263"  width="868" height="632" frameX="-824" frameY="-571" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0005.png" x="4079" y="1538"  width="857" height="790" frameX="-830" frameY="-413" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0002.png" x="2156" y="1279"  width="803" height="750" frameX="-563" frameY="-453" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0001.png" x="2156" y="2328"  width="580" height="750" frameX="-786" frameY="-453" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0010.png" x="2959" y="1895"  width="569" height="619" frameX="-805" frameY="-585" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0015.png" x="2959" y="2514"  width="569" height="619" frameX="-805" frameY="-585" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="loop0001.png" x="0" y="0"  width="2156" height="1617" frameX="-0" frameY="-0" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="loop0003.png" x="0" y="0"  width="2156" height="1617" frameX="-0" frameY="-0" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="loop0005.png" x="0" y="0"  width="2156" height="1617" frameX="-0" frameY="-0" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="loop0007.png" x="0" y="0"  width="2156" height="1617" frameX="-0" frameY="-0" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="loop0009.png" x="0" y="0"  width="2156" height="1617" frameX="-0" frameY="-0" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="loop0011.png" x="0" y="0"  width="2156" height="1617" frameX="-0" frameY="-0" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="loop0002.png" x="0" y="1617"  width="2156" height="1617" frameX="-0" frameY="-0" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="loop0004.png" x="0" y="1617"  width="2156" height="1617" frameX="-0" frameY="-0" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="loop0006.png" x="0" y="1617"  width="2156" height="1617" frameX="-0" frameY="-0" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="loop0008.png" x="0" y="1617"  width="2156" height="1617" frameX="-0" frameY="-0" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="loop0010.png" x="0" y="1617"  width="2156" height="1617" frameX="-0" frameY="-0" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="loop0012.png" x="0" y="1617"  width="2156" height="1617" frameX="-0" frameY="-0" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0012.png" x="2959" y="1895"  width="569" height="619" frameX="-805" frameY="-585" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0014.png" x="2959" y="1895"  width="569" height="619" frameX="-805" frameY="-585" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0016.png" x="2959" y="1895"  width="569" height="619" frameX="-805" frameY="-585" frameWidth="2156" frameHeight="1617"/>
+  <SubTexture name="dies0013.png" x="3243" y="0"  width="1087" height="639" frameX="-805" frameY="-585" frameWidth="2156" frameHeight="1617"/>
+</TextureAtlas>
