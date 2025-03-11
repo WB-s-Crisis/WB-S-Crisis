@@ -72,6 +72,18 @@ class DebugPrint extends Sprite {
 		return super.removeChild(child);
 	}
 
+	public inline function resizePosition(X:Float, Y:Float, ?scale:Float) {
+		setScale(scale);
+		this.x = FlxG.game.x + X;
+		this.y = Y;
+	}
+
+	public inline function setScale(?scale:Float){
+		if(scale == null)
+			scale = Math.min(FlxG.stage.window.width / FlxG.width, FlxG.stage.window.height / FlxG.height);
+		scaleX = scaleY = #if android (scale > 1 ? scale : 1) #else (scale < 1 ? scale : 1) #end;
+	}
+
 	private function updateChildrenPos(child:DebugText):Void {
 		if(__children.length > 0) {
 		    for(_child in __children) {
