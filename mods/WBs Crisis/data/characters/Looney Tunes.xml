@@ -1,0 +1,8 @@
+<!DOCTYPE codename-engine-character>
+<character y="-150" sprite="Looney Tunes" scale="0.8" camx="0" camy="-30" icon="bugRabbit" color="#807979">
+	<anim name="singDOWN" anim="down" x="100" y="260" fps="14" loop="false"/>
+	<anim name="singRIGHT" anim="right" x="0" y="-30" fps="14" loop="false"/>
+	<anim name="singLEFT" anim="left" x="200" y="220" fps="14" loop="false"/>
+	<anim name="idle" anim="idie" x="0" y="0" fps="14" loop="false"/>
+	<anim name="singUP" anim="up" x="75" y="0" fps="14" loop="false"/>
+</character>
