@@ -1,1 +1,6 @@
-
+<week name="1942" sprite="week1" bg="bg-1942">
+	<difficulty name="TOM" x="114514"></difficulty>
+	<song>friendship broken</song>
+	<song>bloody scissors</song>
+	<song>Cruel cartoon</song>
+</week>
