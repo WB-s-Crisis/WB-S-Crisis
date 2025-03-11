@@ -9,10 +9,10 @@ class FunkinGame extends FlxGame {
 	public var debugPrintLog:DebugPrint;
 	
 	var skipNextTickUpdate:Bool = false;
-	
-	override function create(_) {
-		super.create(_);
 
+	public function new(gameWidth:Int = 0, gameHeight:Int = 0, ?initialState:InitialState, updateFramerate:Int = 60, drawFramerate:Int = 60, skipSplash:Bool = false, startFullscreen:Bool = false) {
+		super(gameWidth, gameHeight, initialState, updateFramerate, drawFramerate, skipSplash, startFullscreen);
+		
 		var textFormat = new TextFormat(Paths.font("COMIC.TTF"), 24);
 		debugPrintLog = new DebugPrint(textFormat, true);
 		addChild(debugPrintLog);
