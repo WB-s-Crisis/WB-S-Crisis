@@ -34,8 +34,6 @@ class DebugPrint extends Sprite {
 		
 		downscroll = downScroll;
 		this.textFormat = textFormat;
-
-		resizePosition(2, 0);
 	}
     
 	public function debugPrint(text:String, ?textOptions:TextOptions) {
