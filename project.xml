@@ -5,7 +5,7 @@
 		title="Friday Night Funkin' - WB's Crisis" main="funkin.backend.system.Main"
 		file="WBsCrisis" packageName="com.myZYANG.WBsCrisis"
 		package="com.myZYANG.WBsCrisis"
-		version="0.1.0" company="WBsCrisis Studio" />
+		version="v1.0" company="WBsCrisis Studio" />
 
 	<!--
 		CHANGE THE SAVE PATH & NAME FOR YOUR MOD HERE!
