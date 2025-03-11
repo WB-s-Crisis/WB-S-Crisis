@@ -1,0 +1,26 @@
+/*import funkin.backend.shaders.CustomShader;*/
+
+importAddons("shader.OldTV");
+importAddons("shader.GLITCH");
+importAddons("shader.Chromatic");
+
+public var tvShader:OldTV;
+public var glitch:GLITCH;
+public var chromatic:Chromatic;
+
+function create() {
+	tvShader = new OldTV();
+	tvShader.blueOpac = 1.3;
+	tvShader.redOpac = 0.15;
+	camGame.addShader(tvShader.shader);
+	add(tvShader);
+	
+	glitch = new GLITCH();
+	camGame.addShader(glitch.shader);
+	add(glitch);
+	
+	chromatic = new Chromatic();
+	chromatic.aberration = -0.02;
+	camGame.addShader(chromatic.shader);
+	camHUD.addShader(chromatic.shader);
+}
