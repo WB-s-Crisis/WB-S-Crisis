@@ -10,7 +10,7 @@ class FunkinGame extends FlxGame {
 	
 	var skipNextTickUpdate:Bool = false;
 
-	public function new(gameWidth:Int = 0, gameHeight:Int = 0, ?initialState:InitialState, updateFramerate:Int = 60, drawFramerate:Int = 60, skipSplash:Bool = false, startFullscreen:Bool = false) {
+	public function new(gameWidth = 0, gameHeight = 0, ?initialState:Class<FlxState>, updateFramerate = 60, drawFramerate = 60, skipSplash = false, startFullscreen = false) {
 		super(gameWidth, gameHeight, initialState, updateFramerate, drawFramerate, skipSplash, startFullscreen);
 		
 		var textFormat = new TextFormat(Paths.font("COMIC.TTF"), 24);
