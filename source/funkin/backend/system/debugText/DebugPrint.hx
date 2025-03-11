@@ -95,6 +95,8 @@ class DebugPrint extends Sprite {
 	@:noCompletion
 	private override function __enterFrame(deltaTime:Float):Void {
 		var elapsed:Float = FlxG.elapsed;
+
+		x = FlxG.game.x + 2;
 		
         if(__children.length > 0) {
 		    for(child in __children) {
