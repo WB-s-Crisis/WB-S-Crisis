@@ -1,6 +1,7 @@
 package funkin.backend.system;
 
 import flixel.FlxGame;
+import flixel.FlxState;
 import funkin.backend.system.debugText.DebugPrint;
 import openfl.Assets as OpenflAssets;
 import openfl.text.TextFormat;
