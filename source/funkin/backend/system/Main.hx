@@ -49,7 +49,7 @@ class Main extends Sprite
 
 	public static var game:FunkinGame;
 
-	private static var debugPrintLog:DebugPrint;
+	private var debugPrintLog:DebugPrint;
 
 	/**
 	 * The time since the game was focused last time in seconds.
