@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="tom-final.png" width="2017" height="1522">
+  <SubTexture name="normal0000" x="0" y="0"  width="520" height="499" frameX="-98" frameY="-105" frameWidth="700" frameHeight="700"/>
+  <SubTexture name="normal0001" x="520" y="0"  width="507" height="496" frameX="-99" frameY="-104" frameWidth="700" frameHeight="700"/>
+  <SubTexture name="lose0000" x="1027" y="0"  width="501" height="502" frameX="-120" frameY="-125" frameWidth="700" frameHeight="700"/>
+  <SubTexture name="normal0002" x="520" y="496"  width="499" height="491" frameX="-100" frameY="-101" frameWidth="700" frameHeight="700"/>
+  <SubTexture name="win0000" x="0" y="499"  width="492" height="543" frameX="-93" frameY="-117" frameWidth="700" frameHeight="700"/>
+  <SubTexture name="win0001" x="1528" y="0"  width="489" height="542" frameX="-96" frameY="-117" frameWidth="700" frameHeight="700"/>
+  <SubTexture name="lose0001" x="1019" y="502"  width="486" height="459" frameX="-123" frameY="-122" frameWidth="700" frameHeight="700"/>
+  <SubTexture name="lose00002" x="1019" y="961"  width="485" height="456" frameX="-117" frameY="-122" frameWidth="700" frameHeight="700"/>
+  <SubTexture name="win00002" x="492" y="987"  width="480" height="535" frameX="-97" frameY="-112" frameWidth="700" frameHeight="700"/>
+</TextureAtlas>

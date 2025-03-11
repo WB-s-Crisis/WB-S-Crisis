@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="bugRabbit.png">
+	<!-- Created using the Spritesheet and XML generator -->
+	<!-- https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web -->
+	<SubTexture name="lose0000" x="1986" y="0" width="1011" height="945" frameX="-55" frameY="-43" frameWidth="1080" frameHeight="1080"/>
+	<SubTexture name="lose0001" x="0" y="1982" width="1013" height="938" frameX="-55" frameY="-48" frameWidth="1080" frameHeight="1080"/>
+	<SubTexture name="lose0002" x="1986" y="945" width="1010" height="939" frameX="-55" frameY="-49" frameWidth="1080" frameHeight="1080"/>
+	<SubTexture name="normal0000" x="1000" y="0" width="986" height="991" frameX="-53" frameY="-11" frameWidth="1080" frameHeight="1080"/>
+	<SubTexture name="normal0001" x="0" y="991" width="982" height="991" frameX="-60" frameY="-11" frameWidth="1080" frameHeight="1080"/>
+	<SubTexture name="win0000" x="2997" y="0" width="994" height="931" frameX="-68" frameY="-14" frameWidth="1080" frameHeight="1080"/>
+	<SubTexture name="win0001" x="1013" y="1982" width="998" height="935" frameX="-68" frameY="-12" frameWidth="1080" frameHeight="1080"/>
+	<SubTexture name="normal0002" x="0" y="0" width="1000" height="991" frameX="-42" frameY="-9" frameWidth="1080" frameHeight="1080"/>
+	<SubTexture name="win0002" x="982" y="991" width="1003" height="933" frameX="-68" frameY="-11" frameWidth="1080" frameHeight="1080"/>
+</TextureAtlas>
