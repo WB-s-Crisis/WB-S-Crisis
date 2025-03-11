@@ -15,6 +15,7 @@ import flixel.addons.transition.TransitionData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import funkin.backend.system.modules.*;
+import funkin.backend.system.debugText.DebugPrint;
 
 #if ALLOW_MULTITHREADING
 import sys.thread.Thread;
@@ -47,6 +48,8 @@ class Main extends Sprite
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 
 	public static var game:FunkinGame;
+
+	private static var debugPrintLog:DebugPrint;
 
 	/**
 	 * The time since the game was focused last time in seconds.
@@ -83,6 +86,10 @@ class Main extends Sprite
 
 		#if !web
 		addChild(framerateSprite);
+
+		var textFormat = new TextFormat(Paths.font("COMIC.TTF"), 24);
+		addChild(debugPrintLog = new DebugPrint(textFormat, true));
+		debugPrintLog.x = game.x;
 		#if mobile
 		FlxG.stage.window.onResize.add((w:Int, h:Int) -> framerateSprite.setScale());
 		#end
