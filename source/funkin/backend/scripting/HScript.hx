@@ -49,7 +49,7 @@ class HScript extends Script {
 		interp.variables.set("importAddons", (addonsPath:String) -> {
 			funkin.backend.scripting.addons.AddonsManager.importScriptAddons(addonsPath, this);
 		});
-		@:privateAccess
+
 		interp.variables.set("debugPrint", Main.instance.debugPrintLog.debugPrint);
 
 		#if GLOBAL_SCRIPT
@@ -116,10 +116,8 @@ class HScript extends Script {
 
 		//把这里原本的依托卸了
 		#if mobile
-		@:privateAccess {
-			Main.instance.debugPrintLog.debugPrint(fn, {delayTime: 3.5, style: 0x00ff00});
-			Main.instance.debugPrintLog.debugPrint(err, {delayTime: 3.5, style: 0xff0000});
-		}
+		Main.instance.debugPrintLog.debugPrint(fn, {delayTime: 3.5, style: 0x00ff00});
+		Main.instance.debugPrintLog.debugPrint(err, {delayTime: 3.5, style: 0xff0000});
 		#end
 	}
 
