@@ -1,0 +1,9 @@
+{
+    "params": [
+        {
+            "name": "setRealDefaultCamZoom",
+            "type": "String",
+            "defaultValue": "0.75"
+        }
+    ]
+}
