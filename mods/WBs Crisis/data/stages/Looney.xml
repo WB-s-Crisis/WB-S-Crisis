@@ -1,0 +1,6 @@
+<stage zoom="0.75" startCamPosX="0" startCamPosY="0" folder="stages/1942">
+
+	<girlfriend x="500" y="280" />
+	<boyfriend x="1000" y="300" camxoffset="-400" camyoffset="-120"/>
+	<dad x="-580" y="310" camxoffset="180" camyoffset="-100"/>
+</stage>
