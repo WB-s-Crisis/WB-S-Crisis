@@ -63,15 +63,15 @@ function postCreate() {
 
 var useone:Bool = true;
 function update(elapsed:Float) {
-	loadedList.percent = lerp(loadedList.percent, (loadedAmout / maxLoop) * 100, 0.075);
+	loadedList.percent = lerp(loadedList.percent, (loadedAmout / maxLoop) * 100, 0.2);
 	
-	if(loadedAmout != maxLoop) {
+	if(loadedList.percent <= 80) {
 		var preText = "loading...[" + Math.floor(loadedList.percent) + "%(stuffix: " + optionStuffixList[loadedAmout] + ")]";
 		StringTools.replace(preText, "null", "no man");
 		loadTxt.text = preText;
 	}else loadTxt.text = "loaded Successfully";
 	
-	if(loadedList.percent > 99 && useone) {
+	if(loadedList.percent > 99.99 && useone) {
 		useone = false;
 		
 		finish();
