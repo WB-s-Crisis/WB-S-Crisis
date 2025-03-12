@@ -38,6 +38,11 @@ import funkin.backend.utils.NativeAPI;
 import flixel.ui.FlxBar;
 import flixel.ui.FlxBar.FlxBarFillDirection;
 
+#if ALLOW_MULTITHREADING
+import sys.thread.Thread;
+import sys.thread.FixedThreadPool;
+#end
+
 #if sys
 import sys.io.File;
 import sys.FileSystem;
@@ -61,6 +66,7 @@ class CopyState extends funkin.backend.MusicBeatState
 	public var loadingBar:FlxBar;
 	public var loadedText:FlxText;
 	public var copyLoop:FlxAsyncLoop;
+	public var threadPool:FixedThreadPool;
 
 	var failedFilesStack:Array<String> = [];
 	var failedFiles:Array<String> = [];
@@ -103,19 +109,30 @@ class CopyState extends funkin.backend.MusicBeatState
 		if (maxLoopTimes <= 15)
 			ticks = 1;
 
+		#if !ALLOW_MULTITHREADING
 		copyLoop = new FlxAsyncLoop(maxLoopTimes, copyAsset, ticks);
 		add(copyLoop);
 		copyLoop.start();
+		#else
+		threadPool = new FixedThreadPool(8);
+		threadPool.run(() -> {
+			while(shouldCopy && loopTimes < maxLoopTimes) {
+				for(i in loopTimes...Std.int(Math.min(loopTimes + ticks, maxLoopTimes))) {
+					copyAsset();
+				}
+			}
+		});
+		#end
 
 		super.create();
 	}
 
 	override function update(elapsed:Float)
 	{
-		if (shouldCopy && copyLoop != null)
+		if (shouldCopy)
 		{
 			loadingBar.percent = loopTimes / maxLoopTimes * 100;
-			if (copyLoop.finished && canUpdate)
+			if (#if ALLOW_MULTITHREADING loopTimes == maxLoopTimes #else copyLoop.finished #end && canUpdate)
 			{
 				if (failedFiles.length > 0)
 				{
@@ -137,6 +154,15 @@ class CopyState extends funkin.backend.MusicBeatState
 				loadedText.text = '$loopTimes/$maxLoopTimes';
 		}
 		super.update(elapsed);
+	}
+	
+	override function destroy() {
+		super.destroy();
+		
+		#if ALLOW_MULTITHREADING
+		threadPool.shutdown();
+		threadPool = null;
+		#end
 	}
 
 	public function copyAsset()
