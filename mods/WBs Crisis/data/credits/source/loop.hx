@@ -79,6 +79,7 @@ function update(elapsed:Float) {
 }
 
 function destroy() {
+	thread.destroy();
 }
 
 function finish() {
