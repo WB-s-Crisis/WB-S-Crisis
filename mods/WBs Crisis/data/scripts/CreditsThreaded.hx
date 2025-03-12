@@ -1,3 +1,7 @@
+import sys.thread.Mutex;
+
+var mutex = new Mutex();
+
 function onLoad(length:Int) {
 	var i = 0;
 	while(i < length) {
@@ -11,6 +15,9 @@ function onLoad(length:Int) {
 		var dir = optionStuffixList[i];
 
 		if(Assets.exists(imagePath("stuffix/" + dir + "/icon"))) {
+
+			mutex.tryAcquire();
+			
 			var bd = Assets.getBitmapData(imagePath("stuffix/" + dir + "/icon"));
 			
 			if(bd == null) continue;
@@ -32,9 +39,15 @@ function onLoad(length:Int) {
 			}
 		
 			graphicCache.cacheGraphic(FlxG.bitmap.add(bd));
+			
+			mutex.release();
 		}
 	
 		i++;
 		loadedAmout++;
 	}
+}
+
+function destroy() {
+	mutex = null;
 }
