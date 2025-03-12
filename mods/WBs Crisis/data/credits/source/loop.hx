@@ -6,6 +6,7 @@ import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
 import openfl.geom.Point;
 import funkin.backend.utils.BitmapUtil;
+import funkin.backend.scripting.MultiThreadedScript;
 
 importAddons("game.BarEvaluate");
 
@@ -13,6 +14,8 @@ var barGroup:FlxSpriteGroup;
 var loadBar:FlxBar;
 var barBG:FlxSprite;
 var loadTxt:FlxText;
+
+var thread:MultiThreadedScript = null;
 
 var loadedList:Dynamic = {
 	percent: 0,
@@ -22,6 +25,9 @@ var loadedAmout:Int = 0;
 
 function postCreate() {
 	startedLoaded = true;
+	
+	thread = new MultiThreadedScript(Paths.script("data/scripts/CreditsThreaded"), __script__);
+	thread.script.set("callEnded", thread.callEnded);
 
 	loadBar = new FlxBar(0, 0, FlxBarFillDirection.LEFT_TO_RIGHT, FlxG.width - 200 - 16, 75 - 16, loadedList, "percent", 0, loadedList.maxLoaded);
 	loadBar.createFilledBar(0xFFD4D4D4, 0xFF00FF00);
@@ -44,37 +50,43 @@ function postCreate() {
 	loadTxt.alpha = 0;
 	add(loadTxt);
 	
-	var al = new FlxAsyncLoop(maxLoop, iterationCallback, 1);
-	add(al);
-	
 	FlxG.camera.flash(0xFF000000, 0.75, () -> {
 		for(bar in [loadBar, barBG]) {
 			bar.visible = true;
 			FlxTween.tween(bar.scale, {x: 1, y: 1}, 0.5, {ease: FlxEase.circInOut});
 		}
 		FlxTween.tween(loadTxt, {alpha: 1}, 0.25, {startDelay: 0.25, onComplete: (_) -> {
-			al.start();
+			thread.call("onLoad", [maxLoop]);
 		}});
 	});
 }
 
-function iterationCallback() {
-	stuffixData.push(parseCreditsFromDirectory(optionStuffixList[loadedAmout]));
-	loadcacheGraphic();
-
-	loadedAmout++;
-	loadedList.percent = (loadedAmout / maxLoop) * 100;
-	loadTxt.text = "loading...[" + Math.floor(loadedList.percent) + "%(stuffix: " + optionStuffixList[loadedAmout - 1] + ")]";
+var useone:Bool = true;
+function update(elapsed:Float) {
+	loadedList.percent = lerp(loadedList.percent, (loadedAmout / maxLoop) * 100, 0.075);
 	
-	if(loadedAmout == maxLoop) {
-		loaded = true;
-		new FlxTimer().start(0.25, (_) -> finishLoop());
+	if(loadedAmout != maxLoop) {
+		var preText = "loading...[" + Math.floor(loadedList.percent) + "%(stuffix: " + optionStuffixList[loadedAmout] + ")]";
+		StringTools.replace(preText, "null", "no man");
+		loadTxt.text = preText;
+	}else loadTxt.text = "loaded Successfully";
+	
+	if(loadedList.percent > 99 && useone) {
+		useone = false;
+		
+		finish();
 	}
 }
 
-function finishLoop() {
-	loadTxt.text = "loaded successfully!!";
+function destroy() {
+}
 
+function finish() {
+	loaded = true;
+	new FlxTimer().start(0.25, (_) -> finishLoop());
+}
+
+function finishLoop() {
 	for(bar in [loadBar, barBG]) {
 		FlxTween.tween(bar.scale, {x: 0.01, y: 0.01}, 0.5, {ease: FlxEase.circInOut, onComplete: (_) -> {
 			bar.visible = false;
@@ -127,30 +139,4 @@ function restoreMenu(_:FlxTimer) {
 	}});
 	
 	changeSelection(0, true);
-}
-
-function loadcacheGraphic() {
-	var dir = optionStuffixList[loadedAmout];
-
-	if(Assets.exists(imagePath("stuffix/" + dir + "/icon"))) {
-		var bd = Assets.getBitmapData(imagePath("stuffix/" + dir + "/icon"));
-		
-		if(!Reflect.hasField(stuffixData[loadedAmout], "color") || stuffixData[loadedAmout].color == null) {
-			var newColor = BitmapUtil.getMostPresentSaturatedColor(bd);
-			Reflect.setField(stuffixData[loadedAmout], "color", newColor);
-		}
-		
-		if(Reflect.hasField(stuffixData[loadedAmout], "maskIcon") && stuffixData[loadedAmout].maskIcon) {
-			var maskBd = new BitmapData(bd.width, bd.height, true, 0x00000000);
-			var shape = new Shape();
-			shape.graphics.beginFill(0xFF00FF00);
-			shape.graphics.drawCircle(maskBd.width / 2, maskBd.height / 2, ((maskBd.width + maskBd.height) / 2) / 2);
-			shape.graphics.endFill();
-			maskBd.draw(shape);
-			
-			bd.copyChannel(maskBd, new Rectangle(0, 0, bd.width, bd.height), new Point(), 8, 8);
-		}
-		
-		graphicCache.cacheGraphic(FlxG.bitmap.add(bd));
-	}
 }

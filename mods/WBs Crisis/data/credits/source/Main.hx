@@ -12,7 +12,6 @@ public var loaded:Bool = false;
 function create() {
 	FlxG.mouse.visible = true;
 	MusicBeatState.skipTransIn = true;
-	Main.instance.framerateSprite.visible = false;
 	
 	camCredit = new FlxCamera();
 	camCredit.bgColor = 0;
