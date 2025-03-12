@@ -18,6 +18,7 @@ class GameplayOptions extends OptionsScreen {
 			if(withoutExtension.contains("secret") || withoutExtension.contains("pixel")) continue;
 			splashArray.push(Path.withoutExtension(goodPath));
 		}
+		splashArray.sort((left, right) -> return -1);
 		
 		super("Gameplay", 'Change Gameplay options such as Downscroll, Scroll Speed, Naughtyness...', null, 'LEFT_FULL', 'A_B');
 		add(new Checkbox(
