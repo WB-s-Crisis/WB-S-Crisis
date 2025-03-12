@@ -35,6 +35,7 @@ import haxe.io.Path;
 import mobile.funkin.backend.utils.MobileUtil;
 import funkin.backend.assets.Paths;
 import funkin.backend.utils.NativeAPI;
+import funkin.backend.system.Main;
 import flixel.ui.FlxBar;
 import flixel.ui.FlxBar.FlxBarFillDirection;
 
@@ -51,6 +52,9 @@ import sys.FileSystem;
 using StringTools;
 
 /**
+ * ......
+ * 老样子，我进行了一点小小的修改，用于方便对某些事物进行道光（是这么回事的哦）
+ * @editor: VapireMox
  * ...
  * @author: Karim Akra
  */
@@ -84,8 +88,10 @@ class CopyState extends funkin.backend.MusicBeatState
 			FlxG.resetGame();
 			return;
 		}
+		
+		if(Main.instance.framerateSprite.visible) Main.instance.framerateSprite.visible = false;
 
-		NativeAPI.showMessageBox("Notice", "Seems like you have some missing files that are necessary to run the game\nPress OK to begin the copy process");
+		lime.app.Application.current.window.alert("注意(Notice)", "你似乎丢失了启动游戏时必要的文件\n请按下\"OK\"以来复制必要的文件\n(Seems like you have some missing files that are necessary to run the game)\n(Press OK to begin the copy process)\n\n\n（或者说是你个貂毛压根啥文件没丢失，就是第一次下载了而已>:[）");
 
 		shouldCopy = true;
 
@@ -97,6 +103,7 @@ class CopyState extends funkin.backend.MusicBeatState
 		loadingImage.screenCenter();
 		add(loadingImage);
 
+		//666，主播你怎么玩上了啊
 		loadingBar = new FlxBar(0, FlxG.height - 26, FlxBarFillDirection.LEFT_TO_RIGHT, FlxG.width, 26);
 		loadingBar.setRange(0, maxLoopTimes);
 		add(loadingBar);
@@ -129,7 +136,7 @@ class CopyState extends funkin.backend.MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		if (shouldCopy)
+		if (shouldCopy #if !ALLOW_MULTITHREADING && copyLoop != null #end)
 		{
 			loadingBar.percent = loopTimes / maxLoopTimes * 100;
 			if (#if ALLOW_MULTITHREADING loopTimes == maxLoopTimes #else copyLoop.finished #end && canUpdate)
@@ -145,6 +152,7 @@ class CopyState extends funkin.backend.MusicBeatState
 				FlxG.sound.play(Paths.sound('menu/confirm')).onComplete = () ->
 				{
 					FlxG.resetGame();
+					Main.instance.framerateSprite.visible = true;
 				};
 			}
 
