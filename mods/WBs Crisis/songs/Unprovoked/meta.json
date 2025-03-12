@@ -1,1 +1,21 @@
-
+{
+	"beatsPerMeasure": 4,
+	"opponentModeAllowed": false,
+	"coopAllowed": false,
+	"stepsPerBeat": 4,
+	"bpm": 150,
+	"difficulties": [
+		"bugRabbit"
+	],
+	"needsVoices": true,
+	"parsedColor": -12368550,
+	"displayName": "Unprovoked",
+	"icon": "tom-final",
+	"name": "Unprovoked",
+	"color": "#43455A",
+	"customValues": {
+		"iconAnimated": true,
+		"iconScale": 1.1,
+		"iconOffset": [-20, -80]
+	}
+}
