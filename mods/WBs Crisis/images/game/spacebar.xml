@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+不想再改了😭😭😭
+-->
+<TextureAtlas imagePath="spacebar.png" width="1590" height="773">
+  <SubTexture name="static0000" x="0" y="0"  width="799" height="769" frameX="-133" frameY="-168" frameWidth="1080" frameHeight="1080"/>
+  <SubTexture name="press0000" x="799" y="0"  width="791" height="773" frameX="-137" frameY="-164" frameWidth="1080" frameHeight="1080"/>
+</TextureAtlas>
