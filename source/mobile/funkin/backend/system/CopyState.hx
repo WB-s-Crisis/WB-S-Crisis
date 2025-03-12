@@ -91,7 +91,7 @@ class CopyState extends funkin.backend.MusicBeatState
 		
 		if(Main.instance.framerateSprite.visible) Main.instance.framerateSprite.visible = false;
 
-		lime.app.Application.current.window.alert("注意(Notice)", "你似乎丢失了启动游戏时必要的文件\n请按下\"OK\"以来复制必要的文件\n(Seems like you have some missing files that are necessary to run the game)\n(Press OK to begin the copy process)\n\n\n（或者说是你个貂毛压根啥文件没丢失，就是第一次下载了而已>:[）");
+		lime.app.Application.current.window.alert("你似乎丢失了启动游戏时必要的文件\n请按下\"OK\"以来复制必要的文件\n(Seems like you have some missing files that are necessary to run the game)\n(Press OK to begin the copy process)\n\n\n（或者说是你个貂毛压根啥文件没丢失，就是第一次下载了而已>:[）", "注意(Notice)");
 
 		shouldCopy = true;
 
