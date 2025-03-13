@@ -30,6 +30,7 @@ import flixel.FlxG;
 import flixel.text.FlxText;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
+import flixel.math.FlxMath;
 import openfl.utils.ByteArray;
 import haxe.io.Path;
 import mobile.funkin.backend.utils.MobileUtil;
