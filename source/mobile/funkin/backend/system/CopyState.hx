@@ -70,13 +70,15 @@ class CopyState extends funkin.backend.MusicBeatState
 	public var loadingBar:FlxBar;
 	public var loadedText:FlxText;
 	public var copyLoop:FlxAsyncLoop;
-	public var threadPool:FixedThreadPool;
+	public var threadPool:#if ALLOW_MULTITHREADING FixedThreadPool #else Dynamic #end;
 
 	var failedFilesStack:Array<String> = [];
 	var failedFiles:Array<String> = [];
 	var shouldCopy:Bool = false;
 	var canUpdate:Bool = true;
 	var loopTimes:Int = 0;
+	
+	var currentLoadFile:String;
 
 	override function create()
 	{
@@ -88,8 +90,6 @@ class CopyState extends funkin.backend.MusicBeatState
 			FlxG.resetGame();
 			return;
 		}
-		
-		if(Main.instance.framerateSprite.visible) Main.instance.framerateSprite.visible = false;
 
 		lime.app.Application.current.window.alert("你似乎丢失了启动游戏时必要的文件\n请按下\"OK\"以来复制必要的文件\n(Seems like you have some missing files that are necessary to run the game)\n(Press OK to begin the copy process)\n\n\n（或者说是你个貂毛压根啥文件没丢失，就是第一次下载了而已>:[）", "注意(Notice)");
 
@@ -109,7 +109,8 @@ class CopyState extends funkin.backend.MusicBeatState
 		add(loadingBar);
 
 		loadedText = new FlxText(loadingBar.x, loadingBar.y + 4, FlxG.width, '', 16);
-		loadedText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
+		loadedText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT);
+		loadedText.y -= loadedText.fieldHeight;
 		add(loadedText);
 
 		var ticks:Int = 15;
@@ -124,6 +125,8 @@ class CopyState extends funkin.backend.MusicBeatState
 		threadPool = new FixedThreadPool(8);
 		threadPool.run(() -> {
 			while(shouldCopy && loopTimes < maxLoopTimes) {
+			        Sys.sleep(0.001);
+			
 				for(i in loopTimes...Std.int(Math.min(loopTimes + ticks, maxLoopTimes))) {
 					copyAsset();
 				}
@@ -159,7 +162,7 @@ class CopyState extends funkin.backend.MusicBeatState
 			if (loopTimes == maxLoopTimes)
 				loadedText.text = "Completed!";
 			else
-				loadedText.text = '$loopTimes/$maxLoopTimes';
+				loadedText.text = 'Copying In Progress: $loopTimes/$maxLoopTimes' + (currentLoadFile != null ? '(loading: $currentLoadFile)' : '');
 		}
 		super.update(elapsed);
 	}
@@ -176,6 +179,7 @@ class CopyState extends funkin.backend.MusicBeatState
 	public function copyAsset()
 	{
 		var file = locatedFiles[loopTimes];
+		currentLoadFile = file;
 		loopTimes++;
 		if (!FileSystem.exists(file))
 		{
