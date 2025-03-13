@@ -108,8 +108,9 @@ class CopyState extends funkin.backend.MusicBeatState
 		loadingBar.setRange(0, maxLoopTimes);
 		add(loadingBar);
 
-		loadedText = new FlxText(loadingBar.x, loadingBar.y + 4, FlxG.width, '', 16);
+		loadedText = new FlxText(loadingBar.x, loadingBar.y, FlxG.width, '', 16);
 		loadedText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT);
+		loadedText.setBorderStyle(OUTLINE_FAST, 0xFF4D0000, 1.14514);
 		loadedText.y -= loadedText.fieldHeight;
 		add(loadedText);
 
@@ -141,7 +142,7 @@ class CopyState extends funkin.backend.MusicBeatState
 	{
 		if (shouldCopy #if !ALLOW_MULTITHREADING && copyLoop != null #end)
 		{
-			loadingBar.percent = loopTimes / maxLoopTimes * 100;
+			loadingBar.percent = FlxMath.bound(FlxMath.lerp(loadingBar.percent, loopTimes / maxLoopTimes * 100, Math.exp(-elapsed / 0.0133)), 0, 100);
 			if (#if ALLOW_MULTITHREADING loopTimes == maxLoopTimes #else copyLoop.finished #end && canUpdate)
 			{
 				if (failedFiles.length > 0)
@@ -161,8 +162,10 @@ class CopyState extends funkin.backend.MusicBeatState
 
 			if (loopTimes == maxLoopTimes)
 				loadedText.text = "Completed!";
-			else
+			else {
 				loadedText.text = 'Copying In Progress: $loopTimes/$maxLoopTimes' + (currentLoadFile != null ? '(loading: $currentLoadFile)' : '');
+			}
+	                loadedText.y = loadingBar.y - loadedText.fieldHeight;
 		}
 		super.update(elapsed);
 	}
