@@ -119,7 +119,7 @@ enum abstract StorageType(String) from String to String
 {
 	final forcedPath = '/storage/emulated/0/';
 	final packageNameLocal = 'com.myZYANG.WBsCrisis';
-	final fileLocal = 'WBsCrisis';
+	final fileLocal = 'WBs Crisis';
 
 	public static function fromStr(str:String):StorageType
 	{
