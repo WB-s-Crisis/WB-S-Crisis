@@ -102,7 +102,7 @@ class LuaUtil {
 				}else {
 					if(oldVar != null) {
 						try {
-							if((Reflect.field(oldVar. fuck) is Array) || (fuck.contains("[") && fuck.contains("]"))) {
+							if((StringTools.contains(fuck, "[") && StringTools.contains(fuck, "]"))) {
 								error('The final value cannot be Array');
 								return false;
 							}else {
