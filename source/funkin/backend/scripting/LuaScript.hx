@@ -8,6 +8,7 @@ import llua.Convert;
 
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxColor;
+import funkin.backend.scripting.utils.LuaUtil;
 
 /**
  * 第一次搞，懂？
@@ -31,7 +32,7 @@ class LuaScript extends Script {
 	private var _allowUseHScript:Bool;
 	
 	public function new(path:String, allowUseHScript:Bool = true) {
-		super();
+		super(path);
 		_allowUseHScript = allowUseHScript;
 	}
 
