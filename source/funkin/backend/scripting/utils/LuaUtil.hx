@@ -20,7 +20,7 @@ class LuaUtil {
 		
 		lua.set("setProperty", function(tag:String, val:Dynamic) {
 			if(lua.scriptObject != null) {
-				return getVariableFromStr(lua.scriptObject, tag, val, lua, "getProperty");
+				return setVariableFromStr(lua.scriptObject, tag, val, lua, "setProperty");
 			}else {
 				error('ScriptObject Was Null, So You Can\'t Use This Callback', "setProperty", lua);
 			}
