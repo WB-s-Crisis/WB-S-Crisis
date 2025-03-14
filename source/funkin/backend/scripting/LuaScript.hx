@@ -32,7 +32,7 @@ class LuaScript extends Script {
 	private var _allowUseHScript:Bool;
 	private var defaultVariables:Map<String, Dynamic> = [
 		//测试的
-		"debugText" => (text:String, delayTime:Float = 1, ?style:String) -> {
+		"debugPrint" => (text:String, delayTime:Float = 1, ?style:String) -> {
 			Main.instance.debugPrintLog.debugPrint(text, {delayTime: delayTime, style: (style != null ? (cast FlxColor.fromString(style)) : 0xFFFFFFFF)});
 		},
 		"windowAlert" => lime.app.Application.current.window.alert,
