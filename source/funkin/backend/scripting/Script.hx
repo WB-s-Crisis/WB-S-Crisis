@@ -1,4 +1,4 @@
-*package funkin.backend.scripting;
+package funkin.backend.scripting;
 
 import lime.app.Application;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
