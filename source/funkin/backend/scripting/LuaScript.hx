@@ -19,6 +19,7 @@ class LuaScript extends Script {
 
 	public var heart:State;
 	public var code:String = "";
+	private var templateCode:String = "return -1";
 	
 	//用于锁定setProperty和getProperty的指定用途（你懂的
 	public var scriptObject:Dynamic = null;
@@ -34,6 +35,7 @@ class LuaScript extends Script {
 		
 		try {
 			if(Assets.exists(rawPath)) code = Assets.getText(rawPath);
+			if(code == "" || code == null) code = templateCode;
 		} catch(e) {
 			Logs.trace('Error while reading $path: ${Std.string(e)}', ERROR);
 			_close();
@@ -60,13 +62,15 @@ class LuaScript extends Script {
 					error(output);
 					_close();
 				}
-			}else {
-				call("new");
 			}
 		} catch(e:Dynamic) {
 			trace(e);
+			_close();
+			
+			return;
 		}
 		trace("loading Successully");
+		call("new");
 	}
 	
 	override function reload() {
