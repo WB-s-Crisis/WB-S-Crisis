@@ -36,7 +36,7 @@ class LuaScript extends Script {
 			if(Assets.exists(rawPath)) code = Assets.getText(rawPath);
 		} catch(e) {
 			Logs.trace('Error while reading $path: ${Std.string(e)}', ERROR);
-			_close():
+			_close();
 		}
 		
 		#if GLOBAL_SCRIPT
