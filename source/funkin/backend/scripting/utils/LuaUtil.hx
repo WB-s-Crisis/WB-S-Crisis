@@ -8,7 +8,7 @@ class LuaUtil {
 	public inline static final Function_Continue:Int = 1;
 	
 	public static function reflectFunction(lua:LuaScript) {
-		lua.set("getProperty", function(tag:String, val:Dynamic) {
+		lua.set("getProperty", function(tag:String) {
 			if(lua.scriptObject != null) {
 				return getVariableFromStr(lua.scriptObject, tag, lua, "getProperty");
 			}else {
@@ -18,9 +18,9 @@ class LuaUtil {
 			return null;
 		});
 		
-		lua.set("setProperty", function(tag:String) {
+		lua.set("setProperty", function(tag:String, val:Dynamic) {
 			if(lua.scriptObject != null) {
-				return getVariableFromStr(lua.scriptObject, tag, lua, "getProperty");
+				return getVariableFromStr(lua.scriptObject, tag, val, lua, "getProperty");
 			}else {
 				error('ScriptObject Was Null, So You Can\'t Use This Callback', "setProperty", lua);
 			}
@@ -71,7 +71,7 @@ class LuaUtil {
 		return null;
 	}
 
-	public static function setVariableFromStr(scriptObject:Dynamic, variable:String, value:Dynamic, lua:LuaScript):Bool {
+	public static function setVariableFromStr(scriptObject:Dynamic, variable:String, value:Dynamic, lua:LuaScript, title:String):Bool {
 		if(scriptObject == null) {
 			error('ScriptObject Was Null, So You Can\'t Use This Callback', title, lua);
 			return false;
@@ -103,7 +103,7 @@ class LuaUtil {
 					if(oldVar != null) {
 						try {
 							if((StringTools.contains(fuck, "[") && StringTools.contains(fuck, "]"))) {
-								error('The final value cannot be Array');
+								error('The final value cannot be Array', title, lua);
 								return false;
 							}else {
 								Reflect.setProperty(oldVar, fuck, value);
@@ -119,7 +119,7 @@ class LuaUtil {
 		}else if(fuckyou.length == 1) {
 			var originFuck = fuckyou[0];
 			if(StringTools.contains(originFuck, "[") && StringTools.contains(originFuck, "]")) {
-				error('The final value cannot be Array');
+				error('The final value cannot be Array', title, lua);
 				return false;
 			}
 			
