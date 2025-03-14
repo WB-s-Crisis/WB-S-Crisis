@@ -32,8 +32,8 @@ class LuaScript extends Script {
 	private var _allowUseHScript:Bool;
 	
 	public function new(path:String, allowUseHScript:Bool = true) {
-		super(path);
 		_allowUseHScript = allowUseHScript;
+		super(path);
 	}
 
 	public override function onCreate(path:String) {
