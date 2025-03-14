@@ -187,7 +187,6 @@
 	<haxelib name="hscript-improved" />
 	<haxelib name="hxdiscord_rpc" if="DISCORD_RPC"/>
 	<haxelib name="markdown" />
-	<haxelib name="hx-lua" />
 
 	<haxelib name="extension-androidtools" if="android" />
 
