@@ -205,7 +205,7 @@ class LuaUtil {
 			}
 			
 			return null;
-		})
+		});
 	}
 	
 	public static function hscriptFunction(lua:LuaScript, allowHScript:Bool = true) {
