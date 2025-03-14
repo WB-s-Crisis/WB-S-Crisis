@@ -22,22 +22,6 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	public static var staticVariables:Map<String, Dynamic> = [];
 
 	public static function getDefaultVariables(?script:Script):Map<String, Dynamic> {
-		if(script.isLua) return [
-			//测试的
-			"debugText" => (text:String, delayTime:Float = 1, ?style:String) -> {
-				Main.instance.debugPrintLog.debugPrint(text, {delayTime: delayTime, style: (style != null ? (cast FlxColor.fromString(style)) : 0xFFFFFFFF)});
-			},
-			"windowAlert" => lime.app.Application.current.window.alert,
-			
-			//决定call的生死时刻！
-			"Function_Stop" => LuaUtil.Function_Stop,
-			"Function_Continue" => LuaUtil.Function_Continue,
-			
-			//部分FlxMath的大宝贝
-			"mathBound" => flixel.math.FlxMath.bound,
-			"mathLerp" => flixel.math.FlxMath.lerp,
-		];
-	
 		return [
 			// Haxe related stuff
 			"Std"			   => Std,
@@ -226,13 +210,15 @@ class Script extends FlxBasic implements IFlxDestroyable {
 		extension = Path.extension(path);
 		this.path = path;
 		onCreate(path);
-		for(k=>e in getDefaultVariables(this)) {
-			set(k, e);
-		}
 		set("disableScript", () -> {
 			active = false;
 		});
-		set("__script__", this);
+		if(!isLua) {
+			for(k=>e in getDefaultVariables(this)) {
+				set(k, e);
+			}
+			set("__script__", this);
+		}
 	}
 
 
