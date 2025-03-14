@@ -27,12 +27,32 @@ class LuaUtil {
 			
 			return false;
 		});
+		
+		lua.set("setPropertyFromClass", function(cl:String, tag:String, val:Dynamic) {
+			var cls:Class<Dynamic> = Type.resolveClass(cl);
+			if(cls == null) {
+				error('Not Found Class: $cl', "setPropertyFromClass", lua);
+				return false;
+			}
+			
+			return setVariableFromStr(cls, tag, val, lua, "setPropertyFromClass");
+		});
+		
+		lua.set("getPropertyFromClass", function(cl:String, tag:String) {
+			var cls:Class<Dynamic> = Type.resolveClass(cl);
+			if(cls == null) {
+				error('Not Found Class: $cl', "getPropertyFromClass", lua);
+				return null;
+			}
+			
+			return getVariableFromStr(cls, tag, lua, "getPropertyFromClass");
+		});
+	}
+	
+	public static function hscriptFunction(lua:LuaScript) {
 	}
 	
 	public static function getVariableFromStr(scriptObject:Dynamic, variable:String, lua:LuaScript, title:String):Dynamic {
-		if(scriptObject == null) {
-		}
-
 		var fuckyou = variable.split(".");
 	
 		if(fuckyou.length > 1) {
@@ -72,11 +92,6 @@ class LuaUtil {
 	}
 
 	public static function setVariableFromStr(scriptObject:Dynamic, variable:String, value:Dynamic, lua:LuaScript, title:String):Bool {
-		if(scriptObject == null) {
-			error('ScriptObject Was Null, So You Can\'t Use This Callback', title, lua);
-			return false;
-		}
-
 		var fuckyou = variable.split(".");
 	
 		if(fuckyou.length > 1) {
