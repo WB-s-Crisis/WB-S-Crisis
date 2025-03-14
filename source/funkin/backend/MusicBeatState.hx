@@ -97,6 +97,8 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	 */
 	public var stateScripts:ScriptPack;
 
+	public var scriptVariables:Map<String, Dynamic> = new Map();
+
 	public var scriptsAllowed:Bool = true;
 
 	public static var lastScriptName:String = null;
@@ -212,6 +214,8 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 		if(camVPad != null)
 			camVPad = FlxDestroyUtil.destroy(camVPad);
 		#end
+
+		scriptVariables.clear();
 
 		// CNE Related
 		super.destroy();
