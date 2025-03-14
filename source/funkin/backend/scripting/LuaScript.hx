@@ -19,7 +19,8 @@ class LuaScript extends Script {
 
 	public var heart:State;
 	public var code:String = "";
-	private var templateCode:String = "return -1";
+	//666，代码要是是空的直接报错闪退了，你这是在让我填充啊
+	private var templateCode:String = "return Function_Stop";
 	
 	//用于锁定setProperty和getProperty的指定用途（你懂的
 	public var scriptObject:Dynamic = null;
@@ -44,11 +45,6 @@ class LuaScript extends Script {
 		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.call("onScriptCreated", [this, "lua"]);
 		#end
-		
-		set("debugPrint", (text:String, delayTime:Float = 1, ?style:String) -> {
-			Main.instance.debugPrintLog.debugPrint(text, {delayTime: delayTime, style: (style != null ? (cast FlxColor.fromString(style)) : 0xFFFFFFFF)});
-		});
-		set("windowAlert", lime.app.Application.current.window.alert);
 	}
 	
 	override function onLoad() {
