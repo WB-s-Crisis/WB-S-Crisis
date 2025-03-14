@@ -40,7 +40,7 @@ class LuaUtil {
 			for(shit=>fuck in fuckyou) {
 				if(StringTools.contains(fuck, "[") && StringTools.contains(fuck, "]")) {
 					var realShit = fuck.substr(0, fuck.indexOf("["));
-					var preField = Reflect.field(oldVar, realShit);
+					var preField = Reflect.getProperty(oldVar, realShit);
 					if(!Std.isOfType(preField, Array)) {
 						error('Expected "$realShit"!! Currently Only Supports Array In This Callback', title, lua);
 						return null;
@@ -51,13 +51,13 @@ class LuaUtil {
 					continue;
 				}
 		
-				oldVar = Reflect.field(oldVar, fuck);
+				oldVar = Reflect.getProperty(oldVar, fuck);
 			}
 			return oldVar;
 		}else if(fuckyou.length == 1) {
 			var originFuck = fuckyou[0];
 			if(StringTools.contains(originFuck, "[") && StringTools.contains(originFuck, "]")) {
-				var preField = Reflect.field(scriptObject, originFuck.substr(0, originFuck.indexOf("[")));
+				var preField = Reflect.getProperty(scriptObject, originFuck.substr(0, originFuck.indexOf("[")));
 				if(!Std.isOfType(preField, Array)) return null;
 
 				var preInt = originFuck.substring(originFuck.indexOf("[") + 1, originFuck.indexOf("]"));
@@ -65,7 +65,7 @@ class LuaUtil {
 				return preField[Std.parseInt(preInt)];
 			}
 		
-			return Reflect.field(scriptObject, originFuck);
+			return Reflect.getProperty(scriptObject, originFuck);
 		}
 	
 		return null;
@@ -86,7 +86,7 @@ class LuaUtil {
 				if(shit < fuckyou.length - 1) {
 					if(StringTools.contains(fuck, "[") && StringTools.contains(fuck, "]")) {
 						var realShit = fuck.substr(0, fuck.indexOf("["));
-						var preField = Reflect.field(oldVar, realShit);
+						var preField = Reflect.getProperty(oldVar, realShit);
 						if(!Std.isOfType(preField, Array)) {
 						error('Expected "$realShit"!! Currently Only Supports Array In This Callback', title, lua);
 							return false;
@@ -98,7 +98,7 @@ class LuaUtil {
 						continue;
 					}
 			
-					oldVar = Reflect.field(oldVar, fuck);
+					oldVar = Reflect.getProperty(oldVar, fuck);
 				}else {
 					if(oldVar != null) {
 						try {
