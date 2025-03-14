@@ -24,9 +24,6 @@
 	<!-- <lib name="dox" /> -->
 	<lib name="markdown" />
 
-	<!-- LUA -->
-	<git name="hx-lua" url="https://github.com/MattTuttle/hx-lua/" />
-
 	<!-- Android Specific -->
 	<git name="extension-androidtools" url="https://github.com/MAJigsaw77/extension-androidtools" ref="main" skipDeps="true" />
 
