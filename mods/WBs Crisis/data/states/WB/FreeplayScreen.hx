@@ -191,8 +191,8 @@ function loadStuff() {
 			
 			if(graphic != null) {
 				cover.loadGraphic(graphic);
-				cover.x = (songs[curSelected].info.get("Freeplay").get("OffsetX") != null ? Std.parseFloat(songs[curSelected].info.get("Freeplay").get("OffsetX")) : 0);
-				cover.y = (songs[curSelected].info.get("Freeplay").get("OffsetY") != null ? Std.parseFloat(songs[curSelected].info.get("Freeplay").get("OffsetY")) : 0);
+				cover.x = (songs[curSelected].info.get("Freeplay").get("CoverX") != null ? Std.parseFloat(songs[curSelected].info.get("Freeplay").get("CoverX")) : 0);
+				cover.y = (songs[curSelected].info.get("Freeplay").get("CoverY") != null ? Std.parseFloat(songs[curSelected].info.get("Freeplay").get("CoverY")) : 0);
 				cover.scale.set(0.9, 0.9);
 				cover.updateHitbox();
 			}
@@ -203,6 +203,8 @@ function loadStuff() {
 			
 			if(graphic != null) {
 				bg.loadGraphic(graphic);
+				bg.x = (songs[curSelected].info.get("Freeplay").get("BGX") != null ? Std.parseFloat(songs[curSelected].info.get("Freeplay").get("BGX")) : 0);
+				bg.y = (songs[curSelected].info.get("Freeplay").get("BGY") != null ? Std.parseFloat(songs[curSelected].info.get("Freeplay").get("BGY")) : 0);
 				scaleToGame(bg);
 			}
 		}
