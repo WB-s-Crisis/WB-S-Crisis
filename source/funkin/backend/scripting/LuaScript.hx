@@ -53,14 +53,18 @@ class LuaScript extends Script {
 		if(heart == null || closed) return;
 	
 		//我一直在想加载是否需要返回值😅
-		if(LuaL.dostring(heart, code) != Lua.LUA_OK) {
-			var output:Dynamic = null;
-			if((output = Lua.tostring(heart, -1)) != null) {
-				error(output);
-				_close();
+		try {
+			if(LuaL.dostring(heart, code) != Lua.LUA_OK) {
+				var output:Dynamic = null;
+				if((output = Lua.tostring(heart, -1)) != null) {
+					error(output);
+					_close();
+				}
+			}else {
+				call("new");
 			}
-		}else {
-			call("new");
+		} catch(e:Dynamic) {
+			trace(e);
 		}
 		trace("loading Successully");
 	}
@@ -115,7 +119,7 @@ class LuaScript extends Script {
 			Lua.settop(heart, oldTop);
 			return result;
 		} catch(e:Dynamic) {
-			throw e;
+			trace(e);
 		}
 		
 		return result;
@@ -149,6 +153,21 @@ class LuaScript extends Script {
 	
 	public override function setParent(sc:Dynamic) {
 		scriptObject = sc;
+	}
+	
+	public override function error(text:String, ?additionInfo:Dynamic) {
+		var fileName = this.fileName;
+		if(remappedNames.exists(fileName))
+			fileName = remappedNames.get(fileName);
+		Logs.traceColored([
+			Logs.logText(fileName, RED),
+			Logs.logText(text)
+		], ERROR);
+		#if mobile
+		final debugPrint = Main.instance.debugPrintLog.debugPrint;
+		debugPrint('Error On $fileName!!!', {style: 0xFFFF0000, delayTime: 3.5});
+		debugPrint('$fileName: $text', {style: 0xFF00FF00, delayTime: 3.5});
+		#end
 	}
 	
 	public override function destroy():Void {
@@ -202,6 +221,8 @@ class LuaScript extends Script {
 	
 	private function loadLibs():Void {
 		LuaL.openlibs(heart);
+		Lua.init_callbacks(heart);
+		Lua_helper.register_hxtrace(heart);
 	}
 }
 #end
