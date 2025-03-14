@@ -30,10 +30,25 @@ class LuaScript extends Script {
 	private var _variables:Map<String, Dynamic> = new Map();
 	
 	private var _allowUseHScript:Bool;
+	private var defaultVariables:Map<String, Dynamic> = [
+		//测试的
+		"debugText" => (text:String, delayTime:Float = 1, ?style:String) -> {
+			Main.instance.debugPrintLog.debugPrint(text, {delayTime: delayTime, style: (style != null ? (cast FlxColor.fromString(style)) : 0xFFFFFFFF)});
+		},
+		"windowAlert" => lime.app.Application.current.window.alert,
+			
+		//决定call的生死时刻！
+		"Function_Stop" => LuaUtil.Function_Stop,
+		"Function_Continue" => LuaUtil.Function_Continue,
+			
+		//部分FlxMath的大宝贝
+		"mathBound" => flixel.math.FlxMath.bound,
+		"mathLerp" => flixel.math.FlxMath.lerp,
+	];
 	
 	public function new(path:String, allowUseHScript:Bool = true) {
 		_allowUseHScript = allowUseHScript;
-		this.isLua = true;
+		isLua = true;
 		super(path);
 	}
 
@@ -54,7 +69,10 @@ class LuaScript extends Script {
 		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.call("onScriptCreated", [this, "lua"]);
 		#end
-		
+
+		for(k=>v in defaultVariables) {
+			set(k, v);
+		}
 		LuaUtil.reflectFunction(this);
 	}
 	
