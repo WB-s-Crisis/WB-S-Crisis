@@ -974,7 +974,7 @@ class PlayState extends MusicBeatState
 			introSprites[swagCounter],
 			0.6, true, null, null, null));
 		
-		var luaRet:Dynamic = script.luaCall("countdownTick", [swagCounter]);
+		var luaRet:Dynamic = scripts.luaCall("countdownTick", [swagCounter]);
 
 		var sprite:FlxSprite = null;
 		var sound:FlxSound = null;
@@ -1441,7 +1441,7 @@ class PlayState extends MusicBeatState
 	override function draw() {
 		var e = scripts.event("draw", EventManager.get(DrawEvent).recycle());
 		var luaRet:Dynamic = scripts.luaCall("onDraw");
-		if (!e.cancelled #if ALLOW_LUASTATE || luaRet == Function_Stop #end)
+		if (!e.cancelled #if ALLOW_LUASTATE || luaRet == LuaUtils.Function_Stop #end)
 			super.draw();
 		scripts.event("postDraw", e);
 	}
