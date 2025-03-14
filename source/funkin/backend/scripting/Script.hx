@@ -24,7 +24,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	public static function getDefaultVariables(?script:Script):Map<String, Dynamic> {
 		return (#if ALLOW_LUASTATE (script is LuaScript) ? [
 			"debugPrint" => (text:String, delayTime:Float = 1, ?style:String) -> {
-				Main.instance.debugPrintLog.debugPrint(text, {delayTime: delayTime, style: (style != null ? (cast FlxColor.fromString(style)) : 0xFFFFFFFF);
+				Main.instance.debugPrintLog.debugPrint(text, {delayTime: delayTime, style: (style != null ? (cast FlxColor.fromString(style)) : 0xFFFFFFFF});
 			},
 			"windowAlert" => lime.app.Application.current.window.alert,
 			"Function_Stop" => LuaUtil.Function_Stop,
