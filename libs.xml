@@ -16,9 +16,6 @@
 	<lib name="hxIni" version="" />
 	<lib name="haxe-crypto" version="" />
 
-	<!-- LUA -->
-	<lib name="linc_luajit"version="0.0.7"/>
-
 	<!-- Documentation and other features -->
 	<git name="away3d" url="https://github.com/CodenameCrew/away3d" />
 	<!-- <lib name="dox" /> -->
