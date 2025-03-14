@@ -4,11 +4,6 @@ import funkin.backend.system.framerate.Framerate;
 import funkin.backend.system.GraphicCacheSprite;
 import funkin.backend.system.Controls;
 import funkin.backend.scripting.DummyScript;
-
-#if LUAState
-import funkin.backend.scripting.lua.LuaScript;
-#end
-
 import flixel.FlxState;
 import flixel.FlxSubState;
 import funkin.backend.scripting.events.*;
