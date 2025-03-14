@@ -27,6 +27,13 @@ class LuaScript extends Script {
 	
 	public var closed:Bool = false;
 	private var _variables:Map<String, Dynamic> = new Map();
+	
+	private var _allowUseHScript:Bool;
+	
+	public function new(path:String, allowUseHScript:Bool = true) {
+		super();
+		_allowUseHScript = allowUseHScript;
+	}
 
 	public override function onCreate(path:String) {
 		super.onCreate(path);
@@ -45,6 +52,8 @@ class LuaScript extends Script {
 		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.call("onScriptCreated", [this, "lua"]);
 		#end
+		
+		LuaUtil.reflectFunction(this);
 	}
 	
 	override function onLoad() {
