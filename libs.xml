@@ -5,7 +5,7 @@
 	<lib name="lime" version="8.1.2" />
 
 	<!-- Flixel -->
-	<git name="flixel" url="https://github.com/CodenameCrew/cne-flixel" />
+	<git name="flixel" url="https://github.com/VapireMox/cne-flixel" />
 	<git name="flixel-addons" url="https://github.com/CodenameCrew/cne-flixel-addons" />
 
 	<!-- Other Libraries -->
