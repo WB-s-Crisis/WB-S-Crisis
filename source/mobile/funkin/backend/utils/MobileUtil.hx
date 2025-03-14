@@ -81,16 +81,16 @@ class MobileUtil
 		}
 
 		if ((VERSION.SDK_INT >= VERSION_CODES.TIRAMISU && !Permissions.getGrantedPermissions().contains('android.permission.READ_MEDIA_IMAGES')) || (VERSION.SDK_INT < VERSION_CODES.TIRAMISU && !Permissions.getGrantedPermissions().contains('android.permission.READ_EXTERNAL_STORAGE')))
-			NativeAPI.showMessageBox('Notice!', 'If you accepted the permissions you are all good!' + '\nIf you didn\'t then expect a crash' + '\nPress Ok to see what happens', MSG_INFORMATION);
-
+			lime.app.Application.current.window.alert('如果你同意给予此模组的文件权限的话，那一切事情都好办了（对的）\n如果不同意...建议还是同意，省你几步流程，别让我给你解析一份小报告给您\n就说按不按吧！\n(If you accepted the permissions you are all good!' + ')\n(If you didn\'t then expect a crash)' + '\n(Press Ok to see what happens)', '注意！(Notice!)');
+		
 		try
 		{
-			if (!FileSystem.exists(MobileUtil.getStorageDirectory()))
-				FileSystem.createDirectory(MobileUtil.getStorageDirectory());
+			if (!FileSystem.exists(MobileUtil.getStorageDirectory(true)))
+				FileSystem.createDirectory(MobileUtil.getStorageDirectory(true));
 		}
-		catch (e:Dynamic)
+		catch (e:haxe.Exception)
 		{
-			NativeAPI.showMessageBox('Error!', 'Please create folder to\n' + MobileUtil.getStorageDirectory(true) + '\nPress OK to close the game', MSG_ERROR);
+			NativeAPI.showMessageBox('Error!', 'Please create folder to\n' + MobileUtil.getStorageDirectory(true) + '\nPress OK to close the game\n\n\n${e.stack}', MSG_ERROR);
 			LimeSystem.exit(1);
 		}
 	}
@@ -119,7 +119,7 @@ enum abstract StorageType(String) from String to String
 {
 	final forcedPath = '/storage/emulated/0/';
 	final packageNameLocal = 'com.myZYANG.WBsCrisis';
-	final fileLocal = 'WBsCrisis';
+	final fileLocal = 'WBs Crisis';
 
 	public static function fromStr(str:String):StorageType
 	{

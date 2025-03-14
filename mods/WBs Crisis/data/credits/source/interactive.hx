@@ -30,7 +30,7 @@ function update(elapsed:Float) {
 		else if(controls.RIGHT_P) changeSelection(1);
 	}
 	
-	if(loaded) bg.setPosition(bg.x - elapsed * 50, bg.y - elapsed * 50);
+	bg.setPosition(bg.x - elapsed * 50, bg.y - elapsed * 50);
 	
 	setClipTo();
 }
