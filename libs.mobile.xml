@@ -9,7 +9,7 @@
 	<lib name="format" version="3.6.0" />
 
 	<!-- Flixel -->
-	<git name="flixel" url="https://github.com/CodenameCrew/cne-flixel" />
+	<git name="flixel" url="https://github.com/VapireMox/cne-flixel" />
 	<git name="flixel-addons" url="https://github.com/CodenameCrew/cne-flixel-addons" />
 
 	<!-- Other Libraries -->
