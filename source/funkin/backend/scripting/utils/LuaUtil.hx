@@ -40,7 +40,7 @@ class LuaUtil {
 			for(shit=>fuck in fuckyou) {
 				if(StringTools.contains(fuck, "[") && StringTools.contains(fuck, "]")) {
 					var realShit = fuck.substr(0, fuck.indexOf("["));
-					var preField = Reflect.field(oldVar, realShit));
+					var preField = Reflect.field(oldVar, realShit);
 					if(!Std.isOfType(preField, Array)) {
 						error('Expected "$realShit"!! Currently Only Supports Array In This Callback', title, lua);
 						return null;
@@ -86,7 +86,7 @@ class LuaUtil {
 				if(shit < fuckyou.length - 1) {
 					if(StringTools.contains(fuck, "[") && StringTools.contains(fuck, "]")) {
 						var realShit = fuck.substr(0, fuck.indexOf("["));
-						var preField = Reflect.field(oldVar, realShit));
+						var preField = Reflect.field(oldVar, realShit);
 						if(!Std.isOfType(preField, Array)) {
 						error('Expected "$realShit"!! Currently Only Supports Array In This Callback', title, lua);
 							return false;
