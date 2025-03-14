@@ -1,4 +1,4 @@
-package funkin.backend.scripting;
+*package funkin.backend.scripting;
 
 import lime.app.Application;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
@@ -22,16 +22,25 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	public static var staticVariables:Map<String, Dynamic> = [];
 
 	public static function getDefaultVariables(?script:Script):Map<String, Dynamic> {
-		return (#if ALLOW_LUASTATE (script is LuaScript) ? [
-			"debugPrint" => (text:String, delayTime:Float = 1, ?style:String) -> {
-				Main.instance.debugPrintLog.debugPrint(text, {delayTime: delayTime, style: (style != null ? (cast FlxColor.fromString(style)) : 0xFFFFFFFF});
+		#if ALLOW_LUASTATE
+		if(script is LuaScript) return [
+			//测试的
+			"debugText" => (text:String, delayTime:Float = 1, ?style:String) -> {
+				Main.instance.debugPrintLog.debugPrint(text, {delayTime: delayTime, style: (style != null ? (cast FlxColor.fromString(style)) : 0xFFFFFFFF)});
 			},
 			"windowAlert" => lime.app.Application.current.window.alert,
+			
+			//决定call的生死时刻！
 			"Function_Stop" => LuaUtil.Function_Stop,
 			"Function_Continue" => LuaUtil.Function_Continue,
-		] : 
+			
+			//部分FlxMath的大宝贝
+			"mathBound" => flixel.math.FlxMath.bound,
+			"mathLerp" => flixel.math.FlxMath.lerp,
+		];
 		#end
-		[
+	
+		return [
 			// Haxe related stuff
 			"Std"			   => Std,
 			"Math"			  => Math,
@@ -110,7 +119,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 			"EngineUtil"		=> funkin.backend.utils.EngineUtil,
 			"MemoryUtil"		=> funkin.backend.utils.MemoryUtil,
 			"BitmapUtil"		=> funkin.backend.utils.BitmapUtil,
-		]);
+		];
 	}
 	public static function getDefaultPreprocessors():Map<String, Dynamic> {
 		var defines = funkin.backend.system.macros.DefinesMacro.defines;
