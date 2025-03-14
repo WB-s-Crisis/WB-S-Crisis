@@ -22,8 +22,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	public static var staticVariables:Map<String, Dynamic> = [];
 
 	public static function getDefaultVariables(?script:Script):Map<String, Dynamic> {
-		#if ALLOW_LUASTATE
-		if(script is LuaScript) return [
+		if(script.isLua) return [
 			//测试的
 			"debugText" => (text:String, delayTime:Float = 1, ?style:String) -> {
 				Main.instance.debugPrintLog.debugPrint(text, {delayTime: delayTime, style: (style != null ? (cast FlxColor.fromString(style)) : 0xFFFFFFFF)});
@@ -38,7 +37,6 @@ class Script extends FlxBasic implements IFlxDestroyable {
 			"mathBound" => flixel.math.FlxMath.bound,
 			"mathLerp" => flixel.math.FlxMath.lerp,
 		];
-		#end
 	
 		return [
 			// Haxe related stuff
@@ -147,6 +145,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 * Script name (with extension)
 	 */
 	public var fileName:String;
+	
+	public var isLua:Bool = false;
 
 	/**
 	 * Script Extension

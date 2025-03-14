@@ -33,6 +33,7 @@ class LuaScript extends Script {
 	
 	public function new(path:String, allowUseHScript:Bool = true) {
 		_allowUseHScript = allowUseHScript;
+		this.isLua = true;
 		super(path);
 	}
 
