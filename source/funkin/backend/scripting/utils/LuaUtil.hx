@@ -469,7 +469,7 @@ class LuaUtil {
 		});
 		if(options != null) {
 			for(op in Reflect.fields(options)) {
-				var value:Dynamic = Reflect.getProperty(object, op);
+				var value:Dynamic = Reflect.getProperty(options, op);
 				switch(op) {
 					case "startDelay" | "loopDelay":
 						Reflect.setField(realOptions, op, value);
