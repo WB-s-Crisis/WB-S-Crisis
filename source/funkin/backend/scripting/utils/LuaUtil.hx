@@ -409,8 +409,8 @@ class LuaUtil {
 	
 	public static function spriteFunction(lua:LuaScript) {
 		lua.set("makeLuaSprite", function(tag:String, x:Float = 0, y:Float = 0) {
-			if(lua.scriptObject is IStateObject) {
-				var realState:IStateObject = cast lua.scriptObject;
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
 				
 				if(realState.scriptVariables.exists(tag)) {
 					error('The Variable "$tag" was Existed!', "makeLuaSprite", lua);
