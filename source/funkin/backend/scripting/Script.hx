@@ -23,11 +23,6 @@ class Script extends FlxBasic implements IFlxDestroyable {
 
 	public static function getDefaultVariables(?script:Script):Map<String, Dynamic> {
 		return [
-			// Haxe related stuff
-			"Std"			   => Std,
-			"Math"			  => Math,
-			"Reflect"			  => Reflect,
-			"StringTools"	   => StringTools,
 			"Json"			  => haxe.Json,
 
 			// OpenFL & Lime related stuff

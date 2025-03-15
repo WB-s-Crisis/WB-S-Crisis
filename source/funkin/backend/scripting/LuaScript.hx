@@ -10,6 +10,7 @@ import flixel.util.FlxStringUtil;
 import flixel.util.FlxColor;
 import funkin.backend.scripting.utils.LuaUtil;
 import hscript.Interp;
+import hscript.Expr;
 import hscript.Parser;
 
 /**
@@ -81,6 +82,10 @@ class LuaScript extends Script {
 		
 		if(_allowUseHScript) {
 			if(scriptObject != null) interp.scriptObject = scriptObject;
+			for(k=>v in Script.getDefaultVariables()) {
+				interp.variables.set(k, v);
+			}
+			interp._errorHandler = _hscriptErrorHandler;
 		}
 
 		for(k=>v in defaultVariables) {
@@ -208,8 +213,26 @@ class LuaScript extends Script {
 		], ERROR);
 		#if mobile
 		final debugPrint = Main.instance.debugPrintLog.debugPrint;
-		debugPrint('Error On $fileName!!!', {style: 0xFFFF0000, delayTime: 3.5});
-		debugPrint('$fileName: $text', {style: 0xFF00FF00, delayTime: 3.5});
+		debugPrint('Error On $fileName!!!', {style: 0xFF00FF00, delayTime: 3.5});
+		debugPrint('$fileName: $text', {style: 0xFFFF0000, delayTime: 3.5});
+		#end
+	}
+	
+	private function _hscriptErrorHandler(error:Error) {
+		var fileName = error.origin;
+
+		var fn = '$fileName:${error.line}: ';
+		var err = error.toString();
+		if (err.startsWith(fn)) err = err.substr(fn.length);
+
+		Logs.traceColored([
+			Logs.logText(fn, GREEN),
+			Logs.logText(err, RED)
+		], ERROR);
+
+		#if mobile
+		Main.instance.debugPrintLog.debugPrint(fn, {delayTime: 3.5, style: 0x00ff00});
+		Main.instance.debugPrintLog.debugPrint(err, {delayTime: 3.5, style: 0xff0000});
 		#end
 	}
 	
