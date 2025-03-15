@@ -85,7 +85,7 @@ class LuaScript extends Script {
 			for(k=>v in Script.getDefaultVariables()) {
 				interp.variables.set(k, v);
 			}
-			interp._errorHandler = _hscriptErrorHandler;
+			interp.errorHandler = _hscriptErrorHandler;
 		}
 
 		for(k=>v in defaultVariables) {
