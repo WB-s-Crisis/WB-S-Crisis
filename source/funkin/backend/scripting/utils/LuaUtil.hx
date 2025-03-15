@@ -2,6 +2,9 @@ package funkin.backend.scripting.utils;
 
 #if ALLOW_LUASTATE
 import Type.ValueType;
+import flixel.util.FlxTimer;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 import funkin.backend.scripting.LuaScript;
 import funkin.backend.MusicBeatState;
 
@@ -275,6 +278,80 @@ class LuaUtil {
 		});
 	}
 	
+	public static function timerAndTweenFunction(lua:LuaScript) {
+		lua.set("runTimer", function(tag:String, time:Float, loops:Int = 1) {
+			if(FlxG.state is MusicBeatState) {
+				var realState:MusicBeatState = cast FlxG.state;
+				
+				if(realState.scriptVariables.get("_timer_") == null) realState.scriptVariables.set("_timer_", new Map<String, FlxTimer>());
+				
+				final variables = realState.scriptVariables.get("_timer_");
+				if(!variables.exists(tag)) {
+					var tmr:FlxTimer = new FlxTimer().start(time, (fw) -> {
+						lua.call("onTimerCompleted", [tag, fw.time, fw.loopsLeft]);
+						cancelTimer(tag, "runTimer", lua);
+					}, loops);
+					variables.set(tag, tmr);
+					return true;
+				}else {
+					error("The Timer's Tag Was Exists", "runTimer", lua);
+				}
+			}
+			
+			return false;
+		});
+			
+		lua.set("cancelTimer", function(tag:String) {
+			return cancelTimer(tag, "cancelTimer", lua);
+		});
+		
+		lua.set("startTween", function(tag:String, obj:String, att:Dynamic, time:Float, ?options:Dynamic) {
+			if(FlxG.state is MusicBeatState) {
+				var realState:MusicBeatState = cast FlxG.state;
+				
+				if(realState.scriptVariables.get("_tween_") == null) {
+					realState.scriptVariables.set("_tween_", new Map<String, FlxTween>());
+				}
+				
+				if(realState.scriptVariables.get("_tween_").exists(tag)) {
+					error('The Variable "$tag" was existed!', "startTween", lua);
+					return false;
+				}
+				
+				var split:Array<String> = obj.split(".");
+				var first:String = split[0];
+				if(scriptVariables.exists(first)) {
+					if(split.length > 1) {
+						var realObj:Dynamic = getVariableFromStr(realState.scriptVariables.get(first), obj.substr(first.length + 1), lua, "startTween");
+						if(realObj != null) {
+							var tn:FlxTween = resolveLuaTween(tag, realObj, att, time, options, lua, "startTween");
+							if(tn != null) {
+								realState.scriptVariables.get("_tween_").set(tag, tn);
+								return true;
+							}
+							return false;
+						}
+					}
+				}
+				
+				if(lua.scriptObject != null) {
+					var realObj:Dynamic = getVariableFromStr(lua.scriptObject, obj, lua, "startTween");
+					if(realObj != null) {
+						var tn:FlxTween = resolveLuaTween(tag, realObj, att, time, options, lua, "startTween");
+						if(tn != null) {
+							realState.scriptVariables.get("_tween_").set(tag, tn);
+							return true;
+						}
+					}else {
+						error('The Variable "$obj" was Null!', "startTween", lua);
+					}
+				}
+			}
+			
+			return false;
+		});
+	}
+	
 	public static function hscriptFunction(lua:LuaScript) {
 		lua.set("addHaxeLibrary", function(className:String, ?packageName:String) {
 			if(!lua._allowUseHScript) {
@@ -314,6 +391,99 @@ class LuaUtil {
 			
 			return lua.interp.execute(LuaScript.parser.parseString(code, '"${lua.fileName}" callback(runHaxeCode)'));
 		});
+	}
+	
+	public static function cancelTimer(tag:String, title:String, lua:LuaScript) {
+		if(FlxG.state is MusicBeatState) {
+			var realState:MusicBeatState = cast FlxG.state;
+			final variables = realState.scriptVariables.get("_timer_");
+			
+			if(variables == null) {
+				error('(cancelTimer)There are no performances on stage six', title, lua);
+				return false;
+			}
+			
+			if(variables.get(tag) != null) {
+				var tmr:FlxTimer = variables.get(tag);
+				tmr.cancel();
+				variables.remove(tag);
+				tmr.destroy();
+				
+				return true;
+			}else {
+				error('(cancelTimer)Not Exists This Timer Tag "$tag", You Can\'t Clear Its Timer', title, lua);
+			}
+		}
+		
+		return false;
+	}
+	
+	private static function cancelTween(tag:String, title:String, lua:LuaScript) {
+		if(FlxG.state is MusicBeatState) {
+			var realState:MusicBeatState = cast FlxG.state;
+			
+			final variables = realState.scriptVariables.get("_tween_");
+			
+			if(variables == null) {
+				error('(cancelTween)There are no performances on stage six', title, lua);
+				return false;
+			}
+			
+			if(variables.get(tag) != null) {
+				var tmr:FlxTimer = variables.get(tag);
+				tmr.cancel();
+				variables.remove(tag);
+				tmr.destroy();
+				
+				return true;
+			}else {
+				error('(cancelTween)Not Exists This Timer Tag "$tag", You Can\'t Clear Its Tween', title, lua);
+			}
+		}
+		
+		return false;
+	}
+	
+	private static function resolveLuaTween(tag:String, obj:Dynamic, object:Dynamic, time:Float, options:Dynamic, lua:LuaScript, title:String):FlxTween {
+		if(object == null) {
+			error("The Att Was Null!!", title, lua);
+			return null;
+		}
+		
+		var realObject:Dynamic = {};
+		var realOptions:Dynamic = {};
+		
+		for(ro in Reflect.fields(object)) {
+			var value:Dynamic = Reflect.getProperty(object, ro);
+			switch(ro) {
+				case "color":
+					if(value is String)
+						Reflect.setField(realObject, ro, FlxColor.fromString(value));
+					else Reflect.setField(realObject, ro, value);
+				default:
+					Reflect.setField(realObject, ro, value);
+			}
+		}
+		
+		Reflect.setField(realOptions, "onComplete", function(_:FlxTween) {
+			lua.call("onTweenCompleted", [tag]);
+			cancelTween(tag, title, lua);
+		});
+		if(options != null) {
+			for(op in Reflect.fields(options)) {
+				var value:Dynamic = Reflect.getProperty(object, op);
+				switch(op) {
+					case "startDelay" | "loopDelay":
+						Reflect.setField(realOptions, op, value);
+					case "ease":
+						if(value is String)
+							Reflect.setField(realOptions, op, Reflect.getProperty(FlxEase, value));
+					default: {/*nothing*/}
+				}
+			}
+		}
+		
+		return FlxTween.tween(obj, realObject, time, realOptions);
 	}
 	
 	public static function getVariableFromStr(scriptObject:Dynamic, variable:String, lua:LuaScript, title:String):Dynamic {
@@ -367,7 +537,7 @@ class LuaUtil {
 						var realShit = fuck.substr(0, fuck.indexOf("["));
 						var preField = Reflect.getProperty(oldVar, realShit);
 						if(!Std.isOfType(preField, Array)) {
-						error('Expected Variable "$realShit"!! Currently Only Supports Array In This Callback', title, lua);
+							error('Expected Variable "$realShit"!! Currently Only Supports Array In This Callback', title, lua);
 							return false;
 						}
 
