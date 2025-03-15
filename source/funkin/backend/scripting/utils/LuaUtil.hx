@@ -5,6 +5,7 @@ import Type.ValueType;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.util.FlxColor
 import funkin.backend.scripting.LuaScript;
 import funkin.backend.MusicBeatState;
 
@@ -320,7 +321,7 @@ class LuaUtil {
 				
 				var split:Array<String> = obj.split(".");
 				var first:String = split[0];
-				if(scriptVariables.exists(first)) {
+				if(realState.scriptVariables.exists(first)) {
 					if(split.length > 1) {
 						var realObj:Dynamic = getVariableFromStr(realState.scriptVariables.get(first), obj.substr(first.length + 1), lua, "startTween");
 						if(realObj != null) {
