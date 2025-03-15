@@ -9,14 +9,22 @@ import llua.Convert;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxColor;
 import funkin.backend.scripting.utils.LuaUtil;
+import hscript.Interp;
+import hscript.Parser;
 
 /**
  * 第一次搞，懂？
  * ...
  * 从目前lua的局限性来看，我认为不可能将他应用在多方面身上的，那很废，而且也不友好
  */
+@:allow(funkin.backend.scripting.utils.LuaUtil)
 class LuaScript extends Script {
-	private static var oldScript:LuaScript;
+	private static var parser:Parser = initParser();
+	private static function initParser():Parser {
+		var pr = new Parser();
+		pr.allowMetadata = pr.allowTypes = pr.allowJSON = true;
+		return pr;
+	}
 
 	public var heart:State;
 	public var code:String = "";
@@ -25,6 +33,7 @@ class LuaScript extends Script {
 	
 	//用于锁定setProperty和getProperty的指定用途（你懂的
 	public var scriptObject:Dynamic = null;
+	private var interp:Interp = new Interp();
 	
 	public var closed:Bool = false;
 	private var _variables:Map<String, Dynamic> = new Map();
@@ -74,6 +83,7 @@ class LuaScript extends Script {
 			set(k, v);
 		}
 		LuaUtil.reflectFunction(this);
+		LuaUtil.hscriptFunction(this);
 	}
 	
 	override function onLoad() {
