@@ -78,6 +78,10 @@ class LuaScript extends Script {
 		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.call("onScriptCreated", [this, "lua"]);
 		#end
+		
+		if(_allowUseHScript) {
+			if(scriptObject != null) interp.scriptObject = scriptObject;
+		}
 
 		for(k=>v in defaultVariables) {
 			set(k, v);
