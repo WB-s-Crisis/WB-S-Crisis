@@ -3,6 +3,7 @@ package funkin.backend.scripting.utils;
 #if ALLOW_LUASTATE
 import Type.ValueType;
 import funkin.backend.scripting.LuaScript;
+import funkin.backend.MusicBeatState;
 
 class LuaUtil {
 	public inline static final Function_Stop:Int = 0;
@@ -15,6 +16,18 @@ class LuaUtil {
 		 * @return 返回其变量值
 		 */
 		lua.set("getProperty", function(tag:String) {
+			if(FlxG.state is MusicBeatState) {
+				var realState:MusicBeatState = cast FlxG.state;
+				
+				var split = tag.split(".");
+				var first:String = split[0];
+				if(realState.scriptVariables.exists(first)) {
+					if(split.length > 1) {
+						return getVariableFromStr(realState.scriptVariables.get(first), tag.substr(first.length + 1), lua, "getProperty");
+					}else return realState.scriptVariables.get(first);
+				}
+			}
+		
 			if(lua.scriptObject != null) {
 				return getVariableFromStr(lua.scriptObject, tag, lua, "getProperty");
 			}else {
@@ -31,6 +44,21 @@ class LuaUtil {
 		 * @return 如果此回调运行正常，将会返回true，否则为false
 		 */
 		lua.set("setProperty", function(tag:String, val:Dynamic) {
+			if(FlxG.state is MusicBeatState) {
+				var realState:MusicBeatState = cast FlxG.state;
+				
+				var split = tag.split(".");
+				var first:String = split[0];
+				if(realState.scriptVariables.exists(first)) {
+					if(split.length > 1) {
+						return setVariableFromStr(realState.scriptVariables.get(first), tag.substr(first.length + 1), val, lua, "setProperty");
+					}else {
+						realState.scriptVariables.set(first);
+						return true;
+					}
+				}
+			}
+		
 			if(lua.scriptObject != null) {
 				return setVariableFromStr(lua.scriptObject, tag, val, lua, "setProperty");
 			}else {
@@ -206,14 +234,97 @@ class LuaUtil {
 			
 			return null;
 		});
+		
+		lua.set("setVar", function(name:String, value:Dynamic) {
+			if(FlxG.state is MusicBeatState) {
+				var realState:MusicBeatState = cast FlxG.state;
+				
+				if(name.contains(".") || name.contains("[") || name.contains("]")) {
+					error('Expected Variable $name, Can\'t Contain "OP"(etc. "." or "[" )', "setVar", lua);
+					return false;
+				}
+				
+				if(!realState.scriptVariables.exists(name)) {
+					realState.scriptVariables.set(name, value);
+					return true;
+				}else {
+					error('The Variable "$name" Was Exist, If You Want to Setter. You can use "setProperty" Callback', "setVar", lua);
+				}
+			}
+			
+			return false;
+		});
+		
+		lua.get("getVar", function(name:String) {
+			if(FlxG.state is MusicBeatState) {
+				var realState:MusicBeatState = cast FlxG.state;
+				
+				if(name.contains(".") || name.contains("[") || name.contains("]")) {
+					error('Expected Variable $name, Can\'t Contain "OP"(etc. "." or "[" )', "getVar", lua);
+					return null;
+				}
+				
+				if(realState.scriptVariables.exists(name)) {
+					return realState.scriptVariables.get(name);
+				}else {
+					error('The Variable "$name" Was Not Exist!', "getVar", lua);
+				}
+			}
+			
+			return null;
+		});
 	}
 	
-	public static function hscriptFunction(lua:LuaScript, allowHScript:Bool = true) {
+	public static function hscriptFunction(lua:LuaScript) {
 		lua.set("addHaxeLibrary", function(className:String, ?packageName:String) {
+			if(!lua._allowUseHScript) {
+				error('Current Lua Script Was Not Allow Execute Haxe', "addHaxeLibrary", lua);
+				return false;
+			}
+			
+			var cp:String;
+			if(packageName != null) {
+				var realPN = packageName.trim();
+				
+				if(realPN != "") {
+					cp = realPN + (realPN.endsWith(".") ? "" : ".") + className.trim();
+				}else {
+					cp = className.trim();
+				}
+			}else {
+				cp = className.trim();
+			}
+			var cls:Dynamic = Type.resolveClass(cp);
+			var cn:String;
+			if(cls != null) cn = Type.getClassName(cls);
+			
+			if(cls == null) {
+				cls = Type.resolveEnum(cp);
+				
+				if(cls != null) cn = Type.getEnhmName(cls);
+			}
+			if(cls != null) {
+				lua.interp.variables.set(cn, cls);
+				return true;
+			}else {
+				error('Not Found This Type $cp!', "addHaxeLibrary", lua);
+			}
+			
 			return false;
 		});
 		
 		lua.set("runHaxeCode", function(code:String) {
+			if(!lua._allowUseHScript) {
+				error('Current Lua Script Was Not Allow Execute Haxe', "runHaxeCode", lua);
+				return null;
+			}
+			
+			try {
+				return lua.interp.execute(LuaScript.parser.parseString(code));
+			} catch(e:Dynamic) {
+				trace(e);
+			}
+			
 			return null;
 		});
 	}
