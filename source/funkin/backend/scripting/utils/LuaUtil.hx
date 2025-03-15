@@ -53,7 +53,7 @@ class LuaUtil {
 					if(split.length > 1) {
 						return setVariableFromStr(realState.scriptVariables.get(first), tag.substr(first.length + 1), val, lua, "setProperty");
 					}else {
-						realState.scriptVariables.set(first);
+						realState.scriptVariables.set(first, val);
 						return true;
 					}
 				}
@@ -255,7 +255,7 @@ class LuaUtil {
 			return false;
 		});
 		
-		lua.get("getVar", function(name:String) {
+		lua.set("getVar", function(name:String) {
 			if(FlxG.state is MusicBeatState) {
 				var realState:MusicBeatState = cast FlxG.state;
 				
@@ -301,7 +301,7 @@ class LuaUtil {
 			if(cls == null) {
 				cls = Type.resolveEnum(cp);
 				
-				if(cls != null) cn = Type.getEnhmName(cls);
+				if(cls != null) cn = Type.getEnumName(cls);
 			}
 			if(cls != null) {
 				lua.interp.variables.set(cn, cls);
