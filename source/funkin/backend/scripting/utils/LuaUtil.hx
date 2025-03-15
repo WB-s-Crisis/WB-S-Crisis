@@ -121,7 +121,7 @@ class LuaUtil {
 				return null;
 			}
 			
-			var grp:Dynamic;
+			var grp:Dynamic = null;
 			var sureVar:Bool = false;
 			if(lua.scriptObject is IStateScript) {
 				var realState:IStateScript = cast lua.scriptObject;
@@ -174,7 +174,7 @@ class LuaUtil {
 				return false;
 			}
 			
-			var grp:Dynamic;
+			var grp:Dynamic = null;
 			var sureVar:Bool = false;
 			if(lua.scriptObject is IStateScript) {
 				var realState:IStateScript = cast lua.scriptObject;
