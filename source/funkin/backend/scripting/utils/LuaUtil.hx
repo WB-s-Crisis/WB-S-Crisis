@@ -227,7 +227,7 @@ class LuaUtil {
 				return null;
 			}
 			
-			var fs:Dynamic;
+			var fs:Dynamic = null;
 			var sureVar:Bool = false;
 			if(lua.scriptObject is IStateScript) {
 				var realState:IStateScript = cast lua.scriptObject;
