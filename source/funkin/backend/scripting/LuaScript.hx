@@ -93,6 +93,7 @@ class LuaScript extends Script {
 		}
 		LuaUtil.reflectFunction(this);
 		LuaUtil.hscriptFunction(this);
+		LuaUtil.timerAndTweenFunction(this);
 	}
 	
 	override function onLoad() {
