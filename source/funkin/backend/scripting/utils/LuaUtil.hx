@@ -290,7 +290,8 @@ class LuaUtil {
 				if(!variables.exists(tag)) {
 					var tmr:FlxTimer = new FlxTimer().start(time, (fw) -> {
 						lua.call("onTimerCompleted", [tag, fw.time, fw.loopsLeft]);
-						cancelTimer(tag, "runTimer", lua);
+						if(fw.finished)
+							cancelTimer(tag, "runTimer", lua);
 					}, loops);
 					variables.set(tag, tmr);
 					return true;
