@@ -407,9 +407,7 @@ class LuaUtil {
 			
 			if(variables.get(tag) != null) {
 				var tmr:FlxTimer = variables.get(tag);
-				tmr.cancel();
 				variables.remove(tag);
-				tmr.destroy();
 				
 				return true;
 			}else {
@@ -433,9 +431,7 @@ class LuaUtil {
 			
 			if(variables.get(tag) != null) {
 				var tmr:FlxTimer = variables.get(tag);
-				tmr.cancel();
 				variables.remove(tag);
-				tmr.destroy();
 				
 				return true;
 			}else {
