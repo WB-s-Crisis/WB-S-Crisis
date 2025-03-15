@@ -295,16 +295,9 @@ class LuaUtil {
 				cp = className.trim();
 			}
 			var cls:Dynamic = Type.resolveClass(cp);
-			var cn:String;
-			if(cls != null) cn = Type.getClassName(cls);
 			
-			if(cls == null) {
-				cls = Type.resolveEnum(cp);
-				
-				if(cls != null) cn = Type.getEnumName(cls);
-			}
 			if(cls != null) {
-				lua.interp.variables.set(cn, cls);
+				lua.interp.variables.set(Type.getClassName(cls), cls);
 				return true;
 			}else {
 				error('Not Found This Type $cp!', "addHaxeLibrary", lua);
