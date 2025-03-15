@@ -5,7 +5,7 @@ import Type.ValueType;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
-import flixel.util.FlxColor
+import flixel.util.FlxColor;
 import funkin.backend.scripting.LuaScript;
 import funkin.backend.MusicBeatState;
 
