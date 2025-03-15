@@ -125,11 +125,11 @@ class LuaUtil {
 			var sureVar:Bool = false;
 			if(lua.scriptObject is IStateScript) {
 				var realState:IStateScript = cast lua.scriptObject;
-				var split = tag.split(".");
+				var split = group.split(".");
 				var first:String = split[0];
 				if(realState.scriptVariables.exists(first)) {
 					if(split.length > 1) {
-						grp = getVariableFromStr(realState.scriptVariables.get(first), tag.substr(first.length + 1), lua, "getPropertyFromGroup");
+						grp = getVariableFromStr(realState.scriptVariables.get(first), group.substr(first.length + 1), lua, "getPropertyFromGroup");
 					}else {
 						grp = realState.scriptVariables.get(first);
 					}
@@ -178,11 +178,11 @@ class LuaUtil {
 			var sureVar:Bool = false;
 			if(lua.scriptObject is IStateScript) {
 				var realState:IStateScript = cast lua.scriptObject;
-				var split = tag.split(".");
+				var split = group.split(".");
 				var first:String = split[0];
 				if(realState.scriptVariables.exists(first)) {
 					if(split.length > 1) {
-						grp = getVariableFromStr(realState.scriptVariables.get(first), tag.substr(first.length + 1), lua, "setPropertyFromGroup");
+						grp = getVariableFromStr(realState.scriptVariables.get(first), group.substr(first.length + 1), lua, "setPropertyFromGroup");
 					}else {
 						grp = realState.scriptVariables.get(first);
 					}
@@ -231,11 +231,11 @@ class LuaUtil {
 			var sureVar:Bool = false;
 			if(lua.scriptObject is IStateScript) {
 				var realState:IStateScript = cast lua.scriptObject;
-				var split = tag.split(".");
+				var split = func.split(".");
 				var first:String = split[0];
 				if(realState.scriptVariables.exists(first)) {
 					if(split.length > 1) {
-						fs = getVariableFromStr(realState.scriptVariables.get(first), tag.substr(first.length + 1), lua, "callMethod");
+						fs = getVariableFromStr(realState.scriptVariables.get(first), func.substr(first.length + 1), lua, "callMethod");
 					}else {
 						fs = realState.scriptVariables.get(first);
 					}
@@ -409,8 +409,8 @@ class LuaUtil {
 	
 	public static function spriteFunction(lua:LuaScript) {
 		lua.set("makeLuaSprite", function(tag:String, x:Float = 0, y:Float = 0) {
-			if(lua.objectScript is IStateObject) {
-				var realState:IStateObject = cast lua.objectScript;
+			if(lua.scriptObject is IStateObject) {
+				var realState:IStateObject = cast lua.scriptObject;
 				
 				if(realState.scriptVariables.exists(tag)) {
 					error('The Variable "$tag" was Existed!', "makeLuaSprite", lua);
