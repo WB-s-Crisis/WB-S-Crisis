@@ -1,4 +1,4 @@
-package funkin.backend.system.interfaces.IStateScript;
+package funkin.backend.system.interfaces;
 
 import funkin.backend.scripting.ScriptPack;
 
