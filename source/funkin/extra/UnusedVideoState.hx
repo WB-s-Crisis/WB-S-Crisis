@@ -11,6 +11,8 @@ import flixel.util.FlxAxes;
 
 /**
  * 废物东西
+ * 请说，哦多桑
+ * 爸爸...诶，儿子乖
  */
 class UnusedVideoState extends FlxState {
 	public static var canSkip(default, set):Bool = false;
@@ -137,6 +139,7 @@ class UnusedVideoState extends FlxState {
 	}
 	
 	private function finish():Void {
+		if(!video.active) return;
 		if(!preFinished)
 		        finished = true;
 		
