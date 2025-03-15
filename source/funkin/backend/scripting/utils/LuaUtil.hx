@@ -312,13 +312,7 @@ class LuaUtil {
 				return null;
 			}
 			
-			try {
-				return lua.interp.execute(LuaScript.parser.parseString(code));
-			} catch(e:Dynamic) {
-				trace(e);
-			}
-			
-			return null;
+			return lua.interp.execute(LuaScript.parser.parseString(code, '"${lua.fileName}" callback(runHaxeCode)'));
 		});
 	}
 	
