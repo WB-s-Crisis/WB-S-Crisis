@@ -33,7 +33,12 @@ class LuaScript extends Script {
 	private var templateCode:String = "return Function_Stop";
 	
 	//用于锁定setProperty和getProperty的指定用途（你懂的
-	public var scriptObject:Dynamic = null;
+	public var scriptObject(default, set):Dynamic = null;
+	@:noCompletion private function set_scriptObject(val:Dynamic):Dynamic {
+		scriptObject = val;
+		interp.scriptObject = val;
+		return val;
+	}
 	private var interp:Interp = new Interp();
 	
 	public var closed:Bool = false;
@@ -81,7 +86,6 @@ class LuaScript extends Script {
 		#end
 		
 		if(_allowUseHScript) {
-			if(scriptObject != null) interp.scriptObject = scriptObject;
 			for(k=>v in Script.getDefaultVariables()) {
 				interp.variables.set(k, v);
 			}
@@ -94,6 +98,8 @@ class LuaScript extends Script {
 		LuaUtil.reflectFunction(this);
 		LuaUtil.hscriptFunction(this);
 		LuaUtil.timerAndTweenFunction(this);
+		LuaUtil.objectFunction(this);
+		LuaUtil.spriteFunction(this);
 	}
 	
 	override function onLoad() {
