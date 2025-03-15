@@ -8,7 +8,7 @@ import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
 import funkin.backend.scripting.LuaScript;
 import funkin.backend.MusicBeatState;
-import funkin.backend.MusicBeatSubState;
+import funkin.backend.MusicBeatSubstate;
 import funkin.backend.system.interfaces.IStateScript;
 import flixel.FlxState;
 import flixel.FlxCamera;
