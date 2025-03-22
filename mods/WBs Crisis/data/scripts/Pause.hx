@@ -35,7 +35,7 @@ var defPosEaster:FlxPoint = FlxPoint.get();
 
 function create(event)
 {
-	menuItems.insert(3, "Botplay");
+	event.options = ['Resume', 'Restart Song', 'Change Options', "Botplay", 'Exit to menu'];
 
 	event.cancel();
 	//pauseMusic.volume = 1;
@@ -160,9 +160,6 @@ function create(event)
 
 function postCreate() {
 	pauseMusic.volume = 1;
-	
-	if(!controls.touchC)
-		menuItems.remove("Change Controls");
 }
 
 var active = true;

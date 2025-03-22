@@ -1,12 +1,15 @@
 /*import funkin.backend.shaders.CustomShader;*/
+import hscript.IHScriptCustomBehaviour;
 
 importAddons("shader.OldTV");
 importAddons("shader.GLITCH");
 importAddons("shader.Chromatic");
+importAddons("shader.RTXLighting");
 
 public var tvShader:OldTV;
 public var glitch:GLITCH;
 public var chromatic:Chromatic;
+public var rtxLighting:RTXLighting = new RTXLighting();
 
 function create() {
 	tvShader = new OldTV();

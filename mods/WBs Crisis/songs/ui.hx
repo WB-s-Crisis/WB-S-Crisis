@@ -85,7 +85,7 @@ function postCreate() {
     missesTxt.y += 15;
     scoreTxt.y += 15;
     
-    missesTxt.addFormat(missFormat, "Misses:".length, missesTxt.text.length);
+    missesTxt.addFormat(missFormat, (comboBreaks ? "Combo Breaks:" : "Misses:").length, missesTxt.text.length);
     
     onSetVariable.add(function(key:String, val:Dynamic, isPost:Bool) {
     	if(key == "misses" && !isPost)
@@ -95,7 +95,7 @@ function postCreate() {
     		changeMisses = false;
 
 			updateRatingStuff();
-			missesTxt._formatRanges[0].range.set("Misses:".length, missesTxt.text.length);
+			missesTxt._formatRanges[0].range.set((comboBreaks ? "Combo Breaks:" : "Misses:").length, missesTxt.text.length);
 		}
     });
 

@@ -146,18 +146,20 @@ class CopyState extends funkin.backend.MusicBeatState
 			loadingBar.percent = FlxMath.bound(FlxMath.lerp(loadingBar.percent, loopTimes / maxLoopTimes * 100, Math.exp(-elapsed / 0.0133)), 0, 100);
 			if (#if ALLOW_MULTITHREADING loopTimes == maxLoopTimes #else copyLoop.finished #end && canUpdate)
 			{
+				canUpdate = false;
+			
 				if (failedFiles.length > 0)
 				{
 					NativeAPI.showMessageBox('Failed To Copy ${failedFiles.length} File.', failedFiles.join('\n'), MSG_ERROR);
 					if (!FileSystem.exists('logs'))
 						FileSystem.createDirectory('logs');
 					File.saveContent('logs/' + Date.now().toString().replace(' ', '-').replace(':', "'") + '-CopyState' + '.txt', failedFilesStack.join('\n'));
+					Sys.exit(0);
 				}
-				canUpdate = false;
 				FlxG.sound.play(Paths.sound('menu/confirm')).onComplete = () ->
 				{
-					FlxG.resetGame();
-					Main.instance.framerateSprite.visible = true;
+					lime.app.Application.current.window.alert("已加载完毕！\n请重新进入游戏！！\n(Loaded completed!)\n(Please re-enter the game!)");
+					Sys.exit(0);
 				};
 			}
 
@@ -166,7 +168,7 @@ class CopyState extends funkin.backend.MusicBeatState
 			else {
 				loadedText.text = 'Copying In Progress: $loopTimes/$maxLoopTimes' + (currentLoadFile != null ? '(loading: $currentLoadFile)' : '');
 			}
-	                loadedText.y = loadingBar.y - loadedText.fieldHeight;
+			loadedText.y = loadingBar.y - loadedText.fieldHeight;
 		}
 		super.update(elapsed);
 	}

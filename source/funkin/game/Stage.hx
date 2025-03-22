@@ -7,6 +7,7 @@ import flixel.FlxState;
 import haxe.xml.Access;
 import funkin.backend.utils.XMLUtil.XMLImportedScriptInfo;
 import funkin.backend.system.interfaces.IBeatReceiver;
+import funkin.backend.system.interfaces.IStateScript;
 import funkin.backend.scripting.DummyScript;
 import funkin.backend.scripting.Script;
 import haxe.io.Path;
@@ -28,8 +29,15 @@ class Stage extends FlxBasic implements IBeatReceiver {
 	public function getSprite(name:String)
 		return stageSprites[name];
 
-	public function setStagesSprites(script:Script)
-		for (k=>e in stageSprites) script.set(k, e);
+	public function setStagesSprites(script:Script) {
+		for (k=>e in stageSprites) {
+			if(script.isLua) {
+				if(state != null && state is IStateScript) {
+					cast(state, IStateScript).scriptVariables.set(k, e);
+				}
+			}else script.set(k, e);
+		}
+	}
 
 	public function prepareInfos(node:Access)
 		return XMLImportedScriptInfo.prepareInfos(node, PlayState.instance.scripts, (infos) -> xmlImportedScripts.push(infos));

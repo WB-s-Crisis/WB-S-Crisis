@@ -26,14 +26,14 @@ function create(event) {
 			case "friendship broken" | "bloody scissors": "1942menu";
 			case "cruel cartoon" | "cruel cartoon erect": "1942menu1";
 			case "blood dispute": "1942menu2";
-			case "unprovoked" | "nothing" | "last life": "Looneymenu";
+			case "unprovoked" | "hunt and kill" | "last life": "Looneymenu";
 			default: "1942menu";
 		};
 		
 		if(sureLaodaDeadDay()) {
 			easterID = switch(PlayState.SONG.meta.name.toLowerCase()) {
 				case "friendship broken" | "bloody scissors" | "cruel cartoon" | "cruel cartoon erect" | "blood dispute": "laoda-tom";
-				case "unprovoked" | "nothing" | "last life": "laoda-bugsBunny";
+				case "unprovoked" | "hunt and kill" | "last life": "laoda-bugsBunny";
 				default: "laoda-tom";
 			}
 		}

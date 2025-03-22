@@ -10,8 +10,11 @@ import funkin.backend.scripting.LuaScript;
 import funkin.backend.MusicBeatState;
 import funkin.backend.MusicBeatSubstate;
 import funkin.backend.system.interfaces.IStateScript;
+import funkin.backend.shaders.FunkinShader;
+import funkin.backend.shaders.CustomShader;
 import flixel.FlxState;
-import flixel.FlxCamera;
+import flixel.FlxSprite;
+import hscript.IHScriptCustomBehaviour;
 
 class LuaUtil {
 	public inline static final Function_Stop:Int = 0;
@@ -24,11 +27,21 @@ class LuaUtil {
 		 * @return 返回其变量值
 		 */
 		lua.set("getProperty", function(tag:String) {
+			var split = tag.split(".");
+			var first:String = split[0];
+			
+			if(lua._publicVariables.exists(first)) {
+				if(split.length > 1) {
+					return getVariableFromStr(lua._publicVariables.get(first), tag.substr(first.length + 1), lua, "getProperty");
+				}else if(split.length == 1) {
+					return lua._publicVariables.get(tag);
+				}
+			}
+		
 			if(lua.scriptObject != null) {
 				if(lua.scriptObject is IStateScript) {
 					var realState:IStateScript = cast lua.scriptObject;
-					var split = tag.split(".");
-					var first:String = split[0];
+
 					if(realState.scriptVariables.exists(first)) {
 						if(split.length > 1) {
 							return getVariableFromStr(realState.scriptVariables.get(first), tag.substr(first.length + 1), lua, "getProperty");
@@ -53,11 +66,22 @@ class LuaUtil {
 		 * @return 如果此回调运行正常，将会返回true，否则为false
 		 */
 		lua.set("setProperty", function(tag:String, val:Dynamic) {
+			var split = tag.split(".");
+			var first:String = split[0];
+			
+			if(lua._publicVariables.exists(first)) {
+				if(split.length > 1) {
+					return setVariableFromStr(lua._publicVariables.get(first), tag.substr(first.length + 1), val, lua, "setProperty");
+				}else if(split.length == 1) {
+					lua._publicVariables.set(tag, val);
+					return true;
+				}
+			}
+		
 			if(lua.scriptObject != null) {
 				if(lua.scriptObject is IStateScript) {
 					var realState:IStateScript = cast lua.scriptObject;
-					var split = tag.split(".");
-					var first:String = split[0];
+
 					if(realState.scriptVariables.exists(first)) {
 						if(split.length > 1) {
 							return setVariableFromStr(realState.scriptVariables.get(first), tag.substr(first.length + 1), val, lua, "setProperty");
@@ -85,6 +109,9 @@ class LuaUtil {
 		lua.set("setPropertyFromClass", function(cl:String, tag:String, val:Dynamic) {
 			var cls:Class<Dynamic> = Type.resolveClass(cl);
 			if(cls == null) {
+				cls = Type.resolveClass('${cl}_HSC');
+			}
+			if(cls == null) {
 				error('Not Found Class: $cl', "setPropertyFromClass", lua);
 				return false;
 			}
@@ -101,8 +128,11 @@ class LuaUtil {
 		lua.set("getPropertyFromClass", function(cl:String, tag:String) {
 			var cls:Class<Dynamic> = Type.resolveClass(cl);
 			if(cls == null) {
-				error('Not Found Class: $cl', "getPropertyFromClass", lua);
-				return null;
+				cls = Type.resolveClass('${cl}_HSC');
+			}
+			if(cls == null) {
+				error('Not Found Class: $cl', "setPropertyFromClass", lua);
+				return false;
 			}
 			
 			return getVariableFromStr(cls, tag, lua, "getPropertyFromClass");
@@ -116,17 +146,26 @@ class LuaUtil {
 		 * @return 返回其所选的变量的值
 		 */
 		lua.set("getPropertyFromGroup", function(group:String, index:Int, variable:String) {
-			if(lua.scriptObject == null) {
-				error('ScriptObject Was Null, So You Can\'t Use This Callback', "getPropertyFromGroup", lua);
-				return null;
-			}
+			
 			
 			var grp:Dynamic = null;
 			var sureVar:Bool = false;
-			if(lua.scriptObject is IStateScript) {
+			
+			var split = group.split(".");
+			var first:String = split[0];
+			
+			if(lua._publicVariables.exists(first)) {
+				if(split.length > 1) {
+					grp =  getVariableFromStr(lua._publicVariables.get(first), group.substr(first.length + 1), lua, "getPropertyFromGroup");
+				}else if(split.length == 1) {
+					grp = lua._publicVariables.get(group);
+				}
+				sureVar = true;
+			}
+			
+			if(!sureVar && (lua.scriptObject is IStateScript)) {
 				var realState:IStateScript = cast lua.scriptObject;
-				var split = group.split(".");
-				var first:String = split[0];
+
 				if(realState.scriptVariables.exists(first)) {
 					if(split.length > 1) {
 						grp = getVariableFromStr(realState.scriptVariables.get(first), group.substr(first.length + 1), lua, "getPropertyFromGroup");
@@ -169,17 +208,23 @@ class LuaUtil {
 		 * @return 如果回调正常，将返回true，否则为false
 		 */
 		lua.set("setPropertyFromGroup", function(group:String, index:Int, variable:String, value:Dynamic) {
-			if(lua.scriptObject == null) {
-				error('ScriptObject Was Null, So You Can\'t Use This Callback', "setPropertyFromGroup", lua);
-				return false;
-			}
-			
 			var grp:Dynamic = null;
 			var sureVar:Bool = false;
-			if(lua.scriptObject is IStateScript) {
+			var split = group.split(".");
+			var first:String = split[0];
+			
+			if(lua._publicVariables.exists(first)) {
+				if(split.length > 1) {
+					grp = getVariableFromStr(lua._publicVariables.get(first), group.substr(first.length + 1), lua, "setPropertyFromGroup");
+				}else if(split.length == 1) {
+					return lua._publicVariables.get(group);
+				}
+				sureVar = true;
+			}
+			
+			if(!sureVar && (lua.scriptObject is IStateScript)) {
 				var realState:IStateScript = cast lua.scriptObject;
-				var split = group.split(".");
-				var first:String = split[0];
+				
 				if(realState.scriptVariables.exists(first)) {
 					if(split.length > 1) {
 						grp = getVariableFromStr(realState.scriptVariables.get(first), group.substr(first.length + 1), lua, "setPropertyFromGroup");
@@ -222,17 +267,23 @@ class LuaUtil {
 		 * @return 如果其函数拥有返回值，将会返回其值（否则为null）
 		 */
 		lua.set("callMethod", function(func:String, ?args:Array<Dynamic>) {
-			if(lua.scriptObject == null) {
-				error('ScriptObject Was Null, So You Can\'t Use This Callback', "callMethod", lua);
-				return null;
-			}
-			
 			var fs:Dynamic = null;
 			var sureVar:Bool = false;
-			if(lua.scriptObject is IStateScript) {
+			var split = func.split(".");
+			var first:String = split[0];
+			
+			if(lua._publicVariables.exists(first)) {
+				if(split.length > 1) {
+					fs = getVariableFromStr(lua._publicVariables.get(first), func.substr(first.length + 1), lua, "callMethod");
+				}else if(split.length == 1) {
+					fs = lua._publicVariables.get(func);
+				}
+				sureVar = true;
+			}
+			
+			if(!sureVar && (lua.scriptObject is IStateScript)) {
 				var realState:IStateScript = cast lua.scriptObject;
-				var split = func.split(".");
-				var first:String = split[0];
+
 				if(realState.scriptVariables.exists(first)) {
 					if(split.length > 1) {
 						fs = getVariableFromStr(realState.scriptVariables.get(first), func.substr(first.length + 1), lua, "callMethod");
@@ -272,7 +323,10 @@ class LuaUtil {
 		lua.set("callMethodFromClass", function(cl:String, func:String, ?args:Array<Dynamic>) {
 			var cls:Class<Dynamic> = Type.resolveClass(cl);
 			if(cls == null) {
-				error('Not Found Class "$cl"', "callMethodFromClass", lua);
+				cls = Type.resolveClass('${cl}_HSC');
+			}
+			if(cls == null) {
+				error('Not Found Class: $cl', "setPropertyFromClass", lua);
 				return null;
 			}
 			
@@ -303,6 +357,11 @@ class LuaUtil {
 					return false;
 				}
 				
+				if(lua._publicVariables.exists(name)) {
+					error('The Variable "$name" Was Exist, If You Want to Setter. You can use "setProperty" Callback', "setVar", lua);
+					return false;
+				}
+				
 				if(!realState.scriptVariables.exists(name)) {
 					realState.scriptVariables.set(name, value);
 					return true;
@@ -325,6 +384,294 @@ class LuaUtil {
 			}
 			
 			return null;
+		});
+	}
+	
+	public static function shaderFunction(lua:LuaScript) {
+		lua.set("makeLuaShader", function(tag:String, path:String, glslVersion:String = #if mobile "100" #else "120" #end) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.get("_shader_") == null)
+					realState.scriptVariables.set("_shader_", new Map<String, FunkinShader>());
+				
+				if(realState.scriptVariables.get("_shader_").exists(tag)) {
+					error('The Shader "$tag" Was Existed!', "makeLuaShader", lua);
+					return false;
+				}
+				
+				try {
+					var preShader:CustomShader = new CustomShader(path, glslVersion);
+					realState.scriptVariables.get("_shader_").set(tag, preShader);
+					return true;
+				} catch(e:Dynamic) {
+					error('Expected Make Lua Shader "$tag"', "makeLuaShader", lua);
+				}
+			}
+			
+			return false;
+		});
+		
+		lua.set("makeLuaShaderFromString", function(tag:String, content:String, ?content1:String, glslVersion:String = #if mobile "100" #else "120" #end) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.get("_shader_") == null)
+					realState.scriptVariables.set("_shader_", new Map<String, FunkinShader>());
+				
+				if(realState.scriptVariables.get("_shader_").exists(tag)) {
+					error('The Shader "$tag" Was Existed!', "makeLuaShaderFromString", lua);
+					return false;
+				}
+				
+				try {
+					var preShader:FunkinShader = new FunkinShader(content, content1, glslVersion);
+					realState.scriptVariables.get("_shader_").set(tag, preShader);
+					return true;
+				} catch(e:Dynamic) {
+					error('Expected Make Lua Shader "$tag"', "makeLuaShaderFromString", lua);
+				}
+			}
+			
+			return false;
+		});
+		
+		lua.set("setShaderProperty", function(shader:String, prop:String, val:Dynamic) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.get("_shader_") != null) {
+					var variables = realState.scriptVariables.get("_shader_");
+					if(variables.exists(shader)) {
+						return setVariableFromStr(variables.get(shader), prop, val, lua, "setShaderProperty");
+					}else {
+						error('The Shader Variables "$shader" Was Not Existed', "setShaderProperty", lua);
+					}
+				}
+			}
+			
+			return false;
+		});
+		
+		lua.set("getShaderProperty", function(shader:String, prop:String) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.get("_shader_") != null) {
+					var variables = realState.scriptVariables.get("_shader_");
+					if(variables.exists(shader)) {
+						return getVariableFromStr(variables.get(shader), prop, lua, "getShaderProperty");
+					}else {
+						error('The Shader Variables "$shader" Was Not Existed', "getShaderProperty", lua);
+					}
+				}
+			}
+			
+			return null;
+		});
+		
+		lua.set("setSpriteShader", function(obj:String, shader:String) {
+			var realShader:Dynamic = resolveLuaShader(shader, "setSpriteShader", lua);
+			if(realShader == null) {
+				error('The Shader Variable "$shader" Was Null!!', "setSpriteShader", lua);
+				return false;
+			}else if(!(realShader is FunkinShader)) {
+				error('The Shader Variable "$shader" Was Not Type FunkinShader Or Ex', "setSpriteShader", lua);
+				return false;
+			}
+		
+			var objSplit = obj.split(".");
+			var objFirst = objSplit[0];
+			var realObj:Dynamic = null;
+			if(lua._publicVariables.exists(objFirst)) {
+				if(objSplit.length > 1) {
+					realObj = getVariableFromStr(lua._publicVariables.get(objFirst), obj.substr(objFirst.length + 1), lua, "setSpriteShader");
+				}else if(objSplit.length == 1) {
+					realObj = lua._publicVariables.get(objFirst);
+				}
+				
+				if(realObj == null) {
+					error('The Variable "$obj" Was Null!!', "setSpriteShader", lua);
+					return false;
+				}else if(!(realObj is FlxSprite)) {
+					error('The Variable "$obj" Was Not Type FlxSprite Or Ex!!', "setSpriteShader", lua);
+					return false;
+				}
+				
+				try {
+					cast(realObj, FlxSprite).shader = cast(realShader, FunkinShader);
+					return true;
+				} catch(e:Dynamic) {
+					error('Expected Set Sprite Shader "$obj"', "setSpriteShader", lua);
+					return false;
+				}
+			}
+			
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				if(realState.scriptVariables.exists(objFirst)) {
+					if(objSplit.length > 1) {
+						realObj = getVariableFromStr(realState.scriptVariables.get(objFirst), obj.substr(objFirst.length + 1), lua, "setSpriteShader");
+					}else if(objSplit.length == 1) {
+						realObj = realState.scriptVariables.get(objFirst);
+					}
+					
+					if(realObj == null) {
+					error('The Variable "$obj" Was Null!!', "setSpriteShader", lua);
+					return false;
+					}else if(!(realObj is FlxSprite)) {
+						error('The Variable "$obj" Was Not Type FlxSprite Or Ex!!', "setSpriteShader", lua);
+						return false;
+					}
+					
+					try {
+						cast(realObj, FlxSprite).shader = cast(realShader, FunkinShader);
+						return true;
+					} catch(e:Dynamic) {
+						error('Expected Set Sprite Shader "$obj"', "setSpriteShader", lua);
+					return false;
+					}
+				}
+			}
+			
+			if(lua.scriptObject != null) {
+				realObj = getVariableFromStr(lua.scriptObject, obj, lua, "setSpriteShader");
+				
+				if(realObj == null) {
+					error('The Variable "$obj" Was Null!!', "setSpriteShader", lua);
+					return false;
+				}else if(!(realObj is FlxSprite)) {
+					error('The Variable "$obj" Was Not Type FlxSprite Or Ex!!', "setSpriteShader", lua);
+					return false;
+				}
+				
+				try {
+					cast(realObj, FlxSprite).shader = realShader;
+					return true;
+				} catch(e:Dynamic) {
+					error('Expected Set Sprite Shader "$obj"', "setSpriteShader", lua);
+				}
+			}
+			
+			return false;
+		});
+		
+		lua.set("addCameraShader", function(camera:String, shader:String) {
+			var realShader:Dynamic = resolveLuaShader(shader, "addCameraShader", lua);
+			if(realShader == null) {
+				error('The Shader Variable "$shader" Was Null!!', "addCameraShader", lua);
+				return false;
+			}else if(!(realShader is FunkinShader)) {
+				error('The Shader Variable "$shader" Was Not Type FunkinShader Or Ex', "addCameraShader", lua);
+				return false;
+			}
+		
+			var camSplit = camera.split(".");
+			var camFirst = camSplit[0];
+			var realCamera:Dynamic = null;
+			if(lua._publicVariables.exists(camFirst)) {
+				if(camSplit.length > 1) {
+					realCamera = getVariableFromStr(lua._publicVariables.get(camFirst), camera.substr(camFirst.length + 1), lua, "addCameraShader");
+				}else if(camSplit.length == 1) {
+					realCamera = lua._publicVariables.get(camFirst);
+				}
+				
+				if(realCamera == null) {
+					error('The Camera Variable "$camera" Was Null!!', "addCameraShader", lua);
+					return false;
+				}else if(!(realCamera is FlxCamera)) {
+					error('The Camera Variable "$camera" Was Not Type FlxCamera Or Ex!!', "addCameraShader", lua);
+					return false;
+				}
+				
+				try {
+					cast(realCamera, FlxCamera).addShader(cast(realShader, FunkinShader));
+					return true;
+				} catch(e:Dynamic) {
+					error('Expected Add Camera Shader "$camera"', "addCameraShader", lua);
+					return false;
+				}
+			}
+			
+			if(lua.scriptObject != null) {
+				realCamera = getVariableFromStr(lua.scriptObject, camera, lua, "addCameraShader");
+				
+				if(realCamera == null) {
+					error('The Camera Variable "$camera" Was Null!!', "addCameraShader", lua);
+					return false;
+				}else if(!(realCamera is FlxCamera)) {
+					error('The Camera Variable "$camera" Was Not Type FlxCamera Or Ex!!', "addCameraShader", lua);
+					return false;
+				}
+				
+				try {
+					cast(realCamera, FlxCamera).addShader(cast(realShader, FunkinShader));
+					return true;
+				} catch(e:Dynamic) {
+					error('Expected Set Sprite Shader "$camera"', "addCameraShader", lua);
+				}
+			}
+			
+			return false;
+		});
+		
+		lua.set("removeCameraShader", function(camera:String, shader:String) {
+			var realShader:Dynamic = resolveLuaShader(shader, "removeCameraShader", lua);
+			if(realShader == null) {
+				error('The Shader Variable "$shader" Was Null!!', "removeCameraShader", lua);
+				return false;
+			}else if(!(realShader is FunkinShader)) {
+				error('The Shader Variable "$shader" Was Not Type FunkinShader Or Ex', "removeCameraShader", lua);
+				return false;
+			}
+		
+			var camSplit = camera.split(".");
+			var camFirst = camSplit[0];
+			var realCamera:Dynamic = null;
+			if(lua._publicVariables.exists(camFirst)) {
+				if(camSplit.length > 1) {
+					realCamera = getVariableFromStr(lua._publicVariables.get(camFirst), camera.substr(camFirst.length + 1), lua, "removeCameraShader");
+				}else if(camSplit.length == 1) {
+					realCamera = lua._publicVariables.get(camFirst);
+				}
+				
+				if(realCamera == null) {
+					error('The Camera Variable "$camera" Was Null!!', "removeCameraShader", lua);
+					return false;
+				}else if(!(realCamera is FlxCamera)) {
+					error('The Camera Variable "$camera" Was Not Type FlxCamera Or Ex!!', "removeCameraShader", lua);
+					return false;
+				}
+				
+				try {
+					cast(realCamera, FlxCamera).removeShader(cast(realShader, FunkinShader));
+					return true;
+				} catch(e:Dynamic) {
+					error('Expected Add Camera Shader "$camera"', "removeCameraShader", lua);
+					return false;
+				}
+			}
+			
+			if(lua.scriptObject != null) {
+				realCamera = getVariableFromStr(lua.scriptObject, camera, lua, "removeCameraShader");
+				
+				if(realCamera == null) {
+					error('The Camera Variable "$camera" Was Null!!', "removeCameraShader", lua);
+					return false;
+				}else if(!(realCamera is FlxCamera)) {
+					error('The Camera Variable "$camera" Was Not Type FlxCamera Or Ex!!', "removeCameraShader", lua);
+					return false;
+				}
+				
+				try {
+					cast(realCamera, FlxCamera).removeShader(cast(realShader, FunkinShader));
+					return true;
+				} catch(e:Dynamic) {
+					error('Expected Set Sprite Shader "$camera"', "removeCameraShader", lua);
+				}
+			}
+			
+			return false;
 		});
 	}
 	
@@ -371,9 +718,44 @@ class LuaUtil {
 				
 				var split:Array<String> = obj.split(".");
 				var first:String = split[0];
+
+				if(lua._publicVariables.exists(first)) {
+					if(split.length > 1) {
+						var realObj:Dynamic = getVariableFromStr(lua._publicVariables.get(first), obj.substr(first.length + 1), lua, "startTween");
+						if(realObj != null) {
+							var tn:FlxTween = resolveLuaTween(tag, realObj, att, time, options, lua, "startTween");
+							if(tn != null) {
+								realState.scriptVariables.get("_tween_").set(tag, tn);
+								return true;
+							}
+							return false;
+						}
+					}else if(split.length == 1) {
+						var realObj:Dynamic = lua._publicVariables.get(obj);
+						if(realObj != null) {
+							var tn:FlxTween = resolveLuaTween(tag, realObj, att, time, options, lua, "startTween");
+							if(tn != null) {
+								realState.scriptVariables.get("_tween_").set(tag, tn);
+								return true;
+							}
+							return false;
+						}
+					}
+				}
+			
 				if(realState.scriptVariables.exists(first)) {
 					if(split.length > 1) {
 						var realObj:Dynamic = getVariableFromStr(realState.scriptVariables.get(first), obj.substr(first.length + 1), lua, "startTween");
+						if(realObj != null) {
+							var tn:FlxTween = resolveLuaTween(tag, realObj, att, time, options, lua, "startTween");
+							if(tn != null) {
+								realState.scriptVariables.get("_tween_").set(tag, tn);
+								return true;
+							}
+							return false;
+						}
+					}else if(split.length == 1) {
+						var realObj:Dynamic = realState.scriptVariables.get(obj);
 						if(realObj != null) {
 							var tn:FlxTween = resolveLuaTween(tag, realObj, att, time, options, lua, "startTween");
 							if(tn != null) {
@@ -395,6 +777,112 @@ class LuaUtil {
 						}
 					}else {
 						error('The Variable "$obj" was Null!', "startTween", lua);
+					}
+				}
+			}
+			
+			return false;
+		});
+		
+		lua.set("doTweenNum", function(tag:String, fromValue:Float, toValue:Float, time:Float, ?options:Dynamic) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				if(realState.scriptVariables.get("_tween_") == null) {
+					realState.scriptVariables.set("_tween_", new Map<String, FlxTween>());
+				}
+			
+				if(realState.scriptVariables.get("_tween_").exists(tag)) {
+					error('The Variable "$tag" was existed!', "doTweenNum", lua);
+					return false;
+				}
+			
+				var fn:FlxTween = resolveLuaNumTween(tag, fromValue, toValue, time, options, lua, "doTweenNum");
+				if(fn != null) {
+					realState.scriptVariables.get("_tween_").set(tag, fn);
+					return true;
+				}
+			}
+			return false;
+		});
+		
+		lua.set("doTweenColor", function(tag:String, obj:String, time:Float, fromColor:String, toColor:String, ?options:Dynamic) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.get("_tween_") == null) {
+					realState.scriptVariables.set("_tween_", new Map<String, FlxTween>());
+				}
+				
+				if(realState.scriptVariables.get("_tween_").exists(tag)) {
+					error('The Variable "$tag" was existed!', "doTweenColor", lua);
+					return false;
+				}
+				
+				var split:Array<String> = obj.split(".");
+				var first:String = split[0];
+
+				if(lua._publicVariables.exists(first)) {
+					if(split.length > 1) {
+						var realObj:Dynamic = getVariableFromStr(lua._publicVariables.get(first), obj.substr(first.length + 1), lua, "doTweenColor");
+						if((realObj is FlxSprite)) {
+							var tn:FlxTween = resolveLuaColorTween(tag, realObj, time, FlxColor.fromString(fromColor), FlxColor.fromString(toColor), options, lua, "doTweenColor");
+							if(tn != null) {
+								realState.scriptVariables.get("_tween_").set(tag, tn);
+								return true;
+							}
+							return false;
+						}
+					}else if(split.length == 1) {
+						var realObj:Dynamic = lua._publicVariables.get(obj);
+						if(realObj != null) {
+							var tn:FlxTween = resolveLuaColorTween(tag, realObj, time, FlxColor.fromString(fromColor), FlxColor.fromString(toColor), options, lua, "doTweenColor");
+							if(tn != null) {
+								realState.scriptVariables.get("_tween_").set(tag, tn);
+								return true;
+							}
+							return false;
+						}
+					}
+				}
+			
+				if(realState.scriptVariables.exists(first)) {
+					if(split.length > 1) {
+						var realObj:Dynamic = getVariableFromStr(realState.scriptVariables.get(first), obj.substr(first.length + 1), lua, "doTweenColor");
+						if(realObj is FlxSprite) {
+							var tn:FlxTween = resolveLuaColorTween(tag, realObj, time, FlxColor.fromString(fromColor), FlxColor.fromString(toColor), options, lua, "doTweenColor");
+							if(tn != null) {
+								realState.scriptVariables.get("_tween_").set(tag, tn);
+								return true;
+							}
+							return false;
+						}
+					}else if(split.length == 1) {
+						var realObj:Dynamic = realState.scriptVariables.get(obj);
+						if(realObj != null) {
+							var tn:FlxTween = resolveLuaColorTween(tag, realObj, time, FlxColor.fromString(fromColor), FlxColor.fromString(toColor), options, lua, "doTweenColor");
+							if(tn != null) {
+								realState.scriptVariables.get("_tween_").set(tag, tn);
+								return true;
+							}
+							return false;
+						}
+					}
+				}
+				
+				if(lua.scriptObject != null) {
+					var realObj:Dynamic = getVariableFromStr(lua.scriptObject, obj, lua, "doTweenColor");
+					if(realObj == null) {
+						error('The Variable "$obj" was Null!', "doTweenColor", lua);
+						return false;
+					}
+					if(realObj is FlxSprite) {
+						var tn:FlxTween = resolveLuaColorTween(tag, realObj, time, FlxColor.fromString(fromColor), FlxColor.fromString(toColor), options, lua, "doTweenColor");
+						if(tn != null) {
+							realState.scriptVariables.get("_tween_").set(tag, tn);
+							return true;
+						}
+					}else {
+						error('The Variable "$obj" was Not "FlxSprite" Type Or Ex', "doTweenColor", lua);
 					}
 				}
 			}
@@ -468,6 +956,32 @@ class LuaUtil {
 				}
 			}
 		});
+		
+		lua.set("loadFrames", function(tag:String, path:String) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(!realState.scriptVariables.exists(tag)) {
+					error('The Variable "$tag" was not exists!', 'loadGraphic', lua);
+					return;
+				}
+				
+				var spr:Dynamic = realState.scriptVariables.get(tag);
+				if(spr == null) {
+					error('The Sprite Variable "$tag" Was Null!!', "loadFrames", lua);
+					return;
+				}
+				try {
+					if(spr is FunkinSprite) {
+						cast(spr, FunkinSprite).loadSprite(Paths.image(path));
+					}else if(spr is FlxSprite) {
+						cast(spr, FlxSprite).frames = Paths.getFrames(Paths.image(path));
+					}
+				} catch(e:Dynamic) {
+					error('Expected Variable "$tag", When Load Frames', "loadFrames", lua);
+				}
+			}
+		});
 	}
 	
 	public static function objectFunction(lua:LuaScript) {
@@ -480,11 +994,19 @@ class LuaUtil {
 					return;
 				}
 				
+				var obj:Dynamic = realState.scriptVariables.get(tag);
+				if(obj == null) {
+					error('The Object Variable "$tag" Was Null!', "addLuaObject", lua);
+					return;
+				}else if(!(obj is FlxBasic)) {
+					error('The Object Variable "$tag" Can\'t Add To State, Because It Was Not FlxBasic Or Extended!', "addLuaObject", lua);
+					return;
+				}
 				try {
 					if(lua.scriptObject is FlxState) {
-						cast(lua.scriptObject, FlxState).add(realState.scriptVariables.get(tag));
+						cast(lua.scriptObject, FlxState).add(obj);
 					}else {
-						FlxG.state.add(realState.scriptVariables.get(tag));
+						FlxG.state.add(obj);
 					}
 				} catch(e:Dynamic) {
 					error('Expected Variable "$tag", When Add To State', "addLuaObject", lua);
@@ -501,14 +1023,22 @@ class LuaUtil {
 					return;
 				}
 				
+				var obj:Dynamic = realState.scriptVariables.get(tag);
+				if(obj == null) {
+					error('The Object Variable "$tag" Was Null!', "removeLuaObject", lua);
+					return;
+				}else if(!(obj is FlxBasic)) {
+					error('The Object Variable "$tag" Can\'t Remove To State, Because It Was Not FlxBasic Or Extended!', "removeLuaObject", lua);
+					return;
+				}
 				try {
 					if(lua.scriptObject is FlxState) {
-						cast(lua.scriptObject, FlxState).remove(realState.scriptVariables.get(tag));
+						cast(lua.scriptObject, FlxState).remove(obj);
 					}else {
-						FlxG.state.remove(realState.scriptVariables.get(tag));
+						FlxG.state.remove(obj);
 					}
 				} catch(e:Dynamic) {
-					error('Expected Variable "$tag", When Remove To State', "addLuaObject", lua);
+					error('Expected Variable "$tag", When Remove To State', "removeLuaObject", lua);
 				}
 			}
 		});
@@ -522,11 +1052,19 @@ class LuaUtil {
 					return;
 				}
 				
+				var obj:Dynamic = realState.scriptVariables.get(tag);
+				if(obj == null) {
+					error('The Object Variable "$tag" Was Null!', "insertLuaObject", lua);
+					return;
+				}else if(!(obj is FlxBasic)) {
+					error('The Object Variable "$tag" Can\'t Inert To State, Because It Was Not FlxBasic Or Extended!', "insertLuaObject", lua);
+					return;
+				}
 				try {
 					if(lua.scriptObject is FlxState) {
-						cast(lua.scriptObject, FlxState).insert(index, realState.scriptVariables.get(tag));
+						cast(lua.scriptObject, FlxState).insert(index, obj);
 					}else {
-						FlxG.state.insert(index, realState.scriptVariables.get(tag));
+						FlxG.state.insert(index, obj);
 					}
 				} catch(e:Dynamic) {
 					error('Expected Variable "$tag", When Insert To State', "insertLuaObject", lua);
@@ -538,15 +1076,46 @@ class LuaUtil {
 			if(lua.scriptObject is IStateScript) {
 				var realState:IStateScript = cast lua.scriptObject;
 				
-				var realCamera:Dynamic = getVariableFromStr(lua.scriptObject, camera, lua, "setObjectCamera");
+				var realCamera:Dynamic = null;
 				
-				if(realCamera == null) error('The Camera Variable "$camera" Was Null!', "setObjectCamera", lua);
-				else if(!(realCamera is FlxCamera)) error('The Camera Variable "$camera" Was Not FlxCamera Type!', "setObjectCamera", lua);
+				var split:Array<Dynamic> = camera.split(".");
+				var first:String = split[0];
+				var sureVar:Bool = false;
+
+				if(lua._publicVariables.exists(first)) {
+					if(split.length > 1) {
+						realCamera = getVariableFromStr(lua._publicVariables.get(first), camera.substr(first.length + 1), lua, "setObjectCamera");
+					}else if(split.length == 1) {
+						realCamera = lua._publicVariables.get(camera);
+					}
+					sureVar = true;
+				}
+				
+				if(!sureVar)
+					realCamera = getVariableFromStr(lua.scriptObject, camera, lua, "setObjectCamera");
+				if(realCamera == null) {
+					error('The Camera Variable "$camera" Was Null!', "setObjectCamera", lua);
+					return;
+				}
+				else if(!(realCamera is FlxCamera)) {
+					error('The Camera Variable "$camera" Was Not FlxCamera Type!', "setObjectCamera", lua);
+					return;
+				}
+				
+				
 				if(realState.scriptVariables.exists(tag)) {
+					var obj:Dynamic = realState.scriptVariables.get(tag);
+					if(obj == null) {
+						error('The Object Variable "$tag" Was Null!', "setObjectCamera", lua);
+						return;
+					}else if(!(obj is FlxBasic)) {
+						error('The Object Variable "$tag" Can\'t Set Its Camera, Because It Was Not FlxBasic Or Extended!', "setObjectCamera", lua);
+						return;
+					}
 					try {
-						realState.scriptVariables.get(tag).camera = realCamera;
+						cast(obj, FlxBasic).camera = cast(realCamera, FlxCamera);
 					} catch(e:Dynamic) {
-						error('Expected Variable "$tag", When Set A Camera', "setObjectCamera", lua);
+						error('Expected Object Variable "$tag", When Set Camera', "setObjectCamera", lua);
 					}
 					return;
 				}
@@ -555,11 +1124,14 @@ class LuaUtil {
 				if(obj == null) {
 					error('The Object Variable "$tag" Was Null!', "setObjectCamera", lua);
 					return;
+				}else if(!(obj is FlxBasic)) {
+					error('The Object Variable "$tag" Can\'t Set Its Camera, Because It Was Not FlxBasic Or Extended!', "setObjectCamera", lua);
+					return;
 				}
 				try {
-					obj.camera = realCamera;
+					cast(obj, FlxBasic).camera = cast(realCamera, FlxCamera);
 				} catch(e:Dynamic) {
-					error('Expected Object Variable "$tag", When Set A Camera', "setObjectCamera", lua);
+					error('Expected Object Variable "$tag", When Set Camera', "setObjectCamera", lua);
 				}
 			}
 		});
@@ -569,10 +1141,18 @@ class LuaUtil {
 				var realState:IStateScript = cast lua.scriptObject;
 				
 				if(realState.scriptVariables.exists(tag)) {
+					var obj:Dynamic = realState.scriptVariables.get(tag);
+					if(obj == null) {
+						error('The Object Variable "$tag" Was Null!', "scaleObject", lua);
+						return;
+					}else if(!(Reflect.hasField(obj, "scale") || obj is FlxSprite)) {
+						error('The Object Variable "$tag" Can\'t Set Scale, Because It Was Not FlxSprite Or Extended Or Has No Field "scale"!', "scaleObject", lua);
+						return;
+					}
 					try {
-						realState.scriptVariables.get(tag).scale.set(scaleX, scaleY);
+						obj.scale.set(scaleX, scaleY);
 						if(updateHitbox)
-							realState.scriptVariables.get(tag).updateHitbox();
+							obj.updateHitbox();
 					} catch(e:Dynamic) {
 						error('Expected Object Variable "$tag", When Set Scale', "scaleObject", lua);
 					}
@@ -582,6 +1162,9 @@ class LuaUtil {
 				var obj:Dynamic = getVariableFromStr(lua.scriptObject, tag, lua, "scaleObject");
 				if(obj == null) {
 					error('The Object Variable "$tag" Was Null!', "scaleObject", lua);
+					return;
+				}else if(!(Reflect.hasField(obj, "scale") || obj is FlxSprite)) {
+					error('The Object Variable "$tag" Can\'t Set Scale, Because It Was Not FlxSprite Or Extended Or Has No Field "scale"!', "scaleObject", lua);
 					return;
 				}
 				try {
@@ -599,8 +1182,16 @@ class LuaUtil {
 				var realState:IStateScript = cast lua.scriptObject;
 				
 				if(realState.scriptVariables.exists(tag)) {
+					var obj:Dynamic = realState.scriptVariables.get(tag);
+					if(obj == null) {
+						error('The Object Variable "$tag" Was Null!', "updateHitbox", lua);
+						return;
+					}else if(!(obj is FlxSprite)) {
+						error('The Object Variable "$tag" Can\'t Update Hitbox, Because It Was Not FlxSprite Or Extended!', "scaleObject", lua);
+						return;
+					}
 					try {
-						realState.scriptVariables.get(tag).updateHtbox();
+						obj.updateHtbox();
 					} catch(e:Dynamic) {
 						error('Expected Object Variable "$tag", When Update Its Hitbox', "updateHitbox", lua);
 					}
@@ -611,11 +1202,51 @@ class LuaUtil {
 				if(obj == null) {
 					error('The Object Variable "$tag" Was Null!', "updateHitbox", lua);
 					return;
+				}else if(!(obj is FlxSprite)) {
+					error('The Object Variable "$tag" Can\'t Update Hitbox, Because It Was Not FlxSprite Or Extended!', "scaleObject", lua);
+					return;
 				}
 				try {
 					obj.updateHitbox();
 				} catch(e:Dynamic) {
 					error('Expected Object Variable "$tag", When Update Its Hitbox', "updateHitbox", lua);
+				}
+			}
+		});
+		
+		lua.set("setScrollFactor", function(tag:String, x:Float, y:Float) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.exists(tag)) {
+					var obj:Dynamic = realState.scriptVariables.get(tag);
+					if(obj == null) {
+						error('The Object Variable "$tag" Was Null!', "setScrollFactor", lua);
+						return;
+					}else if(!(obj is FlxSprite)) {
+						error('The Object Variable "$tag" Can\'t Set ScrollFactor, Because It Was Not FlxSprite Or Extended!', "setScrollFactor", lua);
+						return;
+					}
+					try {
+						obj.scrollFactor.set(x, y);
+					} catch(e:Dynamic) {
+						error('Expected Object Variable "$tag", When Set Its Factor', "setScrollFactor", lua);
+					}
+					return;
+				}
+				
+				var obj:Dynamic = getVariableFromStr(lua.scriptObject, tag, lua, "setScrollFactor");
+				if(obj == null) {
+					error('The Object Variable "$tag" Was Null!', "setScrollFactor", lua);
+					return;
+				}else if(!(obj is FlxSprite)) {
+					error('The Object Variable "$tag" Can\'t Set ScrollFactor, Because It Was Not FlxSprite Or Extended!', "setScrollFactor", lua);
+					return;
+				}
+				try {
+					obj.scrollFactor.set(x, y);
+				} catch(e:Dynamic) {
+					error('Expected Object Variable "$tag", When Set Its Factor', "setScrollFactor", lua);
 				}
 			}
 		});
@@ -628,7 +1259,7 @@ class LuaUtil {
 				return false;
 			}
 			
-			var cp:String;
+			var cp:String = null;
 			if(packageName != null) {
 				var realPN = packageName.trim();
 				
@@ -641,9 +1272,23 @@ class LuaUtil {
 				cp = className.trim();
 			}
 			var cls:Dynamic = Type.resolveClass(cp);
+			if(cls == null) {
+				cls = Type.resolveEnum(cp);
+				
+				if(cls != null) {
+					var precn = Type.getEnumName(cls);
+					lua.interp.variables.set(precn.substr(precn.lastIndexOf(".") + 1), cls);
+					return true;
+				}
+			}
+			
+			if(cls == null) {
+				cls = Type.resolveClass('${cp}_HSC');
+			}
 			
 			if(cls != null) {
-				lua.interp.variables.set(Type.getClassName(cls), cls);
+				var precn = Type.getClassName(cls);
+				lua.interp.variables.set(precn.substr(precn.lastIndexOf(".") + 1), cls);
 				return true;
 			}else {
 				error('Not Found This Type $cp!', "addHaxeLibrary", lua);
@@ -660,6 +1305,36 @@ class LuaUtil {
 			
 			return lua.interp.execute(LuaScript.parser.parseString(code, '"${lua.fileName}" callback(runHaxeCode)'));
 		});
+	}
+	
+	public static function resolveLuaShader(tag:String, title:String, lua:LuaScript) {
+		var split = tag.split(".");
+		var first = split[0];
+		if(lua.scriptObject is IStateScript) {
+			var realState:IStateScript = cast lua.scriptObject;
+			
+			if(realState.scriptVariables.get("_shader_") != null) {
+				var variables = realState.scriptVariables.get("_shader_");
+				
+				if(variables.exists(first)) {
+					return variables.get(first);
+				}
+			}
+		}
+		
+		if(lua._publicVariables.exists(first)) {
+			if(split.length > 1) {
+				return getVariableFromStr(lua._publicVariables.get(first), tag.substr(first.length + 1), lua, title);
+			}else if(split.length == 1) {
+				return lua._publicVariables.get(first);
+			}
+		}
+		
+		if(lua.scriptObject != null) {
+			return getVariableFromStr(lua.scriptObject, tag, lua, title);
+		}
+		
+		return null;
 	}
 	
 	public static function cancelTimer(tag:String, title:String, lua:LuaScript, isDestroy:Bool = false) {
@@ -717,6 +1392,68 @@ class LuaUtil {
 		return false;
 	}
 	
+	private static function resolveLuaNumTween(tag:String, fv:Float, tv:Float, time:Float, options:Dynamic, lua:LuaScript, title:String) {
+		var realOptions:Dynamic = {};
+		
+		Reflect.setField(realOptions, "onComplete", function(_:FlxTween) {
+			lua.call("onTweenCompleted", [tag]);
+			cancelTween(tag, title, lua);
+		});
+		if(options != null) {
+			for(op in Reflect.fields(options)) {
+				var value:Dynamic = Reflect.getProperty(options, op);
+				switch(op) {
+					case "startDelay" | "loopDelay":
+						Reflect.setField(realOptions, op, value);
+					case "ease":
+						if(value is String)
+							Reflect.setField(realOptions, op, Reflect.getProperty(FlxEase, value));
+					default: {/*nothing*/}
+				}
+			}
+		}
+		
+		try {
+			return FlxTween.num(fv, tv, time, realOptions, function(val:Float) {
+				lua.call("onGetTweenNum", [tag, val]);
+			});
+		} catch(e:haxe.Exception) {
+			error('Expected The Tween "$tag", Content: \n"${e.message}"', title, lua);
+		}
+		
+		return null;
+	}
+	
+	private static function resolveLuaColorTween(tag:String, obj:FlxSprite, time:Float, fc:FlxColor, tc:FlxColor, options:Dynamic, lua:LuaScript, title:String) {
+		var realOptions:Dynamic = {};
+		
+		Reflect.setField(realOptions, "onComplete", function(_:FlxTween) {
+			lua.call("onTweenCompleted", [tag]);
+			cancelTween(tag, title, lua);
+		});
+		if(options != null) {
+			for(op in Reflect.fields(options)) {
+				var value:Dynamic = Reflect.getProperty(options, op);
+				switch(op) {
+					case "startDelay" | "loopDelay":
+						Reflect.setField(realOptions, op, value);
+					case "ease":
+						if(value is String)
+							Reflect.setField(realOptions, op, Reflect.getProperty(FlxEase, value));
+					default: {/*nothing*/}
+				}
+			}
+		}
+		
+		try {
+			return FlxTween.color(obj, time, fc, tc, realOptions);
+		} catch(e:haxe.Exception) {
+			error('Expected The Tween "$tag", Content: \n"${e.message}"', title, lua);
+		}
+		
+		return null;
+	}
+	
 	private static function resolveLuaTween(tag:String, obj:Dynamic, object:Dynamic, time:Float, options:Dynamic, lua:LuaScript, title:String):FlxTween {
 		if(object == null) {
 			error("The Att Was Null!!", title, lua);
@@ -755,8 +1492,13 @@ class LuaUtil {
 				}
 			}
 		}
+		try {
+			return FlxTween.tween(obj, realObject, time, realOptions);
+		} catch(e:haxe.Exception) {
+			error('Expected The Tween "$tag", Content: \n"${e.message}"', title, lua);
+		}
 		
-		return FlxTween.tween(obj, realObject, time, realOptions);
+		return null;
 	}
 	
 	public static function getVariableFromStr(scriptObject:Dynamic, variable:String, lua:LuaScript, title:String):Dynamic {
@@ -765,6 +1507,11 @@ class LuaUtil {
 		if(fuckyou.length > 1) {
 			var oldVar:Dynamic = scriptObject;
 			for(shit=>fuck in fuckyou) {
+				if(oldVar == null) {
+					error('Invalid access to field "${fuck}"', title, lua);
+					return null;
+				}
+			
 				if(StringTools.contains(fuck, "[") && StringTools.contains(fuck, "]")) {
 					var realShit = fuck.substr(0, fuck.indexOf("["));
 					var preField = Reflect.getProperty(oldVar, realShit);
@@ -777,12 +1524,24 @@ class LuaUtil {
 					oldVar = preField[Std.parseInt(preInt)];
 					continue;
 				}
+				
+				if(oldVar is IHScriptCustomBehaviour) {
+					//检索自定义class里的field，因为我需要
+					oldVar = cast(oldVar, IHScriptCustomBehaviour).hget(fuck);
+					continue;
+				}
 		
 				oldVar = Reflect.getProperty(oldVar, fuck);
 			}
 			return oldVar;
 		}else if(fuckyou.length == 1) {
 			var originFuck = fuckyou[0];
+			
+			if(scriptObject == null) {
+				error('Invalid access to field "${originFuck}"', title, lua);
+				return null;
+			}
+			
 			if(StringTools.contains(originFuck, "[") && StringTools.contains(originFuck, "]")) {
 				var preField = Reflect.getProperty(scriptObject, originFuck.substr(0, originFuck.indexOf("[")));
 				if(!Std.isOfType(preField, Array)) return null;
@@ -790,6 +1549,11 @@ class LuaUtil {
 				var preInt = originFuck.substring(originFuck.indexOf("[") + 1, originFuck.indexOf("]"));
 
 				return preField[Std.parseInt(preInt)];
+			}
+			
+			if(scriptObject is IHScriptCustomBehaviour) {
+				//检索自定义class里的field，因为我需要
+				return cast(scriptObject, IHScriptCustomBehaviour).hget(originFuck);
 			}
 		
 			return Reflect.getProperty(scriptObject, originFuck);
@@ -805,6 +1569,11 @@ class LuaUtil {
 			var preVar:Dynamic = null;
 			var oldVar:Dynamic = scriptObject;
 			for(shit=>fuck in fuckyou) {
+				if(oldVar == null) {
+					error('Invalid access to field "${fuck}"', title, lua);
+					return false;
+				}
+			
 				if(shit < fuckyou.length - 1) {
 					if(StringTools.contains(fuck, "[") && StringTools.contains(fuck, "]")) {
 						var realShit = fuck.substr(0, fuck.indexOf("["));
@@ -819,6 +1588,12 @@ class LuaUtil {
 						oldVar = preField[Std.parseInt(preInt)];
 						continue;
 					}
+					
+					if(oldVar is IHScriptCustomBehaviour) {
+					//检索自定义class里的field，因为我需要
+						oldVar = cast(oldVar, IHScriptCustomBehaviour).hget(fuck);
+						continue;
+					}
 			
 					oldVar = Reflect.getProperty(oldVar, fuck);
 				}else {
@@ -828,6 +1603,11 @@ class LuaUtil {
 								error('The final value cannot be Array', title, lua);
 								return false;
 							}else {
+								if(oldVar is IHScriptCustomBehaviour) {
+									cast(oldVar, IHScriptCustomBehaviour).hset(fuck, value);
+									return true;
+								}
+							
 								Reflect.setProperty(oldVar, fuck, value);
 								return true;
 							}
@@ -840,9 +1620,21 @@ class LuaUtil {
 			}
 		}else if(fuckyou.length == 1) {
 			var originFuck = fuckyou[0];
+			
+			if(scriptObject == null) {
+				error('Invalid access to field "${originFuck}"', title, lua);
+				return false;
+			}
+			
 			if(StringTools.contains(originFuck, "[") && StringTools.contains(originFuck, "]")) {
 				error('The final value cannot be Array', title, lua);
 				return false;
+			}
+			
+			if(scriptObject is IHScriptCustomBehaviour) {
+				//检索自定义class里的field，因为我需要
+				cast(scriptObject, IHScriptCustomBehaviour).hset(originFuck, value);
+				return true;
 			}
 			
 			try {

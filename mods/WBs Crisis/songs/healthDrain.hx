@@ -27,14 +27,14 @@ function create() {
 	if(bugRabbitStuffix.contains(strumLines.members[0].characters[0].curCharacter)) {
 		brBaseDrain = switch(SONG.meta.name.toLowerCase()) {
 			case "unprovoked": 0.005;
-			case "nothing": 0.01;
+			case "hunt and kill": 0.01;
 			case "last life": 0.001;
 			default: 0.001;
 		};
 		
 		brCacheAmout = switch(SONG.meta.name.toLowerCase()) {
 			case "unprovoked": 0.0005;
-			case "last life": 0.001;
+			case "last life": 0.002;
 			default: 0.00075;
 		};
 	}

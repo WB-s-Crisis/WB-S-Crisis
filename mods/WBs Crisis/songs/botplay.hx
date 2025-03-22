@@ -53,16 +53,22 @@ function create() {
 	});
 }
 
-function onRatingUpdate(event) {
-	if(cpuControlled)
-		event.rating = null;
-}
-
 function postUpdate(elapsed:Float) {
 	if(oldCpuControlled != cpuControlled) {
 		oldCpuControlled = cpuControlled;
 		
-		updateRating();
+		if(oldCpuControlled) {
+			curRating = null;
+		}else {
+			var rating = null;
+			var acc = get_accuracy();
+
+			for(e in comboRatings)
+				if (e.percent <= acc && (rating == null || rating.percent < e.percent))
+					rating = e;
+			
+			curRating = rating;
+		}
 	}
 	
 	if(oldCpuControlled) {
