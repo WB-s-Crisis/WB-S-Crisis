@@ -163,7 +163,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 					var arr = Assets.getText(path).split("________PACKSEP________");
 					fromString(arr[1], arr[0]);
 				default:
-				        new DummyScript(path);
+					new DummyScript(path);
 			}
 		}
 		return new DummyScript(path);
@@ -185,7 +185,6 @@ class Script extends FlxBasic implements IFlxDestroyable {
 				Logs.trace("Not Support Lua Script In Current Platform.", ERROR);
 				new DummyScript(path).loadFromString(code);
 				#end
-				new DummyScript(path).loadFromString(code);
 			default:
 				new DummyScript(path).loadFromString(code);
 		}
@@ -233,6 +232,9 @@ class Script extends FlxBasic implements IFlxDestroyable {
 
 	/**
 	 * HSCRIPT ONLY FOR NOW
+	 * ...
+	 * 不一定，牢马尿会知道怎么做的.
+	 * ...
 	 * Sets the "public" variables map for ScriptPack
 	 */
 	public function setPublicMap(map:Map<String, Dynamic>) {

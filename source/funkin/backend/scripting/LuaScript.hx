@@ -9,6 +9,8 @@ import llua.Convert;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxColor;
 import funkin.backend.scripting.utils.LuaUtil;
+import funkin.backend.system.interfaces.IStateScript;
+import funkin.backend.MusicBeatState;
 import hscript.Interp;
 import hscript.Expr;
 import hscript.Parser;
@@ -36,15 +38,22 @@ class LuaScript extends Script {
 	public var scriptObject(default, set):Dynamic = null;
 	@:noCompletion private function set_scriptObject(val:Dynamic):Dynamic {
 		scriptObject = val;
-		interp.scriptObject = val;
+		if(_allowUseHScript) {
+			interp.scriptObject = val;
+			if(val is IStateScript) {
+				interp.variables.set("setLuaVar", (tag:String, val:Dynamic) -> val.scriptVariables.set(tag, val));
+				interp.variables.set("getLuaVar", (tag:String) -> return val.scriptVariables.get(tag));
+			}
+		}
 		return val;
 	}
 	private var interp:Interp = new Interp();
 	
 	public var closed:Bool = false;
 	private var _variables:Map<String, Dynamic> = new Map();
+	private var _publicVariables:Map<String, Dynamic> = new Map();
 	
-	private var _allowUseHScript:Bool;
+	private var _allowUseHScript:Bool = false;
 	private var defaultVariables:Map<String, Dynamic> = [
 		//测试的
 		"debugPrint" => (text:String, delayTime:Float = 1, ?style:String) -> {
@@ -58,7 +67,7 @@ class LuaScript extends Script {
 			
 		//部分FlxMath的大宝贝
 		"mathBound" => flixel.math.FlxMath.bound,
-		"mathLerp" => flixel.math.FlxMath.lerp,
+		"mathLerp" => (FlxG.state is MusicBeatState ? cast(FlxG.state, MusicBeatState).lerp : flixel.math.FlxMath.lerp),
 	];
 	
 	public function new(path:String, allowUseHScript:Bool = true) {
@@ -89,7 +98,9 @@ class LuaScript extends Script {
 			for(k=>v in Script.getDefaultVariables()) {
 				interp.variables.set(k, v);
 			}
+			interp.variables.set("parent_lua", this);
 			interp.errorHandler = _hscriptErrorHandler;
+			interp.staticVariables = Script.staticVariables;
 		}
 
 		for(k=>v in defaultVariables) {
@@ -100,6 +111,7 @@ class LuaScript extends Script {
 		LuaUtil.timerAndTweenFunction(this);
 		LuaUtil.objectFunction(this);
 		LuaUtil.spriteFunction(this);
+		LuaUtil.shaderFunction(this);
 	}
 	
 	override function onLoad() {
@@ -208,6 +220,12 @@ class LuaScript extends Script {
 	
 	public override function setParent(sc:Dynamic) {
 		scriptObject = sc;
+	}
+	
+	public override function setPublicMap(map:Map<String, Dynamic>) {
+		_publicVariables = map;
+		if(_allowUseHScript)
+			this.interp.publicVariables = map;
 	}
 	
 	public override function error(text:String, ?additionInfo:Dynamic) {

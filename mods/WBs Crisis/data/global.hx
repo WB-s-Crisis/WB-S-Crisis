@@ -10,7 +10,6 @@ import funkin.game.GameOverSubstate;
 import funkin.menus.PauseSubState;
 import funkin.backend.utils.WindowUtils;
 import mobile.funkin.backend.utils.MobileUtil;
-
 import openfl.Lib;
 
 /**

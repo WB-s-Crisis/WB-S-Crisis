@@ -1695,10 +1695,15 @@ class PlayState extends MusicBeatState
 		if (playerID == null || directionID == null || playerID == -1) return;
 
 		var event:NoteMissEvent = scripts.event("onPlayerMiss", EventManager.get(NoteMissEvent).recycle(note, -10, 1, muteVocalsOnMiss, note != null ? -0.0475 : -0.04, Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2), note == null, combo > 5, "sad", true, true, "miss", strumLines.members[playerID].characters, playerID, note != null ? note.noteType : null, directionID, 0));
-		var luaRet:Dynamic = scripts.luaCall("preNoteMiss", [strumLine.notes.members.indexOf(note), note.noteType, note.strumID, note.isSustainNote]);
+		var luaRet:Dynamic = null;
+		if(note != null) {
+			luaRet = scripts.luaCall("noteMissPre", [strumLine.notes.members.indexOf(note), note.noteType, note.strumID, note.isSustainNote]);
+		}else {
+			luaRet = scripts.luaCall("noteMissPress", [directionID]);
+		}
 		strumLine.onMiss.dispatch(event);
 		if (event.cancelled #if ALLOW_LUASTATE || luaRet == LuaUtil.Function_Stop #end) {
-			scripts.luaCall("noteMiss", [strumLine.notes.members.indexOf(note), note.noteType, note.strumID, note.isSustainNote]);
+			if(note != null) scripts.luaCall("noteMiss", [strumLine.notes.members.indexOf(note), note.noteType, note.strumID, note.isSustainNote]);
 			return;
 		}
 
@@ -1734,7 +1739,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 		
-		scripts.luaCall("noteMiss", [strumLine.notes.members.indexOf(note), note.noteType, note.strumID, note.isSustainNote]);
+		if(note != null) scripts.luaCall("noteMiss", [strumLine.notes.members.indexOf(note), note.noteType, note.strumID, note.isSustainNote]);
 
 		if (event.deleteNote && strumLine != null && note != null)
 			strumLine.deleteNote(note);
@@ -1785,10 +1790,10 @@ class PlayState extends MusicBeatState
 		var event:NoteHitEvent;
 		var luaRet:Dynamic;
 		if (strumLine != null && !strumLine.cpu) {
-			luaRet = scripts.luaCall("preGoodNoteHit", [strumLine.notes.members.indexOf(note), note.noteType, note.strumID, note.isSustainNote]);
+			luaRet = scripts.luaCall("goodNoteHitPre", [strumLine.notes.members.indexOf(note), note.noteType, note.strumID, note.isSustainNote]);
 			event = EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, null, defaultDisplayRating, defaultDisplayCombo, note, strumLine.characters, true, note.noteType, note.animSuffix.getDefault(note.strumID < strumLine.members.length ? strumLine.members[note.strumID].animSuffix : strumLine.animSuffix), "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, 0.023, daRating, Options.splashesEnabled && !note.isSustainNote && daRating == "sick");
 		}else {
-			luaRet = scripts.luaCall("preOpponentNoteHit", [strumLine.notes.members.indexOf(note), note.noteType, note.strumID, note.isSustainNote]);
+			luaRet = scripts.luaCall("opponentNoteHitPre", [strumLine.notes.members.indexOf(note), note.noteType, note.strumID, note.isSustainNote]);
 			event = EventManager.get(NoteHitEvent).recycle(false, false, false, null, defaultDisplayRating, defaultDisplayCombo, note, strumLine.characters, false, note.noteType, note.animSuffix.getDefault(note.strumID < strumLine.members.length ? strumLine.members[note.strumID].animSuffix : strumLine.animSuffix), "game/score/", "", note.strumID, 0, null, 0, daRating, false);
 		}
 		event.deleteNote = !note.isSustainNote; // work around, to allow sustain notes to be deleted
