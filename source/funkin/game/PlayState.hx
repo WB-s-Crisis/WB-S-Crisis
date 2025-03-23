@@ -343,6 +343,9 @@ class PlayState extends MusicBeatState
 	 * Camera for the game (stages, characters)
 	 */
 	public var camGame:FlxCamera;
+	
+	//lol ---qqqeb
+	public var camBars:FlxCamera;
 
 	/**
 	 * The player's current score.
@@ -624,8 +627,12 @@ class PlayState extends MusicBeatState
 		(scripts = new ScriptPack("PlayState")).setParent(this);
 
 		camGame = camera;
+		camBars = new FlxCamera();
+		FlxG.cameras.add(camBars, false);
+		camBars.bgColor.alpha = 0;
 		FlxG.cameras.add(camHUD = new HudCamera(), false);
 		camHUD.bgColor.alpha = 0;
+		
 
 		downscroll = Options.downscroll;
 
