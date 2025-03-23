@@ -280,11 +280,11 @@ class LuaScript extends Script {
 		]);
 	}
 	
-	private function retReturn(sb:State, oldTop:Int):Dynamic {
+	private inline function retReturn(sb:State, oldTop:Int):Dynamic {
 		if(Lua.gettop(sb) - oldTop > 1) {
 			var arr:Array<Dynamic> = [];
-			var top:Int;
-			var i:Int;
+			var top:Null<Int> = null;
+			var i:Null<Int> = null;
 
 			while(Lua.gettop(sb) != Lua.LUA_OK) {
 				top = Lua.gettop(sb);
