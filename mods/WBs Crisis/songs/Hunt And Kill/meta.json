@@ -1,0 +1,21 @@
+{
+	"beatsPerMeasure": 4,
+	"opponentModeAllowed": false,
+	"coopAllowed": false,
+	"stepsPerBeat": 4,
+	"bpm": 180,
+	"difficulties": [
+		"bugRabbit"
+	],
+	"needsVoices": true,
+	"parsedColor": -12368550,
+	"displayName": "Hunt And Kill",
+	"icon": "tom-final",
+	"name": "Hunt And Kill",
+	"color": "#43455A",
+	"customValues": {
+		"iconAnimated": true,
+		"iconScale": 1.1,
+		"iconOffset": [-20, -80]
+	}
+}
