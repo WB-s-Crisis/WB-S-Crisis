@@ -387,6 +387,60 @@ class LuaUtil {
 		});
 	}
 	
+	public static function stateFunction(lua:LuaScript) {
+		lua.set("switchState", function(cls:String, ?args:Array<Dynamic>) {
+			var cl:Class<Dynamic> = Type.resolveClass(cls);
+			if(cl == null) cl = Type.resolveClass('${cls}_HSC');
+			
+			if(cl != null) {
+				try {
+					var instance:Dynamic = Type.createInstance(cl, (args != null ? args : []));
+					switch(Type.typeof(instance)) {
+						case TClass(FlxState):
+							FlxG.switchState(instance);
+							return true;
+						default:
+							error('The Class "$cls" Was Not FlxState Or Ex', "switchState", lua);
+					}
+				} catch(e:Dynamic) {
+					error('Expected Class "$cls" When Switch State', "switchState", lua);
+				}
+				
+				return false;
+			}else {
+				error('The Class "$cls" Was Not Found!', "switchState", lua);
+			}
+			
+			return false;
+		});
+	}
+	
+	public static function mobileFunction(lua:LuaScript) {
+		#if mobile
+		if(!(lua.scriptObject is MusicBeatState) || !(lua.scriptObject is MusicBeatSubstate)) return;
+		
+		lua.set("addVirtualPad", function(dpad:String, acPad:String) {
+			lua.scriptObject.addVirtualPad(dpad, acPad);
+		});
+		
+		lua.set("removeVirtualPad", function() {
+			lua.scriptObject.removeVirtualPad();
+		});
+		
+		lua.set("addHitbox", function(defCam:Bool = false) {
+			lua.scriptObject.addHitbox(defCam);
+		});
+		
+		lua.set("removeHitbox", function() {
+			lua.scriptObject.removeHitbox();
+		});
+		
+		lua.set("addVirtualPadCamera", function(defCam:Bool = false) {
+			lua.scriptObject.addVirtualPadCamera(defCam);
+		});
+		#end
+	}
+	
 	public static function shaderFunction(lua:LuaScript) {
 		lua.set("makeLuaShader", function(tag:String, path:String, glslVersion:String = #if mobile "100" #else "120" #end) {
 			if(lua.scriptObject is IStateScript) {

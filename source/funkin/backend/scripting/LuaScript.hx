@@ -111,6 +111,8 @@ class LuaScript extends Script {
 		LuaUtil.timerAndTweenFunction(this);
 		LuaUtil.objectFunction(this);
 		LuaUtil.spriteFunction(this);
+		LuaUtil.mobileFunction(this);
+		LuaUtil.stateFunction(this);
 		LuaUtil.shaderFunction(this);
 	}
 	
@@ -133,7 +135,7 @@ class LuaScript extends Script {
 			return;
 		}
 		trace("loading Successully");
-		call("new");
+		call("onNew");
 	}
 	
 	override function reload() {
@@ -148,6 +150,8 @@ class LuaScript extends Script {
 
 		try {
 			var oldTop:Int = Lua.gettop(heart);
+			
+			LuaError.setErrorHandler(heart);
 	
 			Lua.getglobal(heart, key);
 			var funcType:Int = Lua.type(heart, -1);
@@ -315,5 +319,11 @@ class LuaScript extends Script {
 		Lua.init_callbacks(heart);
 		Lua_helper.register_hxtrace(heart);
 	}
+}
+
+@:include("linc_lua.h")
+extern class LuaError {
+	@:native('linc::helpers::setErrorHandler')
+	static function setErrorHandler(heart:State):Int;
 }
 #end

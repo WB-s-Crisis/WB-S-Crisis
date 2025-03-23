@@ -21,27 +21,35 @@ class GlobalScript {
 
 		FlxG.signals.focusGained.add(function() {
 			call("focusGained");
+			luaCall("onFocusGained");
 		});
 		FlxG.signals.focusLost.add(function() {
 			call("focusLost");
+			luaCall("onFocusLost");
 		});
 		FlxG.signals.gameResized.add(function(w:Int, h:Int) {
 			call("gameResized", [w, h]);
+			luaCall("gameResized", [w, h]);
 		});
 		FlxG.signals.postDraw.add(function() {
 			call("postDraw");
+			luaCall("onDrawPost");
 		});
 		FlxG.signals.postGameReset.add(function() {
 			call("postGameReset");
+			luaCall("onGameResetPost");
 		});
 		FlxG.signals.postGameStart.add(function() {
 			call("postGameStart");
+			luaCall("onGameStartPost");
 		});
 		FlxG.signals.postStateSwitch.add(function() {
 			call("postStateSwitch");
+			luaCall("onStateSwitchPost");
 		});
 		FlxG.signals.postUpdate.add(function() {
 			call("postUpdate", [FlxG.elapsed]);
+			luaCall("onUpdatePost", [FlxG.elapsed]);
 			if (FlxG.keys.justPressed.F5) {
 				if (scripts.scripts.length > 0) {
 					Logs.trace('Reloading global script...', WARNING, YELLOW);
@@ -57,22 +65,28 @@ class GlobalScript {
 		});
 		FlxG.signals.preDraw.add(function() {
 			call("preDraw");
+			luaCall("onDrawPre");
 		});
 		FlxG.signals.preGameReset.add(function() {
 			call("preGameReset");
+			luaCall("onGameResetPre");
 		});
 		FlxG.signals.preGameStart.add(function() {
 			call("preGameStart");
+			luaCall("onGameStartPre");
 		});
 		FlxG.signals.preStateCreate.add(function(state:FlxState) {
 			call("preStateCreate", [state]);
+			luaCall("onStateCreatePre", [Type.getClassName(Type.getClass(state))]);
 		});
 		FlxG.signals.preStateSwitch.add(function() {
 			call("preStateSwitch", []);
 		});
 		FlxG.signals.preUpdate.add(function() {
 			call("preUpdate", [FlxG.elapsed]);
+			luaCall("onUpdatePre", [FlxG.elapsed]);
 			call("update", [FlxG.elapsed]);
+			luaCall("onUpdate", [FlxG.elapsed]);
 		});
 
 		onModSwitch(#if MOD_SUPPORT ModsFolder.currentModFolder #else null #end);
@@ -83,6 +97,13 @@ class GlobalScript {
 			scripts.event(name, event);
 		return event;
 	}
+	
+	public static function luaCall(name:String, ?args:Array<Dynamic>):Dynamic {
+		if (scripts != null)
+			return scripts.luaCall(name, args);
+		
+		return null;
+	}
 
 	public static function call(name:String, ?args:Array<Dynamic>) {
 		if (scripts != null)
@@ -90,6 +111,7 @@ class GlobalScript {
 	}
 	public static function onModSwitch(newMod:String) {
 		call("destroy");
+		luaCall("onDestroy");
 		scripts = FlxDestroyUtil.destroy(scripts);
 		scripts = new ScriptPack("GlobalScript");
 		for (i in funkin.backend.assets.ModsFolder.getLoadedMods()) {
@@ -105,10 +127,12 @@ class GlobalScript {
 
 	public static function beatHit(curBeat:Int) {
 		call("beatHit", [curBeat]);
+		luaCall("onBeatHit", [curBeat]);
 	}
 
 	public static function stepHit(curStep:Int) {
 		call("stepHit", [curStep]);
+		call("onStepHit", [curStep]);
 	}
 }
 #end
