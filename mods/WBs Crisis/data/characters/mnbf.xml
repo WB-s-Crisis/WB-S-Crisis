@@ -1,0 +1,9 @@
+<!DOCTYPE codename-engine-character>
+<character x="-100" y="300" sprite="mu" scale="1.2" flipX="true" isPlayer="true" icon="hnbf" color="#51CDE1" holdTime="6">
+	<anim name="idle" anim="BF idle dance" x="0" y="0" fps="24" loop="false"/>
+	<anim name="singUP" anim="BF NOTE UP" x="-40" y="40" fps="24" loop="false"/>
+	<anim name="singLEFT" anim="BF NOTE LEFT" x="30" y="-10" fps="24" loop="false"/>
+	<anim name="singRIGHT" anim="BF NOTE RIGHT" x="-40" y="-4" fps="24" loop="false"/>
+	<anim name="singDOWN" anim="BF NOTE DOWN" x="0" y="-50" fps="24" loop="false"/>
+	<anim name="dodge" anim="dodge" x="0" y="0" fps="24" loop="false"/>
+</character>

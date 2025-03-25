@@ -1,0 +1,21 @@
+{
+	"beatsPerMeasure": 4,
+	"opponentModeAllowed": false,
+	"coopAllowed": false,
+	"stepsPerBeat": 4,
+	"bpm": 160,
+	"difficulties": [
+		"TOM"
+	],
+	"needsVoices": true,
+	"parsedColor": -12368550,
+	"displayName": "Its a meTom",
+	"icon": "tom-final",
+	"name": "Its a meTom",
+	"color": "#43455A",
+	"customValues": {
+		"iconAnimated": true,
+		"iconScale": 1.1,
+		"iconOffset": [-20, -80]
+	}
+}

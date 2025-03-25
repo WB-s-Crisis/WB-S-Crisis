@@ -5,6 +5,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxRect;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.util.FlxAxes;
+import openfl.display.BitmapData;
 
 import funkin.backend.utils.DiscordUtil;
 import funkin.backend.MusicBeatState;
@@ -65,14 +66,20 @@ function create() {
 		card.ID = i;
 
 		if (song.info != null && song.info.exists("Freeplay") && song.info.get("Freeplay").exists("Cover") && !coverGraphics.exists(song.info.get("Freeplay").get("Cover"))) {
-			var graph = FlxG.bitmap.add(Paths.image('menus/freeplay/covers/' + song.info.get("Freeplay").get("Cover")));
+			var path = Paths.image('menus/freeplay/covers/' + song.info.get("Freeplay").get("Cover"));
+			
+			var graph = null;
+			if(!Assets.exists(path)) graph = FlxG.bitmap.add(Paths.image("menus/freeplay/covers/templates"));
+			else graph = FlxG.bitmap.add(path);
 			graph.useCount++;
 			graph.destroyOnNoUse = false;
 			coverGraphics.set(song.info.get("Freeplay").get("Cover"), graph);
 		}
 		
 		if(song.info != null && song.info.exists("Freeplay") && song.info.get("Freeplay").exists("Background") && !bgGraphics.exists(song.info.get("Freeplay").get("Background"))) {
-			var graphic = FlxG.bitmap.add(Paths.image("menus/freeplay/BG/" + song.info.get("Freeplay").get("Background")));
+			var path = Paths.image("menus/freeplay/BG/" + song.info.get("Freeplay").get("Background"));
+			if(Assets.exists(path)) graphic = FlxG.bitmap.add(path);
+			else graphic = FlxG.bitmap.add(new BitmapData(FlxG.width, FlxG.height));
 			graphic.useCount++;
 			graphic.destroyOnNoUse = false;
 			bgGraphics.set(song.info.get("Freeplay").get("Background"), graphic);

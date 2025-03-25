@@ -14,7 +14,7 @@
  */
 
 var tomStuffix:Array<String> = ["tom", "tom1-3"];
-var bugRabbitStuffix:Array<String> = ["Looney Tunes"];
+var bugRabbitStuffix:Array<String> = ["Looney Tunes", "Looney Tunes-2"];
 
 var brBaseDrain:Float;
 var brCacheTime:Float = Conductor.crochet / 950;

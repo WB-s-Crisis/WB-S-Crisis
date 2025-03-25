@@ -6,14 +6,20 @@ import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
+import flixel.util.FlxAxes;
+import flxanimate.FlxAnimate;
+import funkin.backend.FlxAnimate as BydAnimate;
 import funkin.backend.scripting.LuaScript;
+import funkin.backend.scripting.events.PlayAnimEvent.PlayAnimContext;
 import funkin.backend.MusicBeatState;
 import funkin.backend.MusicBeatSubstate;
 import funkin.backend.system.interfaces.IStateScript;
 import funkin.backend.shaders.FunkinShader;
+import funkin.backend.FunkinText;
 import funkin.backend.shaders.CustomShader;
 import flixel.FlxState;
-import flixel.FlxSprite;
+import flixel.text.FlxText;
+import flixel.FlxSubState;
 import hscript.IHScriptCustomBehaviour;
 
 class LuaUtil {
@@ -107,7 +113,11 @@ class LuaUtil {
 		 * @return 如果此回调运行正常，将会返回true，否则为false
 		 */
 		lua.set("setPropertyFromClass", function(cl:String, tag:String, val:Dynamic) {
-			var cls:Class<Dynamic> = Type.resolveClass(cl);
+			var cls:Dynamic = null;
+			if(lua._variables.exists(cl)) {
+				cls = lua._variables.get(cl);
+			}
+			if(cls == null) cls = Type.resolveClass(cl);
 			if(cls == null) {
 				cls = Type.resolveClass('${cl}_HSC');
 			}
@@ -126,7 +136,11 @@ class LuaUtil {
 		 * @return 将返回其类的静态变量的值
 		 */
 		lua.set("getPropertyFromClass", function(cl:String, tag:String) {
-			var cls:Class<Dynamic> = Type.resolveClass(cl);
+			var cls:Dynamic = null;
+			if(lua._variables.exists(cl)) {
+				cls = lua._variables.get(cl);
+			}
+			if(cls == null) cls = Type.resolveClass(cl);
 			if(cls == null) {
 				cls = Type.resolveClass('${cl}_HSC');
 			}
@@ -321,12 +335,16 @@ class LuaUtil {
 		 * @return 你知道的，我懒得说
 		 */
 		lua.set("callMethodFromClass", function(cl:String, func:String, ?args:Array<Dynamic>) {
-			var cls:Class<Dynamic> = Type.resolveClass(cl);
+			var cls:Dynamic = null;
+			if(lua._variables.exists(cl)) {
+				cls = lua._variables.get(cl);
+			}
+			if(cls == null) cls = Type.resolveClass(cl);
 			if(cls == null) {
 				cls = Type.resolveClass('${cl}_HSC');
 			}
 			if(cls == null) {
-				error('Not Found Class: $cl', "setPropertyFromClass", lua);
+				error('Not Found Class: $cl', "callMethodFromClass", lua);
 				return null;
 			}
 			
@@ -389,19 +407,19 @@ class LuaUtil {
 	
 	public static function stateFunction(lua:LuaScript) {
 		lua.set("switchState", function(cls:String, ?args:Array<Dynamic>) {
-			var cl:Class<Dynamic> = Type.resolveClass(cls);
+			var cl = null;
+			if(lua._variables.exists(cls)) {
+				cl = lua._variables.get(cls);
+			}
+			if(cl == null) cl = Type.resolveClass(cls);
 			if(cl == null) cl = Type.resolveClass('${cls}_HSC');
 			
 			if(cl != null) {
 				try {
 					var instance:Dynamic = Type.createInstance(cl, (args != null ? args : []));
-					switch(Type.typeof(instance)) {
-						case TClass(FlxState):
-							FlxG.switchState(instance);
-							return true;
-						default:
-							error('The Class "$cls" Was Not FlxState Or Ex', "switchState", lua);
-					}
+					
+					FlxG.switchState(instance);
+					return true;
 				} catch(e:Dynamic) {
 					error('Expected Class "$cls" When Switch State', "switchState", lua);
 				}
@@ -413,32 +431,572 @@ class LuaUtil {
 			
 			return false;
 		});
+		
+		lua.set("openSubState", function(cls:String, ?args:Array<Dynamic>) {
+			var cl = null;
+			if(lua._variables.exists(cls)) {
+				cl = lua._variables.get(cls);
+			}
+			if(cl == null) cl = Type.resolveClass(cls);
+			if(cl == null) cl = Type.resolveClass('${cls}_HSC');
+			
+			if(cl != null) {
+				try {
+					var instance:Dynamic = Type.createInstance(cl, (args != null ? args : []));
+					
+					if(lua.scriptObject is FlxState) {
+						cast(lua.scriptObject, FlxState).openSubState(instance);
+					}else {
+						FlxG.state.openSubState(instance);
+					}
+					return true;
+				} catch(e:Dynamic) {
+					error('Expected Class "$cls" When Open SubState', "openSubState", lua);
+				}
+				
+				return false;
+			}else {
+				error('The Class "$cls" Was Not Found!', "openSubState", lua);
+			}
+			
+			return false;
+		});
+		
+		lua.set("closeSubState", function() {
+			try {
+				if(lua.scriptObject is FlxState) {
+					cast(lua.scriptObject, FlxState).closeSubState();
+				}else {
+					FlxG.state.closeSubState();
+				}
+				return true;
+			} catch(e:Dynamic) {
+				error('Expected Close SubState', "closeSubState", lua);
+			}
+			
+			return false;
+		});
+		
+		//仅用在lua的scriptObject为FlxSubState时可用
+		lua.set("close", function() {
+			if(!(lua.scriptObject is FlxSubState)) {
+				error('Current Lua State Was Not FlxSubState Or Ex!', "close", lua);
+				return false;
+			}
+			
+			try {
+				cast(lua.scriptObject, FlxSubState).close();
+				return true;
+			} catch(e:Dynamic) {
+				error('Expected Close This SubState', "close", lua);
+			}
+			
+			return false;
+		});
 	}
 	
 	public static function mobileFunction(lua:LuaScript) {
 		#if mobile
-		if(!(lua.scriptObject is MusicBeatState) || !(lua.scriptObject is MusicBeatSubstate)) return;
-		
 		lua.set("addVirtualPad", function(dpad:String, acPad:String) {
-			lua.scriptObject.addVirtualPad(dpad, acPad);
+			if(lua.scriptObject == null) {
+				error('The Lua ScriptObject Was Null, You Can\'t Use This Callback!!', "addVirtualPad", lua);
+				return;
+			}
+		
+			try {
+				final func = Reflect.getProperty(lua.scriptObject, "addVirtualPad");
+				if(func == null || !Reflect.isFunction(func)) {
+					error("The Lua ScriptObject Was Not Exists \"addVirtualPad\" or was null", "addVirtualPad", lua);
+					return;
+				}
+				func(dpad, acPad);
+			}catch(e:Dynamic) {
+				error('Expected This Callback When Add VirtualPad!', "addVirtualPad", lua);
+			}
 		});
 		
 		lua.set("removeVirtualPad", function() {
-			lua.scriptObject.removeVirtualPad();
+			if(lua.scriptObject == null) {
+				error('The Lua ScriptObject Was Null, You Can\'t Use This Callback!!', "removeVirtualPad", lua);
+				return;
+			}
+		
+			try {
+				final func = Reflect.getProperty(lua.scriptObject, "removeVirtualPad");
+				if(func == null || !Reflect.isFunction(func)) {
+					error("The Lua ScriptObject Was Not Exists \"removeVirtualPad\" or was null", "removeVirtualPad", lua);
+					return;
+				}
+				func();
+			}catch(e:Dynamic) {
+				error('Expected This Callback When Remove VirtualPad!', "removeVirtualPad", lua);
+			}
 		});
 		
 		lua.set("addHitbox", function(defCam:Bool = false) {
-			lua.scriptObject.addHitbox(defCam);
+			if(lua.scriptObject == null) {
+				error('The Lua ScriptObject Was Null, You Can\'t Use This Callback!!', "addHitbox", lua);
+				return;
+			}
+		
+			try {
+				final func = Reflect.getProperty(lua.scriptObject, "addHitbox");
+				if(func == null || !Reflect.isFunction(func)) {
+					error("The Lua ScriptObject Was Not Exists \"addHitbox\" or was null", "addHitbox", lua);
+					return;
+				}
+				func(defCam);
+			}catch(e:Dynamic) {
+				error('Expected This Callback When Add Hitbox!', "addHitbox", lua);
+			}
 		});
 		
 		lua.set("removeHitbox", function() {
-			lua.scriptObject.removeHitbox();
+			if(lua.scriptObject == null) {
+				error('The Lua ScriptObject Was Null, You Can\'t Use This Callback!!', "removeHitbox", lua);
+				return;
+			}
+		
+			try {
+				final func = Reflect.getProperty(lua.scriptObject, "removeHitbox");
+				if(func == null || !Reflect.isFunction(func)) {
+					error("The Lua ScriptObject Was Not Exists \"removeHitbox\" or was null", "removeHitbox", lua);
+					return;
+				}
+				func();
+			}catch(e:Dynamic) {
+				error('Expected This Callback When Remove Hitbox!', "removeHitbox", lua);
+			}
 		});
 		
 		lua.set("addVirtualPadCamera", function(defCam:Bool = false) {
-			lua.scriptObject.addVirtualPadCamera(defCam);
+			if(lua.scriptObject == null) {
+				error('The Lua ScriptObject Was Null, You Can\'t Use This Callback!!', "addVirtualPadCamera", lua);
+				return;
+			}
+		
+			try {
+				final func = Reflect.getProperty(lua.scriptObject, "addVirtualPadCamera");
+				if(func == null || !Reflect.isFunction(func)) {
+					error("The Lua ScriptObject Was Not Exists \"addVirtualPadCamera\" or was null", "addVirtualPadCamera", lua);
+					return;
+				}
+				func(defCam);
+			}catch(e:Dynamic) {
+				error('Expected This Callback When Add VirtualPad Camera!', "addVirtualPadCamera", lua);
+			}
 		});
 		#end
+	}
+	
+	public static function textFunction(lua:LuaScript) {
+		lua.set("makeLuaText", function(tag:String, x:Float = 0, y:Float = 0, content:String, fw:Float = 0) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.exists(tag)) {
+					error('The Variable "$tag" Was Exists!', "makeLuaText", lua);
+					return false;
+				}
+				
+				var preText:FunkinText = new FunkinText(x, y, fw, content, 16, false);
+				preText.alignment = CENTER;
+				realState.scriptVariables.set(tag, preText);
+				return true;
+			}
+			
+			return false;
+		});
+		
+		lua.set("setTextColor", function(tag:String, color:String) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.exists(tag)) {
+					var inObj = realState.scriptVariables.get(tag);
+					if(inObj == null) {
+						error('The Text Variable "$tag" Was Null', "setTextColor", lua);
+						return false;
+					}else if(!(inObj is FlxText)) {
+						error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextColor", lua);
+						return false;
+					}
+					
+					try {
+						cast(inObj, FlxText).color = FlxColor.fromString(color);
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected Text Variable "$tag" When Set Text Color', "setTextColor", lua);
+						return false;
+					}
+				}
+				
+				if(lua._publicVariables.exists(tag)) {
+					var inObj = realState.scriptVariables.get(tag);
+					if(inObj == null) {
+						error('The Text Variable "$tag" Was Null', "setTextColor", lua);
+						return false;
+					}else if(!(inObj is FlxText)) {
+						error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextColor", lua);
+						return false;
+					}
+					
+					try {
+						cast(inObj, FlxText).color = FlxColor.fromString(color);
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected Text Variable "$tag" When Set Text Color', "setTextColor", lua);
+						return false;
+					}
+				}
+				
+				var inObj = getVariableFromStr(lua.scriptObject, tag, lua, "setTextColor");
+				if(inObj == null) {
+					error('The Text Variable "$tag" Was Null', "setTextColor", lua);
+					return false;
+				}else if(!(inObj is FlxText)) {
+					error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextColor", lua);
+					return false;
+				}
+				
+				try {
+					cast(inObj, FlxText).color = FlxColor.fromString(color);
+					return true;
+				}catch(e:Dynamic) {
+					error('Expected Text Variable "$tag" When Set Text Color', "setTextColor", lua);
+				}
+			}
+			
+			return false;
+		});
+		
+		lua.set("setTextString", function(tag:String, text:String) {
+			error("Please Use setProperty to Instead", "setTextString", lua);
+		});
+		
+		lua.set("setTextSize", function(tag:String, text:String) {
+			error("Please Use setProperty Or setTextFormat to Instead", "setTextSize", lua);
+		});
+		
+		lua.set("setTextFont", function(tag:String, font:String) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.exists(tag)) {
+					var inObj = realState.scriptVariables.get(tag);
+					if(inObj == null) {
+						error('The Text Variable "$tag" Was Null', "setTextFont", lua);
+						return false;
+					}else if(!(inObj is FlxText)) {
+						error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextFont", lua);
+						return false;
+					}
+					
+					try {
+						cast(inObj, FlxText).font = Paths.font(font);
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected Text Variable "$tag" When Set Text Font', "setTextFont", lua);
+						return false;
+					}
+				}
+				
+				if(lua._publicVariables.exists(tag)) {
+					var inObj = realState.scriptVariables.get(tag);
+					if(inObj == null) {
+						error('The Text Variable "$tag" Was Null', "setTextFont", lua);
+						return false;
+					}else if(!(inObj is FlxText)) {
+						error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextFont", lua);
+						return false;
+					}
+					
+					try {
+						cast(inObj, FlxText).font = Paths.font(font);
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected Text Variable "$tag" When Set Text Font', "setTextFont", lua);
+						return false;
+					}
+				}
+				
+				var inObj = getVariableFromStr(lua.scriptObject, tag, lua, "setTextFont");
+				if(inObj == null) {
+					error('The Text Variable "$tag" Was Null', "setTextFont", lua);
+					return false;
+				}else if(!(inObj is FlxText)) {
+					error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextFont", lua);
+					return false;
+				}
+				
+				try {
+					cast(inObj, FlxText).font = Paths.font(font);
+					return true;
+				}catch(e:Dynamic) {
+					error('Expected Text Variable "$tag" When Set Text Font', "setTextFont", lua);
+				}
+			}
+			
+			return false;
+		});
+		
+		lua.set("setTextAlignment", function(tag:String, align:String = "center") {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.exists(tag)) {
+					var inObj = realState.scriptVariables.get(tag);
+					if(inObj == null) {
+						error('The Text Variable "$tag" Was Null', "setTextAlignment", lua);
+						return false;
+					}else if(!(inObj is FlxText)) {
+						error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextAlignment", lua);
+						return false;
+					}
+					
+					try {
+						cast(inObj, FlxText).alignment = switch(align.toLowerCase()) {
+							case "left": LEFT;
+							case "center": CENTER;
+							case "right": RIGHT;
+							case "justify": JUSTIFY;
+							default: CENTER;
+						};
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected Text Variable "$tag" When Set Alignment', "setTextAlignment", lua);
+						return false;
+					}
+				}
+				
+				if(lua._publicVariables.exists(tag)) {
+					var inObj = realState.scriptVariables.get(tag);
+					if(inObj == null) {
+						error('The Text Variable "$tag" Was Null', "setTextAlignment", lua);
+						return false;
+					}else if(!(inObj is FlxText)) {
+						error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextAlignment", lua);
+						return false;
+					}
+					
+					try {
+						cast(inObj, FlxText).alignment = switch(align.toLowerCase()) {
+							case "left": LEFT;
+							case "center": CENTER;
+							case "right": RIGHT;
+							case "justify": JUSTIFY;
+							default: CENTER;
+						};
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected Text Variable "$tag" When Set Alignment', "setTextAlignment", lua);
+						return false;
+					}
+				}
+				
+				var inObj = getVariableFromStr(lua.scriptObject, tag, lua, "setTextAlignment");
+				if(inObj == null) {
+					error('The Text Variable "$tag" Was Null', "setTextAlignment", lua);
+					return false;
+				}else if(!(inObj is FlxText)) {
+					error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextAlignment", lua);
+					return false;
+				}
+				
+				try {
+					cast(inObj, FlxText).alignment = switch(align.toLowerCase()) {
+						case "left": LEFT;
+						case "center": CENTER;
+						case "right": RIGHT;
+						case "justify": JUSTIFY;
+						default: CENTER;
+					};
+					return true;
+				}catch(e:Dynamic) {
+					error('Expected Text Variable "$tag" When Set Alignment', "setTextAlignment", lua);
+				}
+			}
+			
+			return false;
+		});
+		
+		lua.set("setTextBorderStyle", function(tag:String, style:String = "none", ?color:String , size:Float = 1, quality:Float = 1) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.exists(tag)) {
+					var inObj = realState.scriptVariables.get(tag);
+					if(inObj == null) {
+						error('The Text Variable "$tag" Was Null', "setTextBorderStyle", lua);
+						return false;
+					}else if(!(inObj is FlxText)) {
+						error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextBorderStyle", lua);
+						return false;
+					}
+					
+					try {
+						cast(inObj, FlxText).setBorderStyle((switch(style.toLowerCase()) {
+							case "none": NONE;
+							case "outline": OUTLINE;
+							case "outline_fast": OUTLINE_FAST;
+							case "shadow": SHADOW;
+							default: NONE;
+						}), FlxColor.fromString(color), size, quality);
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected Text Variable "$tag" When Set Border Style', "setTextBorderStyle", lua);
+						return false;
+					}
+				}
+				
+				if(lua._publicVariables.exists(tag)) {
+					var inObj = realState.scriptVariables.get(tag);
+					if(inObj == null) {
+						error('The Text Variable "$tag" Was Null', "setTextBorderStyle", lua);
+						return false;
+					}else if(!(inObj is FlxText)) {
+						error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextBorderStyle", lua);
+						return false;
+					}
+					
+					try {
+						cast(inObj, FlxText).setBorderStyle((switch(style.toLowerCase()) {
+							case "none": NONE;
+							case "outline": OUTLINE;
+							case "outline_fast": OUTLINE_FAST;
+							case "shadow": SHADOW;
+							default: NONE;
+						}), FlxColor.fromString(color), size, quality);
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected Text Variable "$tag" When Set Border Style', "setTextBorderStyle", lua);
+						return false;
+					}
+				}
+				
+				var inObj = getVariableFromStr(lua.scriptObject, tag, lua, "setTextBorderStyle");
+				if(inObj == null) {
+					error('The Text Variable "$tag" Was Null', "setTextBorderStyle", lua);
+					return false;
+				}else if(!(inObj is FlxText)) {
+					error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextBorderStyle", lua);
+					return false;
+				}
+				
+				try {
+					cast(inObj, FlxText).setBorderStyle((switch(style.toLowerCase()) {
+						case "none": NONE;
+						case "outline": OUTLINE;
+						case "outline_fast": OUTLINE_FAST;
+						case "shadow": SHADOW;
+						default: NONE;
+					}), FlxColor.fromString(color), size, quality);
+					return true;
+				}catch(e:Dynamic) {
+					error('Expected Text Variable "$tag" When Set Border Style', "setTextBorderStyle", lua);
+				}
+			}
+			
+			return false;
+		});
+		
+		lua.set("setTextFormat", function(tag:String, font:String, size:Int, color:String, ?align:String, ?borderStyle:String, borderColor:String = "#000000", ef:Bool = true) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.exists(tag)) {
+					var inObj = realState.scriptVariables.get(tag);
+					if(inObj == null) {
+						error('The Text Variable "$tag" Was Null', "setTextFormat", lua);
+						return false;
+					}else if(!(inObj is FlxText)) {
+						error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextFormat", lua);
+						return false;
+					}
+					
+					try {
+						cast(inObj, FlxText).setFormat(Paths.font(font), size, FlxColor.fromString(color), (align != null ? switch(align.toLowerCase()) {
+							case "left": LEFT;
+							case "center": CENTER;
+							case "right": RIGHT;
+							case "justify": JUSTIFY;
+							default: CENTER;
+						} : CENTER), (borderStyle != null ? switch(borderStyle.toLowerCase()) {
+							case "outline": OUTLINE;
+							case "shadow": SHADOW;
+							case "outline_fast": OUTLINE_FAST;
+							case "none": NONE;
+							default: NONE;
+						} : NONE), FlxColor.fromString(borderColor), ef);
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected Text Variable "$tag" When Set Format', "setTextFormat", lua);
+						return false;
+					}
+				}
+				
+				if(lua._publicVariables.exists(tag)) {
+					var inObj = realState.scriptVariables.get(tag);
+					if(inObj == null) {
+						error('The Text Variable "$tag" Was Null', "setTextFormat", lua);
+						return false;
+					}else if(!(inObj is FlxText)) {
+						error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextFormat", lua);
+						return false;
+					}
+					
+					try {
+						cast(inObj, FlxText).setFormat(Paths.font(font), size, FlxColor.fromString(color), (align != null ? switch(align.toLowerCase()) {
+							case "left": LEFT;
+							case "center": CENTER;
+							case "right": RIGHT;
+							case "justify": JUSTIFY;
+							default: CENTER;
+						} : CENTER), (borderStyle != null ? switch(borderStyle.toLowerCase()) {
+							case "outline": OUTLINE;
+							case "shadow": SHADOW;
+							case "outline_fast": OUTLINE_FAST;
+							case "none": NONE;
+							default: NONE;
+						} : NONE), FlxColor.fromString(borderColor), ef);
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected Text Variable "$tag" When Set Format', "setTextFormat", lua);
+						return false;
+					}
+				}
+				
+				var inObj = getVariableFromStr(lua.scriptObject, tag, lua, "setTextFormat");
+				if(inObj == null) {
+					error('The Text Variable "$tag" Was Null', "setTextFormat", lua);
+					return false;
+				}else if(!(inObj is FlxText)) {
+					error('The Text Variable "$tag" Type Was Not FlxText Or Ex', "setTextFormat", lua);
+					return false;
+				}
+				
+				try {
+					cast(inObj, FlxText).setFormat(Paths.font(font), size, FlxColor.fromString(color), (align != null ? switch(align.toLowerCase()) {
+						case "left": LEFT;
+						case "center": CENTER;
+						case "right": RIGHT;
+						case "justify": JUSTIFY;
+						default: CENTER;
+					} : CENTER), (borderStyle != null ? switch(borderStyle.toLowerCase()) {
+						case "outline": OUTLINE;
+						case "shadow": SHADOW;
+						case "outline_fast": OUTLINE_FAST;
+						case "none": NONE;
+						default: NONE;
+					} : NONE), FlxColor.fromString(borderColor), ef);
+					return true;
+				}catch(e:Dynamic) {
+					error('Expected Text Variable "$tag" When Set Format', "setTextFormat", lua);
+				}
+			}
+			
+			return false;
+		});
 	}
 	
 	public static function shaderFunction(lua:LuaScript) {
@@ -623,6 +1181,17 @@ class LuaUtil {
 			var camSplit = camera.split(".");
 			var camFirst = camSplit[0];
 			var realCamera:Dynamic = null;
+			if(camera.toLowerCase() == "default") {
+				realCamera = FlxG.camera;
+				
+				try {
+					cast(realCamera, FlxCamera).addShader(cast(realShader, FunkinShader));
+					return true;
+				} catch(e:Dynamic) {
+					error('Expected Add Camera Shader "$camera"', "addCameraShader", lua);
+					return false;
+				}
+			}
 			if(lua._publicVariables.exists(camFirst)) {
 				if(camSplit.length > 1) {
 					realCamera = getVariableFromStr(lua._publicVariables.get(camFirst), camera.substr(camFirst.length + 1), lua, "addCameraShader");
@@ -682,6 +1251,18 @@ class LuaUtil {
 			var camSplit = camera.split(".");
 			var camFirst = camSplit[0];
 			var realCamera:Dynamic = null;
+			if(camera.toLowerCase() == "default") {
+				realCamera = FlxG.camera;
+				
+				try {
+					cast(realCamera, FlxCamera).removeShader(cast(realShader, FunkinShader));
+					return true;
+				} catch(e:Dynamic) {
+					error('Expected Remove Camera Shader "$camera"', "removeCameraShader", lua);
+					return false;
+				}
+			}
+			
 			if(lua._publicVariables.exists(camFirst)) {
 				if(camSplit.length > 1) {
 					realCamera = getVariableFromStr(lua._publicVariables.get(camFirst), camera.substr(camFirst.length + 1), lua, "removeCameraShader");
@@ -722,6 +1303,467 @@ class LuaUtil {
 					return true;
 				} catch(e:Dynamic) {
 					error('Expected Set Sprite Shader "$camera"', "removeCameraShader", lua);
+				}
+			}
+			
+			return false;
+		});
+	}
+	
+	public static function cameraFunction(lua:LuaScript) {
+		lua.set("cameraFlash", function(camera:String, color:String = "#ffffff", time:Float = 1, forced:Bool = false) {
+			var realCamera:FlxCamera = resolveLuaCamera(camera, "cameraFlash", lua);
+			if(realCamera == null) {
+				return false;
+			}
+			
+			try {
+				realCamera.flash(FlxColor.fromString(color), time, forced);
+				return true;
+			}catch(e:Dynamic) {
+				error('Expected Set Camera Flash', "cameraFlash", lua);
+			}
+			
+			return false;
+		});
+		
+		lua.set("cameraFade", function(camera:String, color:String = "#000000", time:Float = 1, fadeIn:Bool = false, forced:Bool = false) {
+			var realCamera:FlxCamera = resolveLuaCamera(camera, "cameraFade", lua);
+			if(realCamera == null) {
+				return false;
+			}
+			
+			try {
+				realCamera.fade(FlxColor.fromString(color), time, fadeIn, forced);
+				return true;
+			}catch(e:Dynamic) {
+				error('Expected Set Camera Fade', "cameraFade", lua);
+			}
+			
+			return false;
+		});
+		
+		lua.set("cameraShake", function(camera:String, fudu:Float = 0.05, time:Float = 1, axes:String = "XY", forced:Bool = false) {
+			var realCamera:FlxCamera = resolveLuaCamera(camera, "cameraShake", lua);
+			if(realCamera == null) {
+				return false;
+			}
+			
+			try {
+				realCamera.shake(fudu, time, forced, switch(axes.toLowerCase()) {
+					case "x": FlxAxes.X;
+					case "y": FlxAxes.Y;
+					case "xy" | "yx" | "both": FlxAxes.XY;
+					default: FlxAxes.NONE;
+				});
+				return true;
+			}catch(e:Dynamic) {
+				error('Expected Set Camera Shake', "cameraShake", lua);
+			}
+			
+			return false;
+		});
+		
+		lua.set("stopCameraShake", function(camera:String) {
+			var realCamera:FlxCamera = resolveLuaCamera(camera, "stopCameraShake", lua);
+			if(realCamera == null) {
+				return false;
+			}
+			
+			try {
+				realCamera.stopShake();
+				return true;
+			}catch(e:Dynamic) {
+				error('Expected Stop Camera Shake', "stopCameraShake", lua);
+			}
+			
+			return false;
+		});
+		
+		lua.set("stopCameraFlash", function(camera:String) {
+			var realCamera:FlxCamera = resolveLuaCamera(camera, "stopCameraFlash", lua);
+			if(realCamera == null) {
+				return false;
+			}
+			
+			try {
+				realCamera.stopFlash();
+				return true;
+			}catch(e:Dynamic) {
+				error('Expected Stop Camera Flash', "stopCameraFlash", lua);
+			}
+			
+			return false;
+		});
+		
+		lua.set("stopCameraFade", function(camera:String) {
+			var realCamera:FlxCamera = resolveLuaCamera(camera, "stopCameraFade", lua);
+			if(realCamera == null) {
+				return false;
+			}
+			
+			try {
+				realCamera.stopFade();
+				return true;
+			}catch(e:Dynamic) {
+				error('Expected Stop Camera Fade', "stopCameraFade", lua);
+			}
+			
+			return false;
+		});
+		
+		lua.set("stopCameraFX", function(camera:String) {
+			var realCamera:FlxCamera = resolveLuaCamera(camera, "stopCameraFX", lua);
+			if(realCamera == null) {
+				return false;
+			}
+			
+			try {
+				realCamera.stopFX();
+				return true;
+			}catch(e:Dynamic) {
+				error('Expected Stop Camera Shake', "stopCameraFX", lua);
+			}
+			
+			return false;
+		});
+	}
+	
+	public static function animationFunction(lua:LuaScript) {
+		lua.set("playAnim", function(tag:String, name:String, forced:Bool = false, reversed:Bool = false, frame:Int = 0) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(lua._publicVariables.exists(tag)) {
+					var bydObj:Dynamic = lua._publicVariables.get(tag);
+					if(bydObj == null) {
+						error('The Sprite Variable "$tag" Was Null!', "playAnim", lua);
+						return false;
+					}else if(!(bydObj is FlxSprite)) {
+						error('The Sprite Variable "$tag" Was Not FlxSprite Or Ex', "playAnim", lua);
+						return false;
+					}
+					
+					try {
+						if(bydObj is FunkinSprite) {
+							cast(bydObj, FunkinSprite).playAnim(name, forced, PlayAnimContext.NONE, reversed, frame);
+						}else if((bydObj is FlxAnimate) || bydObj is BydAnimate) {
+							cast(bydObj, FlxAnimate).anim.play(name, forced, reversed, frame);
+						}else {
+							cast(bydObj, FlxSprite).animation.play(name, forced, reversed, frame);
+						}
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected The Variable "$tag" When Play Sprite Animation', "playAnim", lua);
+					}
+					
+					return false;
+				}
+				
+				if(realState.scriptVariables.exists(tag)) {
+					var bydObj:Dynamic = realState.scriptVariables.get(tag);
+					if(bydObj == null) {
+						error('The Sprite Variable "$tag" Was Null!', "playAnim", lua);
+						return false;
+					}else if(!(bydObj is FlxSprite)) {
+						error('The Sprite Variable "$tag" Was Not FlxSprite Or Ex', "playAnim", lua);
+						return false;
+					}
+					
+					try {
+						if(bydObj is FunkinSprite) {
+							cast(bydObj, FunkinSprite).playAnim(name, forced, PlayAnimContext.NONE, reversed, frame);
+						}else if((bydObj is FlxAnimate) || bydObj is BydAnimate) {
+							cast(bydObj, FlxAnimate).anim.play(name, forced, reversed, frame);
+						}else {
+							cast(bydObj, FlxSprite).animation.play(name, forced, reversed, frame);
+						}
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected The Variable "$tag" When Play Sprite Animation', "playAnim", lua);
+					}
+					
+					return false;
+				}
+				
+				var bydObj:Dynamic = getVariableFromStr(lua.scriptObject, tag, lua, "playAnim");
+				if(bydObj == null) {
+					error('The Sprite Variable "$tag" Was Null!', "playAnim", lua);
+					return false;
+				}else if(!(bydObj is FlxSprite)) {
+					error('The Sprite Variable "$tag" Was Not FlxSprite Or Ex', "playAnim", lua);
+					return false;
+				}
+				
+				try {
+					if(bydObj is FunkinSprite) {
+						cast(bydObj, FunkinSprite).playAnim(name, forced, PlayAnimContext.NONE, reversed, frame);
+					}else if((bydObj is FlxAnimate) || bydObj is BydAnimate) {
+						cast(bydObj, FlxAnimate).anim.play(name, forced, reversed, frame);
+					}else {
+						cast(bydObj, FlxSprite).animation.play(name, forced, reversed, frame);
+					}
+					return true;
+				}catch(e:Dynamic) {
+					error('Expected The Variable "$tag" When Play Sprite Animation', "playAnim", lua);
+				}
+			}
+			
+			return false;
+		});
+		
+		//仅支持FunkinSprite，推荐用lua创建的sprite都使用这个👍
+		lua.set("addSpriteAnimation", function(tag:String, name:String, prefix:String, framerate:Int = 24, looped:Bool = true, forced:Bool = false, indices:Array<Int>, x:Float = 0, y:Float = 0, animType:String = "我操死你的妈") {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(lua._publicVariables.exists(tag)) {
+					var bydObj:Dynamic = lua._publicVariables.get(tag);
+					if(bydObj == null) {
+						error('The Sprite Variable "$tag" Was Null!', "addSpriteAnimation", lua);
+						return false;
+					}else if(!(bydObj is FunkinSprite)) {
+						error('The Sprite Variable "$tag" Was Not FunkinSprite Or Ex', "addSpriteAnimation", lua);
+						return false;
+					}
+					
+					try {
+						cast(bydObj, FunkinSprite).addAnim(name, prefix, framerate, looped, forced, indices, x, y, XMLAnimType.fromString(animType));
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected The Variable "$tag" When Add Sprite Animation', "addSpriteAnimation", lua);
+					}
+					
+					return false;
+				}
+				
+				if(realState.scriptVariables.exists(tag)) {
+					var bydObj:Dynamic = realState.scriptVariables.get(tag);
+					if(bydObj == null) {
+						error('The Sprite Variable "$tag" Was Null!', "addSpriteAnimation", lua);
+						return false;
+					}else if(!(bydObj is FunkinSprite)) {
+						error('The Sprite Variable "$tag" Was Not FunkinSprite Or Ex', "addSpriteAnimation", lua);
+						return false;
+					}
+					
+					try {
+						cast(bydObj, FunkinSprite).addAnim(name, prefix, framerate, looped, forced, indices, x, y, XMLAnimType.fromString(animType));
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected The Variable "$tag" When Add Sprite Animation', "addSpriteAnimation", lua);
+					}
+					
+					return false;
+				}
+				
+				var bydObj:Dynamic = getVariableFromStr(lua.scriptObject, tag, lua, "addSpriteAnimation");
+				if(bydObj == null) {
+					error('The Sprite Variable "$tag" Was Null!', "addSpriteAnimation", lua);
+					return false;
+				}else if(!(bydObj is FunkinSprite)) {
+					error('The Sprite Variable "$tag" Was Not FunkinSprite Or Ex', "addSpriteAnimation", lua);
+					return false;
+				}
+				
+				try {
+					cast(bydObj, FunkinSprite).addAnim(name, prefix, framerate, looped, forced, indices, x, y, XMLAnimType.fromString(animType));
+					return true;
+				}catch(e:Dynamic) {
+					
+					error('Expected The Variable "$tag" When Add Sprite Animation', "addSpriteAnimation", lua);
+				}
+			}
+			
+			return false;
+		});
+		
+		lua.set("addAnimationBySymbol", function(tag:String, name:String, sm:String, framerate:Int = 24, looped:Bool = true, x:Float = 0, y:Float = 0) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(lua._publicVariables.exists(tag)) {
+					var bydObj:Dynamic = lua._publicVariables.get(tag);
+					if(bydObj == null) {
+						error('The Sprite Variable "$tag" Was Null!', "addAnimationBySymbol", lua);
+						return false;
+					}else if(!(bydObj is FlxAnimate)) {
+						error('The Sprite Variable "$tag" Was Not FlxAnimate Or Ex', "addAnimationBySymbol", lua);
+						return false;
+					}
+					
+					try {
+						cast(bydObj, FlxAnimate).anim.addBySymbol(name, sm, framerate, looped, x, y);
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected The Variable "$tag" When Add Animation By Symbol', "addAnimationBySymbol", lua);
+					}
+					
+					return false;
+				}
+				
+				if(realState.scriptVariables.exists(tag)) {
+					var bydObj:Dynamic = realState.scriptVariables.get(tag);
+					if(bydObj == null) {
+						error('The Sprite Variable "$tag" Was Null!', "addAnimationBySymbol", lua);
+						return false;
+					}else if(!(bydObj is FlxAnimate)) {
+						error('The Sprite Variable "$tag" Was Not FlxAnimate Or Ex', "addAnimationBySymbol", lua);
+						return false;
+					}
+					
+					try {
+						cast(bydObj, FlxAnimate).anim.addBySymbol(name, sm, framerate, looped, x, y);
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected The Variable "$tag" When Add Animation By Symbol', "addAnimationBySymbol", lua);
+					}
+					
+					return false;
+				}
+				
+				var bydObj:Dynamic = getVariableFromStr(lua.scriptObject, tag, lua, "addAnimationBySymbol");
+				if(bydObj == null) {
+					error('The Sprite Variable "$tag" Was Null!', "addAnimationBySymbol", lua);
+					return false;
+				}else if(!(bydObj is FlxAnimate)) {
+					error('The Sprite Variable "$tag" Was Not FlxAnimate Or Ex', "addAnimationBySymbol", lua);
+					return false;
+				}
+				
+				try {
+					cast(bydObj, FlxAnimate).anim.addBySymbol(name, sm, framerate, looped, x, y);
+					return true;
+				}catch(e:Dynamic) {
+					error('Expected The Variable "$tag" When Add Animation By Symbol', "addAnimationBySymbol", lua);
+				}
+			}
+			
+			return false;
+		});
+	
+		lua.set("addAnimationByIndices", function(tag:String, name:String, prefix:String, indices:Array<Int>, postfix:String, framerate:Int = 24, looped:Bool = true, flipX:Bool = false, flipY:Bool = false) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(lua._publicVariables.exists(tag)) {
+					var bydObj:Dynamic = lua._publicVariables.get(tag);
+					if(bydObj == null) {
+						error('The Sprite Variable "$tag" Was Null!', "addAnimationByIndices", lua);
+						return false;
+					}else if(!(bydObj is FlxSprite)) {
+						error('The Sprite Variable "$tag" Was Not FlxSprite Or Ex', "addAnimationByPrefixByIndices", lua);
+						return false;
+					}
+					
+					try {
+						cast(bydObj, FlxSprite).animation.addByIndices(name, prefix, indices, postfix, framerate, looped, flipX, flipY);
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected The Variable "$tag" When Add Animation By Indices', "addAnimationByIndices", lua);
+					}
+					
+					return false;
+				}
+				
+				if(realState.scriptVariables.exists(tag)) {
+					var bydObj:Dynamic = realState.scriptVariables.get(tag);
+					if(bydObj == null) {
+						error('The Sprite Variable "$tag" Was Null!', "addAnimationByIndices", lua);
+						return false;
+					}else if(!(bydObj is FlxSprite)) {
+						error('The Sprite Variable "$tag" Was Not FlxSprite Or Ex', "addAnimationByPrefixByIndices", lua);
+						return false;
+					}
+					
+					try {
+						cast(bydObj, FlxSprite).animation.addByIndices(name, prefix, indices, postfix, framerate, looped, flipX, flipY);
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected The Variable "$tag" When Add Animation By Indices', "addAnimationByIndices", lua);
+					}
+					
+					return false;
+				}
+				
+				var bydObj:Dynamic = getVariableFromStr(lua.scriptObject, tag, lua, "addAnimationByIndices");
+				if(bydObj == null) {
+					error('The Sprite Variable "$tag" Was Null!', "addAnimationByIndices", lua);
+					return false;
+				}else if(!(bydObj is FlxSprite)) {
+					error('The Sprite Variable "$tag" Was Not FlxSprite Or Ex', "addAnimationByPrefixByIndices", lua);
+					return false;
+				}
+				
+				try {
+					cast(bydObj, FlxSprite).animation.addByIndices(name, prefix, indices, postfix, framerate, looped, flipX, flipY);
+					return true;
+				}catch(e:Dynamic) {
+					error('Expected The Variable "$tag" When Add Animation By Indices', "addAnimationByIndices", lua);
+				}
+			}
+			
+			return false;
+		});
+	
+		lua.set("addAnimationByPrefix", function(tag:String, name:String, prefix:String, framerate:Int = 24, looped:Bool = true, flipX:Bool = false, flipY:Bool = false) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(lua._publicVariables.exists(tag)) {
+					var bydObj:Dynamic = lua._publicVariables.get(tag);
+					if(bydObj == null) {
+						error('The Sprite Variable "$tag" Was Null!', "addAnimationByPrefix", lua);
+						return false;
+					}else if(!(bydObj is FlxSprite)) {
+						error('The Sprite Variable "$tag" Was Not FlxSprite Or Ex', "addAnimationByPrefix", lua);
+						return false;
+					}
+					
+					try {
+						cast(bydObj, FlxSprite).animation.addByPrefix(name, prefix, framerate, looped, flipX, flipY);
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected The Variable "$tag" When Add Animation By Prefix', "addAnimationByPrefix", lua);
+					}
+					
+					return false;
+				}
+				
+				if(realState.scriptVariables.exists(tag)) {
+					var bydObj:Dynamic = realState.scriptVariables.get(tag);
+					if(bydObj == null) {
+						error('The Sprite Variable "$tag" Was Null!', "addAnimationByPrefix", lua);
+						return false;
+					}else if(!(bydObj is FlxSprite)) {
+						error('The Sprite Variable "$tag" Was Not FlxSprite Or Ex', "addAnimationByPrefix", lua);
+						return false;
+					}
+					
+					try {
+						cast(bydObj, FlxSprite).animation.addByPrefix(name, prefix, framerate, looped, flipX, flipY);
+						return true;
+					}catch(e:Dynamic) {
+						error('Expected The Variable "$tag" When Add Animation By Prefix', "addAnimationByPrefix", lua);
+					}
+					
+					return false;
+				}
+				
+				var bydObj:Dynamic = getVariableFromStr(lua.scriptObject, tag, lua, "addAnimationByPrefix");
+				if(bydObj == null) {
+					error('The Sprite Variable "$tag" Was Null!', "addAnimationByPrefix", lua);
+					return false;
+				}else if(!(bydObj is FlxSprite)) {
+					error('The Sprite Variable "$tag" Was Not FlxSprite Or Ex', "addAnimationByPrefix", lua);
+					return false;
+				}
+				
+				try {
+					cast(bydObj, FlxSprite).animation.addByPrefix(name, prefix, framerate, looped, flipX, flipY);
+					return true;
+				}catch(e:Dynamic) {
+					error('Expected The Variable "$tag" When Add Animation By Prefix', "addAnimationByPrefix", lua);
 				}
 			}
 			
@@ -1016,7 +2058,7 @@ class LuaUtil {
 				var realState:IStateScript = cast lua.scriptObject;
 				
 				if(!realState.scriptVariables.exists(tag)) {
-					error('The Variable "$tag" was not exists!', 'loadGraphic', lua);
+					error('The Variable "$tag" was not exists!', 'loadFrames', lua);
 					return;
 				}
 				
@@ -1126,36 +2168,58 @@ class LuaUtil {
 			}
 		});
 		
+		lua.set("setObjectCameras", function(tag:String, cameras:Array<String>) {
+			var realCameras:Array<FlxCamera> = [];
+			for(i in cameras) {
+				var realCamera = resolveLuaCamera(i, "setObjectCameras", lua);
+				if(realCamera == null) return;
+				realCameras.push(realCamera);
+			}
+		
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+			
+				if(realState.scriptVariables.exists(tag)) {
+					var obj:Dynamic = realState.scriptVariables.get(tag);
+					if(obj == null) {
+						error('The Object Variable "$tag" Was Null!', "setObjectCameras", lua);
+						return;
+					}else if(!(obj is FlxBasic)) {
+						error('The Object Variable "$tag" Can\'t Set Its Cameras, Because It Was Not FlxBasic Or Extended!', "setObjectCameras", lua);
+						return;
+					}
+					try {
+						if(realCameras.length > 0)
+							cast(obj, FlxBasic).cameras = realCameras;
+					} catch(e:Dynamic) {
+						error('Expected Object Variable "$tag", When Set Cameras', "setObjectCameras", lua);
+					}
+					return;
+				}
+				
+				var obj:Dynamic = getVariableFromStr(lua.scriptObject, tag, lua, "setObjectCameras");
+				if(obj == null) {
+					error('The Object Variable "$tag" Was Null!', "setObjectCameras", lua);
+					return;
+				}else if(!(obj is FlxBasic)) {
+					error('The Object Variable "$tag" Can\'t Set Its Cameras, Because It Was Not FlxBasic Or Extended!', "setObjectCameras", lua);
+					return;
+				}
+				try {
+					if(realCameras.length > 0)
+						cast(obj, FlxBasic).cameras = realCameras;
+				} catch(e:Dynamic) {
+					error('Expected Object Variable "$tag", When Set Cameras', "setObjectCameras", lua);
+				}
+			}
+		});
+		
 		lua.set("setObjectCamera", function(tag:String, camera:String) {
 			if(lua.scriptObject is IStateScript) {
 				var realState:IStateScript = cast lua.scriptObject;
 				
-				var realCamera:Dynamic = null;
-				
-				var split:Array<Dynamic> = camera.split(".");
-				var first:String = split[0];
-				var sureVar:Bool = false;
-
-				if(lua._publicVariables.exists(first)) {
-					if(split.length > 1) {
-						realCamera = getVariableFromStr(lua._publicVariables.get(first), camera.substr(first.length + 1), lua, "setObjectCamera");
-					}else if(split.length == 1) {
-						realCamera = lua._publicVariables.get(camera);
-					}
-					sureVar = true;
-				}
-				
-				if(!sureVar)
-					realCamera = getVariableFromStr(lua.scriptObject, camera, lua, "setObjectCamera");
-				if(realCamera == null) {
-					error('The Camera Variable "$camera" Was Null!', "setObjectCamera", lua);
-					return;
-				}
-				else if(!(realCamera is FlxCamera)) {
-					error('The Camera Variable "$camera" Was Not FlxCamera Type!', "setObjectCamera", lua);
-					return;
-				}
-				
+				var realCamera:FlxCamera = resolveLuaCamera(camera, "setObjectCamera", lua);
+				if(realCamera == null) return;
 				
 				if(realState.scriptVariables.exists(tag)) {
 					var obj:Dynamic = realState.scriptVariables.get(tag);
@@ -1167,7 +2231,7 @@ class LuaUtil {
 						return;
 					}
 					try {
-						cast(obj, FlxBasic).camera = cast(realCamera, FlxCamera);
+						cast(obj, FlxBasic).camera = realCamera;
 					} catch(e:Dynamic) {
 						error('Expected Object Variable "$tag", When Set Camera', "setObjectCamera", lua);
 					}
@@ -1183,7 +2247,7 @@ class LuaUtil {
 					return;
 				}
 				try {
-					cast(obj, FlxBasic).camera = cast(realCamera, FlxCamera);
+					cast(obj, FlxBasic).camera = realCamera;
 				} catch(e:Dynamic) {
 					error('Expected Object Variable "$tag", When Set Camera', "setObjectCamera", lua);
 				}
@@ -1205,8 +2269,8 @@ class LuaUtil {
 					}
 					try {
 						obj.scale.set(scaleX, scaleY);
-						if(updateHitbox)
-							obj.updateHitbox();
+						if(updateHitbox && obj is FlxSprite)
+							cast(obj, FlxSprite).updateHitbox();
 					} catch(e:Dynamic) {
 						error('Expected Object Variable "$tag", When Set Scale', "scaleObject", lua);
 					}
@@ -1223,10 +2287,57 @@ class LuaUtil {
 				}
 				try {
 					obj.scale.set(scaleX, scaleY);
-					if(updateHitbox)
-						obj.updateHitbox();
+					if(updateHitbox && obj is FlxSprite)
+						cast(obj, FlxSprite).updateHitbox();
 				} catch(e:Dynamic) {
 					error('Expected Object Variable "$tag", When Set Scale', "scaleObject", lua);
+				}
+			}
+		});
+		
+		lua.set("screenCenter", function(tag:String, include:String = "XY") {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.exists(tag)) {
+					var obj:Dynamic = realState.scriptVariables.get(tag);
+					if(obj == null) {
+						error('The Object Variable "$tag" Was Null!', "screenCenter", lua);
+						return;
+					}else if(!(obj is FlxObject)) {
+						error('The Object Variable "$tag" Can\'t Screen Center, Because It Was Not FlxObject Or Extended!', "screenCenter", lua);
+						return;
+					}
+					try {
+						cast(obj, FlxObject).screenCenter(switch(include.toLowerCase()) {
+							case "x": FlxAxes.X;
+							case "y": FlxAxes.Y;
+							case "xy" | "yx" | "both": FlxAxes.XY;
+							default: FlxAxes.NONE;
+						});
+					} catch(e:Dynamic) {
+						error('Expected Object Variable "$tag", When Screen Center', "screenCenter", lua);
+					}
+					return;
+				}
+				
+				var obj:Dynamic = getVariableFromStr(lua.scriptObject, tag, lua, "screenCenter");
+				if(obj == null) {
+					error('The Object Variable "$tag" Was Null!', "screenCenter", lua);
+					return;
+				}else if(!(obj is FlxObject)) {
+					error('The Object Variable "$tag" Can\'t Screen Center, Because It Was Not FlxObject Or Extended!', "scaleObject", lua);
+					return;
+				}
+				try {
+					cast(obj, FlxObject).screenCenter(switch(include.toLowerCase()) {
+						case "x": FlxAxes.X;
+						case "y": FlxAxes.Y;
+						case "xy" | "yx" | "both": FlxAxes.XY;
+						default: FlxAxes.NONE;
+					});
+				} catch(e:Dynamic) {
+					error('Expected Object Variable "$tag", When Screen Center', "screenCenter", lua);
 				}
 			}
 		});
@@ -1241,11 +2352,11 @@ class LuaUtil {
 						error('The Object Variable "$tag" Was Null!', "updateHitbox", lua);
 						return;
 					}else if(!(obj is FlxSprite)) {
-						error('The Object Variable "$tag" Can\'t Update Hitbox, Because It Was Not FlxSprite Or Extended!', "scaleObject", lua);
+						error('The Object Variable "$tag" Can\'t Update Hitbox, Because It Was Not FlxSprite Or Extended!', "updateHitbox", lua);
 						return;
 					}
 					try {
-						obj.updateHtbox();
+						cast(obj, FlxSprite).updateHitbox();
 					} catch(e:Dynamic) {
 						error('Expected Object Variable "$tag", When Update Its Hitbox', "updateHitbox", lua);
 					}
@@ -1261,7 +2372,7 @@ class LuaUtil {
 					return;
 				}
 				try {
-					obj.updateHitbox();
+					cast(obj, FlxSprite).updateHitbox();
 				} catch(e:Dynamic) {
 					error('Expected Object Variable "$tag", When Update Its Hitbox', "updateHitbox", lua);
 				}
@@ -1359,6 +2470,64 @@ class LuaUtil {
 			
 			return lua.interp.execute(LuaScript.parser.parseString(code, '"${lua.fileName}" callback(runHaxeCode)'));
 		});
+	}
+	
+	public static function extraFunction(lua:LuaScript) {
+		
+	}
+	
+	public static function resolveLuaCamera(camera:String, title:String, lua:LuaScript):FlxCamera {
+		if(camera.toLowerCase() == "default") {
+			return FlxG.camera;
+		}
+		
+		var camSplit = camera.split(".");
+		final camFirst = camSplit[0];
+		if(lua._publicVariables.exists(camFirst)) {
+			var preCamera:Dynamic = null;
+			if(camSplit.length > 1) {
+				preCamera = getVariableFromStr(lua._publicVariables.get(camFirst), camera.substr(camFirst.length + 1), lua, title);
+			}else if(camSplit.length == 1) {
+				preCamera = lua._publicVariables.get(camFirst);
+			}
+			
+			if(preCamera != null && preCamera is FlxCamera) {
+				return cast preCamera;
+			}
+		}
+		
+		if(lua.scriptObject is IStateScript) {
+			var realState:IStateScript = cast lua.scriptObject;
+			
+			if(realState.scriptVariables.exists(camFirst)) {
+				var preCamera:Dynamic = null;
+				if(camSplit.length > 1) {
+					preCamera = getVariableFromStr(realState.scriptVariables.get(camFirst), camera.substr(camFirst.length + 1), lua, title);
+				}else if(camSplit.length == 1) {
+					preCamera = realState.scriptVariables.get(camFirst);
+				}
+			
+				if(preCamera != null && preCamera is FlxCamera) {
+					return cast preCamera;
+				}
+			}
+		}
+		
+		if(lua.scriptObject != null) {
+			var preCamera:Dynamic = getVariableFromStr(lua.scriptObject, camera, lua, title);
+			if(preCamera == null) {
+				error('The Camera Variable "$camera" Was Null Or Not Exists!!', title, lua);
+				return null;
+			}
+			if(!(preCamera is FlxCamera)) {
+				error('The Camera Variable "$camera" Was Not FlxCamera Or Ex!!', title, lua);
+				return null;
+			}
+			
+			return cast preCamera;
+		}
+		
+		return null;
 	}
 	
 	public static function resolveLuaShader(tag:String, title:String, lua:LuaScript) {

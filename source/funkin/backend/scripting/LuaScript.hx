@@ -50,25 +50,43 @@ class LuaScript extends Script {
 	private var interp:Interp = new Interp();
 	
 	public var closed:Bool = false;
+	//图个方便bro
 	private var _variables:Map<String, Dynamic> = new Map();
 	private var _publicVariables:Map<String, Dynamic> = new Map();
 	
 	private var _allowUseHScript:Bool = false;
-	private var defaultVariables:Map<String, Dynamic> = [
-		//测试的
-		"debugPrint" => (text:String, delayTime:Float = 1, ?style:String) -> {
-			Main.instance.debugPrintLog.debugPrint(text, {delayTime: delayTime, style: (style != null ? (cast FlxColor.fromString(style)) : 0xFFFFFFFF)});
-		},
-		"windowAlert" => lime.app.Application.current.window.alert,
+	private static function defaultVariables(lua:LuaScript):Map<String, Dynamic> {
+		return [
+			//测试的
+			"debugPrint" => (text:String, delayTime:Float = 1, ?style:String) -> {
+				Main.instance.debugPrintLog.debugPrint(text, {delayTime: delayTime, style: (style != null ? (cast FlxColor.fromString(style)) : 0xFFFFFFFF)});
+			},
+			"windowAlert" => lime.app.Application.current.window.alert,
+		
+			//颜色工具的
+			"colorToString" => (i:Int) -> {
+				var real:FlxColor = i;
+				return real.toWebString();
+			},
+			"colorFromString" => (str:String) -> {
+				var real:Int = FlxColor.fromString(str);
+				return real;
+			},
+		
+			"game" => {
+				width: FlxG.width,
+				height: FlxG.height
+			},
 			
-		//决定call的生死时刻！
-		"Function_Stop" => LuaUtil.Function_Stop,
-		"Function_Continue" => LuaUtil.Function_Continue,
-			
-		//部分FlxMath的大宝贝
-		"mathBound" => flixel.math.FlxMath.bound,
-		"mathLerp" => (FlxG.state is MusicBeatState ? cast(FlxG.state, MusicBeatState).lerp : flixel.math.FlxMath.lerp),
-	];
+			//决定call的生死时刻！
+			"Function_Stop" => LuaUtil.Function_Stop,
+			"Function_Continue" => LuaUtil.Function_Continue,
+
+			//部分FlxMath的大宝贝
+			"mathBound" => flixel.math.FlxMath.bound,
+			"mathLerp" => (FlxG.state is MusicBeatState ? cast(FlxG.state, MusicBeatState).lerp : flixel.math.FlxMath.lerp),
+		];
+	}
 	
 	public function new(path:String, allowUseHScript:Bool = true) {
 		_allowUseHScript = allowUseHScript;
@@ -103,7 +121,7 @@ class LuaScript extends Script {
 			interp.staticVariables = Script.staticVariables;
 		}
 
-		for(k=>v in defaultVariables) {
+		for(k=>v in defaultVariables(this)) {
 			set(k, v);
 		}
 		LuaUtil.reflectFunction(this);
@@ -111,9 +129,11 @@ class LuaScript extends Script {
 		LuaUtil.timerAndTweenFunction(this);
 		LuaUtil.objectFunction(this);
 		LuaUtil.spriteFunction(this);
+		LuaUtil.textFunction(this);
 		LuaUtil.mobileFunction(this);
 		LuaUtil.stateFunction(this);
 		LuaUtil.shaderFunction(this);
+		LuaUtil.animationFunction(this);
 	}
 	
 	override function onLoad() {
@@ -308,6 +328,7 @@ class LuaScript extends Script {
 		if(closed || heart == null) return;
 		
 		Lua.close(heart);
+		_variables.clear();
 		_variables = null;
 		heart = null;
 		
