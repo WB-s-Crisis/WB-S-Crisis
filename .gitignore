@@ -8,4 +8,5 @@ latest/windows/haxe/
 .haxelib/
 pages/
 docs/doc.xml
+source/funkin/options/Options.hx
 !mods/readme.txt
