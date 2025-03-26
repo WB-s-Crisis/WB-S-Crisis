@@ -81,6 +81,7 @@ class GlobalScript {
 		});
 		FlxG.signals.preStateSwitch.add(function() {
 			call("preStateSwitch", []);
+			luaCall("onStateSwitchPre", []);
 		});
 		FlxG.signals.preUpdate.add(function() {
 			call("preUpdate", [FlxG.elapsed]);

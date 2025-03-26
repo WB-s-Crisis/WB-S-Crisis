@@ -91,6 +91,15 @@ var killingAura:FlxSprite;
 var fwMovies:FlxSpriteGroup;
 var camMovie:FlxCamera;
 
+var originIndex:Dynamic = {
+	dad: -1,
+	pico: -1,
+	bf: -1
+};
+
+var pico:Character = strumLines.members[1].characters[0];
+var bf:Character = strumLines.members[2].characters[0];
+
 //取消切换镜头
 var camCancelled:Bool = false;
 var defaultGoodCamZoom = 0.95;
@@ -121,7 +130,7 @@ function postCreate() {
 	camMovie.bgColor = 0;
 	cameraInsert(camMovie, 1, false);
 
-	black = new FlxSprite(-750, -500).makeGraphic(FlxG.width * 2, FlxG.height * 2, 0xFF000000);
+	black = new FlxSprite(-750, -350).makeGraphic(FlxG.width * 2, FlxG.height * 2, 0xFF000000);
 	black.scrollFactor.set();
 	black.cameras = [camGame];
 	add(black);
@@ -136,6 +145,11 @@ function postCreate() {
 	shoufuTaiwang(0.001);
 	
 	camHUD.alpha = 0;
+	
+	originIndex.dad = members.indexOf(dad);
+	originIndex.pico = members.indexOf(pico);
+	originIndex.bf = members.indexOf(bf);
+	Application.current.window.alert(originIndex);
 }
 
 function onStartSong() {
@@ -243,8 +257,21 @@ function stepHit(step:Int) {
 			FlxTween.tween(camGame, {zoom: camGame.zoom + 0.25}, Conductor.stepCrochet * 10 / 1000);
 		case 384:
 			black.alpha = 1;
+			
+			remove(bf);
+			remove(dad);
+			insert(members.indexOf(black) + 1, dad);
+			insert(members.indexOf(black) + 1, bf);
+			dad.colorTransform.color = 0xFFFF0000;
+			camFollow.setPosition(650, 550);
+			camGame.zoom = preZoom;
+			bf.colorTransform.color = bf.iconColor;
+			
 			camHUD.alpha = 0;
 			anotherKilling = true;
+			for(obj in [dad, bf, pico]) {
+				obj.colorTransform.alphaMultiplier = 0;
+			}
 		case 506:
 			camHUD.alpha = 1;
 			timeGroup.alpha = 0;
@@ -255,10 +282,21 @@ function stepHit(step:Int) {
 					obj.alpha = 0;
 				});
 			});
-			anotherKilling = false;
 			for(items in [animationIconP1, animationIconP2, animationIconP3, missesTxt, accuracyTxt, scoreTxt]) {
 				items.alpha = 0;
 			}
+			
+			anotherKilling = false;
+			remove(bf);
+			remove(dad);
+			insert(originIndex.dad, dad);
+			insert(originIndex.bf, bf);
+			dad.colorTransform = null;
+			dad.updateColorTransform();
+			bf.colorTransform = null;
+			bf.updateColorTransform();
+			pico.colorTransform = null;
+			pico.updateColorTransform();
 			
 			strumLines.members[1].forEach(function(obj:Strum) {
 				FlxTween.tween(obj, {alpha: 1}, Conductor.stepCrochet * 4 / 1000, {ease: FlxEase.quadIn});
@@ -268,6 +306,7 @@ function stepHit(step:Int) {
 			realCamZooming = false;
 			goodCamZooming = true;
 			camCancelled = true;
+			
 			FlxTween.tween(black, {alpha: 0}, Conductor.stepCrochet * 78 / 1000);
 			for(items in [animationIconP1, animationIconP2, animationIconP3, missesTxt, accuracyTxt, scoreTxt, TBHealthBar, timeGroup, healthBar]) {
 				FlxTween.tween(items, {alpha: 1}, Conductor.stepCrochet * 78 / 1000);
@@ -458,9 +497,33 @@ function stepHit(step:Int) {
 			FlxTween.tween(black, {alpha: 1}, Conductor.crochet * 4 / 1000);
 			FlxTween.tween(camHUD, {alpha: 0}, Conductor.crochet * 4 / 1000, {onComplete: function(_) {
 				anotherKilling = true;
+				for(obj in [dad, bf, pico]) {
+					obj.colorTransform.alphaMultiplier = 0;
+				}
+				
+				remove(pico);
+				remove(dad);
+				insert(members.indexOf(black) + 1, dad);
+				insert(members.indexOf(black) + 1, pico);
+				dad.colorTransform.color = 0xFFFF0000;
+				camFollow.setPosition(650, 550);
+				camGame.zoom = preZoom;
+				pico.colorTransform.color = pico.iconColor;
 			}});
 		case 1397:
 			anotherKilling = false;
+			
+			remove(pico);
+			remove(dad);
+			insert(originIndex.dad, dad);
+			insert(originIndex.pico, pico);
+			dad.colorTransform = null;
+			dad.updateColorTransform();
+			bf.colorTransform = null;
+			bf.updateColorTransform();
+			pico.colorTransform = null;
+			pico.updateColorTransform();
+			
 			camHUD.alpha = 1;
 			timeGroup.alpha = 0;
 			TBHealthBar.alpha = 0;
@@ -595,9 +658,20 @@ function beatHit(beat:Int) {
 }
 
 function measureHit(measure:Int) {
-	if(anotherKilling)
-		if(measure % 2 == 0)
+	if(anotherKilling) {
+		if(measure % 2 == 0) {
 			ruozhiFuck(0.65);
+			
+			if(measure >= 26 && measure != 80) {
+				for(obj in [dad, bf, pico]) {
+					obj.colorTransform.alphaMultiplier = 1;
+					FlxTween.tween(obj.colorTransform, {alphaMultiplier: 0}, Conductor.crochet * 2 / 1000, {startDelay: Conductor.stepCrochet / 1000});
+				}
+				camGame.zoom += 0.05;
+				FlxTween.tween(camGame, {zoom: camGame.zoom - 0.05}, Conductor.crochet / 1000, {ease: FlxEase.quadOut});
+			}
+		}
+	}
 	
 	if(measure > 8 && !camCancelled)
 		if(measure % 2 == 0)

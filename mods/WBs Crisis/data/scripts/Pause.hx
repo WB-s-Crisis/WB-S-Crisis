@@ -23,6 +23,7 @@ var restartTxt:FunkinText;
 var optionsTxt:FunkinText;
 var botplayTxt:FunkinText;
 var exitTxt:FunkinText;
+var displayBotplay:FunkinText;
 
 var easterEgg:FunkinSprite;
 
@@ -63,7 +64,6 @@ function create(event)
 	board.updateHitbox();
 
 	cameras = [pauseCam];
-
 
 	art = new FlxSprite().loadGraphic(Paths.image('pause/record/' + songName));
 	art.antialiasing = true;
@@ -127,8 +127,10 @@ function create(event)
 
 	var levelInfo:FlxText = new FunkinText(20, 15, 0, PlayState.SONG.meta.displayName, 32);
 	var deathCounter:FlxText = new FunkinText(20, 15, 0, "Blue balled: " + PlayState.deathCounter, 32);
+	displayBotplay = new FunkinText(20, 15, 0, "Botplay", 32);
+	displayBotplay.visible = game.scripts.publicVariables.get("cpuControlled");
 
-    for(k=>label in [levelInfo, deathCounter]) {
+    for(k=>label in [levelInfo, deathCounter, displayBotplay]) {
 		label.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.fromRGB(255, 255, 255), FlxTextAlign.RIGHT, FlxTextBorderStyle.OUTLINE, 0xFF000000);
 		label.borderSize = 2;
 		label.borderQuality = 6;
@@ -207,6 +209,7 @@ function onSelectOption(event) {
 	if(event.name == "Botplay") {
 		if(gameSaver.passedSongs.contains(songName)) {
 			game.scripts.publicVariables.set("cpuControlled", !game.scripts.publicVariables.get("cpuControlled"));
+			displayBotplay.visible = game.scripts.publicVariables.get("cpuControlled");
 		}else {
 			allowSelected = false;
 			

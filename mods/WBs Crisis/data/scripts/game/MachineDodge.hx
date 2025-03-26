@@ -1,11 +1,15 @@
+import flixel.effects.FlxFlicker;
+
 importAddons("game.AttackSystem");
 
 var dodgeSystem:AttackSystem;
 var characterLockCurAnim:Array<Bool> = [];
 var attackSound:FlxSound = FlxG.sound.load(Paths.sound("game/attack"));
+var tinnitusSound:FlxSound = FlxG.sound.load(Paths.sound("game/tinnitus"));
 var attackNoDodgeSound:FlxSound = FlxG.sound.load(Paths.sound("game/blood"));
 
 var drainCount:Int = 8;
+var getStuck:Bool = false;
 
 function new() {
 	for(i in 0...strumLines.length) {
@@ -13,8 +17,23 @@ function new() {
 	}
 }
 
+function onNoteHit(event) {
+	if(getStuck) event.preventVocalsUnmute();
+}
+
+function onPlayerMiss(event) {
+	if(getStuck) {
+		event.preventVocalsUnmute();
+		event.preventMissSound();
+	}
+}
+
 function onPlayerHit(event) {
 	event.healthGain = 0.023 * (drainCount / 8);
+}
+
+function onInputUpdate(event) {
+	if(!cpuControlled && getStuck) event.cancel();
 }
 
 function create() {
@@ -31,7 +50,8 @@ function create() {
 	dodgeSystem.cameras = [camHUD];
 	dodgeSystem.add("reaction", function(bean:AttackSystem) {
 		FlxG.sound.play(Paths.sound("game/warning"));
-		FlxTween.tween(bean.warningLabel, {alpha: 1}, 0.075, {ease: FlxEase.circIn});
+		bean.warningLabel.alpha = 1;
+		FlxFlicker.flicker(bean.warningLabel, 0.2, 0.2/4);
 	});
 	dodgeSystem.add("reaction_update", function(bean:AttackSystem, elapsed:Float) {
 		if(controlDodge.pressed)
@@ -53,13 +73,6 @@ function create() {
 		charDodges(1, "failed");
 	});
 	add(dodgeSystem);
-}
-
-function stepHit(step:Int) {
-	switch(step) {
-		case 403 | 436 | 466 | 593 | 914 | 960 | 989 | 1040 | 1060 | 1152 | 1460 | 1508 | 1562 | 1650 | 1714 | 1778 | 1840 | 1919 | 1968:
-			execute();
-	}
 }
 
 var controllZoom = 0.65;
@@ -110,7 +123,7 @@ function dadAttack(record:FlxPoint, type:String) {
 	var finishTime = (1 / dad.animation.curAnim.frameRate) * (dad.animation.curAnim.numFrames + 1);
 	FlxTween.tween(dad, {x: recordv.x + 550}, finishTime / 3, {ease: FlxEase.quadIn, startDelay: finishTime * 1/3, onComplete: (_) -> {
 		if(realType == "failed") {
-			camGame.flash(0xFFFF0000, 0.4);
+			camHUD.flash(0xFFFF0000, Conductor.crochet * 1.5 / 1000);
 			
 			executeSendOut();
 			FlxTween.tween(dad, {x: recordv.x}, 0.25, {ease: FlxEase.quadOut, startDelay: finishTime * 1/5, onComplete: (_) -> {
@@ -129,4 +142,25 @@ function dadAttack(record:FlxPoint, type:String) {
 
 function executeSendOut() {
 	drainCount -= (drainCount > 0 ? 1 : 0);
+	if(FlxG.sound.music != null) {
+		FlxG.sound.music.volume = 0;
+		chromatic.aberration = -0.5;
+		getStuck = true;
+		strumLines.members[1].notes.forEach((sb) -> sb.alpha = 0.35);
+		
+		tinnitusSound.volume = 1;
+		tinnitusSound.fadeOut(Conductor.crochet * 2 / 1000 + 0.5);
+		tinnitusSound.play(false, Math.abs(tinnitusSound.length - (Conductor.crochet * 2 + 500)));
+		
+		FlxTween.num(0, 1, Conductor.crochet * 2 / 1000, {startDelay: 0.5, onComplete: (_) -> {
+			getStuck = false;
+			strumLines.members[1].notes.forEach((sb) -> sb.alpha = 1);
+		}}, function(val:Float) {
+			if(FlxG.sound.music != null)
+				FlxG.sound.music.volume = val;
+			vocals.volume = 0;
+		});
+		//我是没想到，他们竟然是为了这个才改的？？？
+		FlxTween.tween(chromatic, {aberration: -0.02}, Conductor.crochet * 2.5 / 1000, {startDelay: 0.5});
+	}
 }

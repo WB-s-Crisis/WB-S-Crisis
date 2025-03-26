@@ -1,5 +1,7 @@
 import openfl.geom.ColorTransform;
 
+importScript("data/scripts/game/MachineDodge");
+
 var cinematicBarTween1:FlxTween = null;
 var cinematicBarTween2:FlxTween = null;
 var cinematicBar1:FunkinSprite = null;
@@ -60,6 +62,13 @@ function onCameraMove(event) {
 	cameraMovementChanged = false;
 	if(camCancelled) {
 		event.cancel();
+	}
+}
+
+function stepHit(step:Int) {
+	switch(step) {
+		case 403 | 436 | 466 | 593 | 914 | 960 | 989 | 1040 | 1060 | 1152 | 1460 | 1508 | 1562 | 1650 | 1714 | 1778 | 1840 | 1919 | 1968:
+			execute();
 	}
 }
 

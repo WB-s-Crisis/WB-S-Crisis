@@ -2,6 +2,7 @@ package funkin.backend.scripting.utils;
 
 #if ALLOW_LUASTATE
 import Type.ValueType;
+import haxe.io.Path;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
@@ -18,15 +19,17 @@ import funkin.backend.shaders.FunkinShader;
 import funkin.backend.FunkinText;
 import funkin.backend.shaders.CustomShader;
 import flixel.FlxState;
+import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.FlxSubState;
 import hscript.IHScriptCustomBehaviour;
+import hscript.IHScriptCustomConstructor;
 
 class LuaUtil {
 	public inline static final Function_Stop:Int = 0;
 	public inline static final Function_Continue:Int = 1;
 	
-	public static function reflectFunction(lua:LuaScript) {
+	public static function reflectFunctions(lua:LuaScript) {
 		/**
 		 * 获取此lua脚本的`scriptObject`中的变量值
 		 * @param tag 选定变量
@@ -405,7 +408,7 @@ class LuaUtil {
 		});
 	}
 	
-	public static function stateFunction(lua:LuaScript) {
+	public static function stateFunctions(lua:LuaScript) {
 		lua.set("switchState", function(cls:String, ?args:Array<Dynamic>) {
 			var cl = null;
 			if(lua._variables.exists(cls)) {
@@ -495,7 +498,7 @@ class LuaUtil {
 		});
 	}
 	
-	public static function mobileFunction(lua:LuaScript) {
+	public static function mobileFunctions(lua:LuaScript) {
 		#if mobile
 		lua.set("addVirtualPad", function(dpad:String, acPad:String) {
 			if(lua.scriptObject == null) {
@@ -589,7 +592,130 @@ class LuaUtil {
 		#end
 	}
 	
-	public static function textFunction(lua:LuaScript) {
+	public static function soundFunctions(lua:LuaScript) {
+		lua.set("loadSound", function(tag:String, asset:String, volume:Float = 1.0, looped:Bool = false, autoDestroy:Bool = false, autoPlay:Bool = false) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.get("_sound_") == null) {
+					//666，主播你死了
+					realState.scriptVariables.set("_sound_", new Map<String, FlxSound>());
+				}
+				
+				var soundVariables:Map<String, FlxSound> = realState.scriptVariables.get("_sound_");
+				if(soundVariables.exists(tag)) {
+					error('The Sound Variable "$tag" Was Existed!', "loadSound", lua);
+					return false;
+				}
+				
+				try {
+					var onComplete:Void->Void = function() {
+						lua.call("onLoadSoundComplete", [tag]);
+						removeSound(tag, "loadSound", lua, !autoDestroy);
+					};
+
+					var preSound:FlxSound = FlxG.sound.load('${Path.withoutExtension(Paths.getPath(asset))}.${Paths.SOUND_EXT}', volume, looped, autoDestroy, autoPlay, onComplete);
+					if(preSound != null) {
+						soundVariables.set(tag, preSound);
+						return false;
+					}
+					return true;
+				}catch(e:Dynamic) {
+					error('Expected The Sound Variable "$tag" When Load This Sound', "loadSound", lua);
+				}
+			} 
+			
+			return false;
+		});
+		
+		lua.set("playMusic", function(asset:String, volume:Float = 1, looped:Bool = true) {
+			FlxG.sound.playMusic(Paths.music(asset), volume, looped);
+		});
+		
+		lua.set("cacheSound", function(asset:String) {
+			FlxG.sound.cache('${Path.withoutExtension(Paths.getPath(asset))}.${Paths.SOUND_EXT}');
+		});
+		
+		lua.set("cacheAllSound", function() {
+			FlxG.sound.cacheAll();
+		});
+		
+		lua.set("getSoundProp", function(tag:String, prop:String) {
+			var sound:FlxSound = resolveLuaSound(tag, "getSoundProp", lua);
+			if(sound != null) {
+				return getVariableFromStr(sound, prop, lua, "getSoundProp");
+			}
+			
+			return null;
+		});
+		
+		lua.set("setSoundProp", function(tag:String, prop:String, val:Dynamic) {
+			var sound:FlxSound = resolveLuaSound(tag, "setSoundProp", lua);
+			if(sound != null) {
+				return setVariableFromStr(sound, prop, val, lua, "setSoundProp");
+			}
+			
+			return false;
+		});
+		
+		lua.set("playSound", function(tag:String, forced:Bool = false, ?volume:Float = 1, startTime:Float = 0, ?endTime:Float) {
+			final path = Path.withoutExtension(Paths.getPath(tag)) + '.${Paths.SOUND_EXT}';
+			if(Assets.exists(path)) {
+				FlxG.sound.play(path, volume, forced);
+				return true;
+			}else {
+				var sound:FlxSound = resolveLuaSound(tag, "playSound", lua, false);
+				if(sound != null) {
+					sound.play(forced, startTime, endTime);
+					return true;
+				}else {
+					error('The Sound "$tag" Was Not Existed!', "playSound", lua);
+				}
+			}
+			
+			return false;
+		});
+		
+		lua.set("stopSound", function(tag:String) {
+			var sound:FlxSound = resolveLuaSound(tag, "stopSound", lua);
+			if(sound != null) {
+				sound.stop();
+				return true;
+			}
+			
+			return false;
+		});
+		
+		lua.set("pauseSound", function(tag:String) {
+			var sound:FlxSound = resolveLuaSound(tag, "pauseSound", lua);
+			if(sound != null) {
+				sound.pause();
+				return true;
+			}
+			
+			return false;
+		});
+		
+		lua.set("resumeSound", function(tag:String) {
+			var sound:FlxSound = resolveLuaSound(tag, "resumeSound", lua);
+			if(sound != null) {
+				sound.resume();
+				return true;
+			}
+			
+			return false;
+		});
+		
+		lua.set("pauseAllSound", function() {
+			FlxG.sound.pause();
+		});
+		
+		lua.set("resumeAllSound", function() {
+			FlxG.sound.resume();
+		});
+	}
+	
+	public static function textFunctions(lua:LuaScript) {
 		lua.set("makeLuaText", function(tag:String, x:Float = 0, y:Float = 0, content:String, fw:Float = 0) {
 			if(lua.scriptObject is IStateScript) {
 				var realState:IStateScript = cast lua.scriptObject;
@@ -999,7 +1125,7 @@ class LuaUtil {
 		});
 	}
 	
-	public static function shaderFunction(lua:LuaScript) {
+	public static function shaderFunctions(lua:LuaScript) {
 		lua.set("makeLuaShader", function(tag:String, path:String, glslVersion:String = #if mobile "100" #else "120" #end) {
 			if(lua.scriptObject is IStateScript) {
 				var realState:IStateScript = cast lua.scriptObject;
@@ -1310,7 +1436,7 @@ class LuaUtil {
 		});
 	}
 	
-	public static function cameraFunction(lua:LuaScript) {
+	public static function cameraFunctions(lua:LuaScript) {
 		lua.set("cameraFlash", function(camera:String, color:String = "#ffffff", time:Float = 1, forced:Bool = false) {
 			var realCamera:FlxCamera = resolveLuaCamera(camera, "cameraFlash", lua);
 			if(realCamera == null) {
@@ -1429,7 +1555,7 @@ class LuaUtil {
 		});
 	}
 	
-	public static function animationFunction(lua:LuaScript) {
+	public static function animationFunctions(lua:LuaScript) {
 		lua.set("playAnim", function(tag:String, name:String, forced:Bool = false, reversed:Bool = false, frame:Int = 0) {
 			if(lua.scriptObject is IStateScript) {
 				var realState:IStateScript = cast lua.scriptObject;
@@ -1771,7 +1897,7 @@ class LuaUtil {
 		});
 	}
 	
-	public static function timerAndTweenFunction(lua:LuaScript) {
+	public static function timerAndTweenFunctions(lua:LuaScript) {
 		lua.set("runTimer", function(tag:String, time:Float, loops:Int = 1) {
 			if(lua.scriptObject is IStateScript) {
 				var realState:IStateScript = cast lua.scriptObject;
@@ -1991,7 +2117,7 @@ class LuaUtil {
 		});
 	}
 	
-	public static function spriteFunction(lua:LuaScript) {
+	public static function spriteFunctions(lua:LuaScript) {
 		lua.set("makeLuaSprite", function(tag:String, x:Float = 0, y:Float = 0) {
 			if(lua.scriptObject is IStateScript) {
 				var realState:IStateScript = cast lua.scriptObject;
@@ -2080,7 +2206,7 @@ class LuaUtil {
 		});
 	}
 	
-	public static function objectFunction(lua:LuaScript) {
+	public static function objectFunctions(lua:LuaScript) {
 		lua.set("addLuaObject", function(tag:String) {
 			if(lua.scriptObject is IStateScript) {
 				var realState:IStateScript = cast lua.scriptObject;
@@ -2417,7 +2543,7 @@ class LuaUtil {
 		});
 	}
 	
-	public static function hscriptFunction(lua:LuaScript) {
+	public static function hscriptFunctions(lua:LuaScript) {
 		lua.set("addHaxeLibrary", function(className:String, ?packageName:String) {
 			if(!lua._allowUseHScript) {
 				error('Current Lua Script Was Not Allow Execute Haxe', "addHaxeLibrary", lua);
@@ -2472,12 +2598,133 @@ class LuaUtil {
 		});
 	}
 	
-	public static function extraFunction(lua:LuaScript) {
+	public static function coolFunctions(lua:LuaScript) {
+		lua.set("playMenuSFX", function(byd:String = "scroll", volume:Float = 1.0) {
+			CoolUtil.playMenuSFX(switch(byd.toLowerCase()) {
+				case "confirm": CoolSfx.CONFIRM;
+				case "cancel": CoolSfx.CANCEL;
+				case "scroll": CoolSfx.SCROLL;
+				case "checked": CoolSfx.CHECKED;
+				case "unchecked": CoolSfx.UNCHECKED;
+				case "warning": CoolSfx.WARNING;
+				default: CoolSfx.SCROLL;
+			}, volume);
+		});
 		
+		//按官方的说法，最好使用这个byd，但我不太确定是否需要跟原本是我playMusic合并在一起😅
+		lua.set("playCoolMusic", function(path:String, persist:Bool = false, volume:Int = 1, looped:Bool = true, defaultBPM:Int = 102) {
+			CoolUtil.playMusic(Paths.music(path), persist, volume, looped, defaultBPM);
+		});
+	}
+	
+	public static function extraFunctions(lua:LuaScript) {
+		//创建实例，支持对hscript自定义类创建实例
+		lua.set("createInstance", function(tag:String, cl:String, ?args:Array<Dynamic>) {
+			if(lua.scriptObject is IStateScript) {
+				var realState:IStateScript = cast lua.scriptObject;
+				
+				if(realState.scriptVariables.exists(tag) /* 还是算了吧😅😅😅 || lua._publicVariables.exists(tag)*/) {
+					error('The Variable "$tag" Was Existed', "createInstance", lua);
+					return false;
+				}
+				
+				var instance:Dynamic = null;
+				try {
+					var cls:Dynamic = null;
+					if(lua._variables.exists(cl)) {
+						cls = lua._variables.get(cl);
+					}
+					if(cls == null) cls = Type.resolveClass(cl);
+					if(cls == null) cls = Type.resolveClass('${cl}_HSC');
+					
+					if(cls is IHScriptCustomConstructor) {
+						instance = cls.hnew(args == null ? [] : args);
+					}else {
+						instance = Type.createInstance(cls, args == null ? [] : args);
+					}
+					
+					if(instance != null) realState.scriptVariables.set(tag, instance);
+				}catch(e:Dynamic) {
+					error('Expected The Variable "$tag" When Create Instance By "$cl"', "createInstance", lua);
+				}
+			}
+			
+			return false;
+		});
+	
+		//导管随机数
+		lua.set("getRandomInt", function(min:Int, max:Int, ?excludes:Array<Int>) {
+			return FlxG.random.int(min, max, excludes);
+		});
+		
+		lua.set("getRandomFloat", function(min:Float, max:Float, ?excludes:Array<Float>) {
+			return FlxG.random.float(min, max, excludes);
+		});
+		
+		lua.set("getRandomColor", function(one:String, two:String, ?alpha:Int, gs:Bool = false) {
+			return FlxG.random.color(FlxColor.fromString(one), FlxColor.fromString(two), alpha, gs).toWebString();
+		});
+		
+		lua.set("getRandomBool", function(chance:Float = 50) {
+			return FlxG.random.bool(chance);
+		});
+		
+		lua.set("getRandomSign", function(chance:Float = 50) {
+			return FlxG.random.sign(chance);
+		});
+		
+		lua.set("getRandomObjects", function(objects:Array<Any>, ?weightArray:Array<Float>, ?startIndex:Int, ?endIndex:Int) {
+			return FlxG.random.getObject(objects, weightArray, startIndex, endIndex);
+		});
+	}
+	
+	public static function resolveLuaSound(sound:String, title:String, lua:LuaScript, tracked:Bool = true):FlxSound {
+		if(sound.toLowerCase() == "defaultmusic" || sound.toLowerCase() == "default") {
+			var realSound:FlxSound = FlxG.sound.music;
+			if(realSound != null) {
+				return realSound;
+			}
+			if(tracked) {
+				error('You haven\'t used "playMusic", Its Null', title, lua);
+			}
+			return null;
+		}
+	
+		if(lua.scriptObject is IStateScript) {
+			var realState:IStateScript = cast lua.scriptObject;
+			final variables = realState.scriptVariables.get("_sound_");
+			if(variables != null) {
+				if(variables.get(sound) != null) {
+					return variables.get(sound);
+				}
+			}else {
+				realState.scriptVariables.set("_sound_", new Map<String, FlxSound>());
+			}
+		}
+		
+		if(lua._publicVariables.get(sound) != null) {
+			var realSound:Dynamic = lua._publicVariables.get(sound);
+			
+			if(realSound is FlxSound) {
+				return cast realSound;
+			}
+		}
+		
+		if(lua.scriptObject != null) {
+			var realSound:Dynamic = getVariableFromStr(lua.scriptObject, sound, lua, title);
+			
+			if(realSound is FlxSound) {
+				return cast realSound;
+			}
+		}
+		
+		if(tracked)
+			error('The Sound Variable "$sound" Was Not Exist', title, lua);
+		return null;
 	}
 	
 	public static function resolveLuaCamera(camera:String, title:String, lua:LuaScript):FlxCamera {
-		if(camera.toLowerCase() == "default") {
+		if(camera.toLowerCase() == "default" || camera.toLowerCase() == "defaultcamera") {
 			return FlxG.camera;
 		}
 		
@@ -2558,6 +2805,29 @@ class LuaUtil {
 		}
 		
 		return null;
+	}
+	
+	public static function removeSound(tag:String, title:String, lua:LuaScript, isDestroy:Bool = false) {
+		if(lua.scriptObject is IStateScript) {
+			var realState:IStateScript = cast lua.scriptObject;
+			
+			final variables = realState.scriptVariables.get("_sound_");
+			if(variables == null) {
+				error("(removeSound)There are no performances on stage six", title, lua);
+				return false;
+			}
+			
+			if(variables.get(tag) != null) {
+				var sd:FlxSound = variables.get(tag);
+				variables.remove(tag);
+				if(isDestroy && sd.active && !sd.autoDestroy) {
+					sd.stop();
+				}
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public static function cancelTimer(tag:String, title:String, lua:LuaScript, isDestroy:Bool = false) {

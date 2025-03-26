@@ -124,16 +124,19 @@ class LuaScript extends Script {
 		for(k=>v in defaultVariables(this)) {
 			set(k, v);
 		}
-		LuaUtil.reflectFunction(this);
-		LuaUtil.hscriptFunction(this);
-		LuaUtil.timerAndTweenFunction(this);
-		LuaUtil.objectFunction(this);
-		LuaUtil.spriteFunction(this);
-		LuaUtil.textFunction(this);
-		LuaUtil.mobileFunction(this);
-		LuaUtil.stateFunction(this);
-		LuaUtil.shaderFunction(this);
-		LuaUtil.animationFunction(this);
+		LuaUtil.extraFunctions(this);
+		LuaUtil.reflectFunctions(this);
+		LuaUtil.hscriptFunctions(this);
+		LuaUtil.timerAndTweenFunctions(this);
+		LuaUtil.objectFunctions(this);
+		LuaUtil.spriteFunctions(this);
+		LuaUtil.textFunctions(this);
+		LuaUtil.mobileFunctions(this);
+		LuaUtil.stateFunctions(this);
+		LuaUtil.shaderFunctions(this);
+		LuaUtil.soundFunctions(this);
+		LuaUtil.animationFunctions(this);
+		LuaUtil.coolFunctions(this);
 	}
 	
 	override function onLoad() {
