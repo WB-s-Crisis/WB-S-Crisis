@@ -149,7 +149,6 @@ function postCreate() {
 	originIndex.dad = members.indexOf(dad);
 	originIndex.pico = members.indexOf(pico);
 	originIndex.bf = members.indexOf(bf);
-	Application.current.window.alert(originIndex);
 }
 
 function onStartSong() {
