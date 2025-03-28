@@ -85,8 +85,8 @@ class MobileUtil
 		
 		try
 		{
-			if (!FileSystem.exists(MobileUtil.getStorageDirectory(true)))
-				FileSystem.createDirectory(MobileUtil.getStorageDirectory(true));
+			if (!FileSystem.exists(MobileUtil.getStorageDirectory()))
+				FileSystem.createDirectory(MobileUtil.getStorageDirectory());
 		}
 		catch (e:haxe.Exception)
 		{
