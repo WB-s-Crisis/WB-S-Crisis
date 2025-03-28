@@ -21,7 +21,6 @@ var DODGE:FlxActionDigital;
 var DODGE_R:FlxActionDigital;
 #if TOUCH_CONTROLS
 var newHitbox:FlxSpriteGroup;
-var allowExtraSongs:Array<String> = ["cruel cartoon"];
 #end
 
 function postCreate() {
@@ -38,7 +37,7 @@ function postCreate() {
 		case "LEFT_FULL" | "RIGHT_FULL":
 			removeHitbox();
 			virtualPad = new FlxVirtualPad(gameSaver.mobileControlStyle, "NONE");
-			if(PlayState.SONG.meta.name.toLowerCase() == "cruel cartoon") {
+			if(scripts.publicVariables.exists("makeYourDad")) {
 				virtualPad.buttonA = virtualPad.createButton((gameSaver.mobileControlStyle == "LEFT_FULL" ? FlxG.width - 150 : 0), (gameSaver.buttonExtraPos == "TOP" ? 0 : FlxG.height - 150), 'a', 0xFFFF0000);
 				virtualPad.add(virtualPad.buttonA);
 				DODGE_P.addInput(virtualPad.buttonA, FlxInputState.JUST_PRESSED);
@@ -68,7 +67,7 @@ function postCreate() {
 					case 3:
 						virtualPad.buttonDown.setPosition(beep[0], beep[1]);
 					case 4:
-						if(PlayState.SONG.meta.name.toLowerCase() == "cruel cartoon") {
+						if(scripts.publicVariables.exists("makeYourDad")) {
 							virtualPad.buttonA = virtualPad.createButton(beep[0], beep[1], 'a', 0xFFFF0000);
 							virtualPad.add(virtualPad.buttonA);
 							DODGE_P.addInput(virtualPad.buttonA, FlxInputState.JUST_PRESSED);
@@ -90,7 +89,7 @@ function postCreate() {
 			controls.trackedInputsNOTES = [];
 			
 			newHitbox = new FlxSpriteGroup();
-			makeNewHitbox(newHitbox, allowExtraSongs.contains(PlayState.SONG.meta.name.toLowerCase()));
+			makeNewHitbox(newHitbox, scripts.publicVariables.exists("makeYourDad"));
 			
 			newHitbox.alpha = Options.controlsAlpha;
 			newHitbox.scrollFactor.set();

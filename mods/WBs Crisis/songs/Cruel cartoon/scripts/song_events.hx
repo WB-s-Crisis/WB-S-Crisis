@@ -15,6 +15,9 @@ var qqqeb:Bool = false;
 
 function create()
 {
+	drainCount = 4;
+	drainMax = 4;
+
     black = new FlxSprite(-100, -100).makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.BLACK);
 	black.scrollFactor.set();
 	black.camera = camOther;
@@ -45,6 +48,8 @@ function create()
         if (i == 1) cinematicBar2 = cinematicBar;
         else cinematicBar1 = cinematicBar;
     }
+    
+    recycleDodgeCamHandler = function(sb:Dynamic) {};
 }
 
 function update(elapsed:Float) {

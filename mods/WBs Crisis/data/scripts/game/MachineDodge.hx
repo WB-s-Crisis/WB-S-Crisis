@@ -2,13 +2,19 @@ import flixel.effects.FlxFlicker;
 
 importAddons("game.AttackSystem");
 
+//bbbb
+public var recycleDodgeCamHandler:Dynamic->Void = null;
+
+public var makeYourDad:Dynamic = null;
+
 var dodgeSystem:AttackSystem;
 var characterLockCurAnim:Array<Bool> = [];
 var attackSound:FlxSound = FlxG.sound.load(Paths.sound("game/attack"));
 var tinnitusSound:FlxSound = FlxG.sound.load(Paths.sound("game/tinnitus"));
 var attackNoDodgeSound:FlxSound = FlxG.sound.load(Paths.sound("game/blood"));
 
-var drainCount:Int = 8;
+public var drainMax:Int = 8;
+public var drainCount:Int = drainMax;
 var getStuck:Bool = false;
 
 function new() {
@@ -29,7 +35,7 @@ function onPlayerMiss(event) {
 }
 
 function onPlayerHit(event) {
-	event.healthGain = 0.023 * (drainCount / 8);
+	event.healthGain = 0.023 * (drainCount / drainMax);
 }
 
 function onInputUpdate(event) {
@@ -76,6 +82,7 @@ function create() {
 }
 
 var controllZoom = 0.65;
+var tnData:Dynamic = {};
 function postUpdate(elapsed:Float) {
 	strumLines.forEachAlive(function(strumLine:StrumLine) {
 		if(characterLockCurAnim[strumLines.members.indexOf(strumLine)] == true) strumLine.characters[0].__lockAnimThisFrame = true;
@@ -83,8 +90,29 @@ function postUpdate(elapsed:Float) {
 	
 	var controlCamera = characterLockCurAnim.contains(true);
 	if(controlCamera) {
+		if(Reflect.fields(tnData).length < 1) {
+			Reflect.setField(tnData, "camx", camFollow.x);
+			Reflect.setField(tnData, "camy", camFollow.y);
+			Reflect.setField(tnData, "zoom", camGame.zoom);
+		}
 		camFollow.setPosition(850, 450);
 		camGame.zoom = lerp(FlxG.camera.zoom, controllZoom, 0.1);
+	}else {
+		if(Reflect.fields(tnData).length >= 1) {
+			if(recycleDodgeCamHandler != null && Reflect.isFunction(recycleDodgeCamHandler)) {
+				if(recycleDodgeCamHandler(tnData) != true) {
+					camFollow.setPosition(tnData.camx, tnData.camy);
+					camGame.zoom = tnData.zoom;
+				}
+			}else {
+				camFollow.setPosition(tnData.camx, tnData.camy);
+				camGame.zoom = tnData.zoom;
+			}
+			
+			for(field in Reflect.fields(tnData)) {
+				Reflect.deleteField(tnData, field);
+			}
+		}
 	}
 }
 
