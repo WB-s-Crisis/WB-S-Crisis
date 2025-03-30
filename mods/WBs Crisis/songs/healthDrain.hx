@@ -13,7 +13,7 @@
  * 打个巅峰巅峰前百前十都是相当轻松的😋
  */
 
-var tomStuffix:Array<String> = ["tom", "tom1-3"];
+var tomStuffix:Array<String> = ["tom", "tom1-3", "Angry Tom"];
 var bugRabbitStuffix:Array<String> = ["Looney Tunes", "Looney Tunes-2"];
 
 var brBaseDrain:Float;

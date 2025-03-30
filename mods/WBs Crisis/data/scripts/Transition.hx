@@ -24,8 +24,7 @@ function create(event) {
 	if(PlayState.SONG != null) {
 		id = switch(PlayState.SONG.meta.name.toLowerCase()) {
 			case "friendship broken" | "bloody scissors": "1942menu";
-			case "cruel cartoon" | "cruel cartoon erect": "1942menu1";
-			case "blood dispute": "1942menu2";
+			case "cruel cartoon" | "cruel cartoon erect" | "blood dispute": "1942menu1";
 			case "unprovoked" | "hunt and kill" | "last life": "Looneymenu";
 			default: "1942menu";
 		};

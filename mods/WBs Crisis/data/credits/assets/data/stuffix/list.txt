@@ -1,5 +1,5 @@
 #分号前面对应要显示的名字，后面是对应名字的文件夹，用于方便读取
-#msZ杨;MSZYang;痔疮
+msZ杨;MS ZYang;痔疮
 闸总不是洗洁精;Xi Jie Jing;副痔疮
 被晒干的橙子;Dry Orange;副副痔疮
 
