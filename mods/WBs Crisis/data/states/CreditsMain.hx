@@ -16,6 +16,7 @@ function create() {
 
 function gotoRealCredits() {
 	new FlxTimer().start(0.75, (tmr) -> {
-		FlxG.switchState(new ModState("WB/CreditsMain"));
+		if(!FlxG.random.bool(10)) FlxG.switchState(new ModState("WB/CreditsMain"));
+		else FlxG.switchState(new ModState("RedemptionState", {lastState: Type.getClass(this)}));
 	});
 }
