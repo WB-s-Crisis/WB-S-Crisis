@@ -1,0 +1,13 @@
+function create() {
+camHUD.alpha = 0;
+camGame.alpha = 0;
+}
+
+function stepHit(step:Int){
+
+    switch (step) {
+    case 0:
+          FlxTween.tween(camGame, {alpha: 1}, 18, {ease: FlxEase.expoInOut});
+          FlxTween.tween(camHUD, {alpha: 1}, 18, {ease: FlxEase.expoInOut});
+}
+}
