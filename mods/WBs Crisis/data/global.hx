@@ -10,6 +10,8 @@ import funkin.game.GameOverSubstate;
 import funkin.menus.PauseSubState;
 import funkin.backend.utils.WindowUtils;
 import mobile.funkin.backend.utils.MobileUtil;
+
+
 import openfl.Lib;
 
 /**
@@ -21,6 +23,14 @@ importAddons("saves.WBSaver");
 //搞储存的，你只需要在这里添加变量就行了
 //如果想使用那个变量可以直接调用`gameSaver.变量`即可
 //保存可以使用`gameSaver.save()`
+static var Util = {
+	setSize: function(obj:Dynamic, width:Float, height:Float):Void {
+		obj.scale.set(Math.abs(((obj.width - width) / obj.width) - 1), Math.abs(((obj.height - height) / obj.height) - 1));
+	},
+
+};
+
+static var initialized:Bool = false;
 public static var gameSaver:WBSaver = new WBSaver({
 	forTest: true,
 	#if mobile
@@ -40,6 +50,10 @@ public static var gameSaver:WBSaver = new WBSaver({
 });
 
 public var globalGameTimer:Float = 0.;
+
+var redirectStates:Map<FlxState, String> = [
+	StoryMenuState => 'menus/StoryMenu',
+];
 
 function new() {
 	//gameSaver.clear();
@@ -70,6 +84,7 @@ function postGameStart() {
 var directState:Map<String, Class<Dynamic>> = [
 	"WB/FreeplayScreen" => FreeplayState,
 	"WB/MainMenu" => MainMenuState
+	"WB/StoryMenu" => StoryMenuState
 ];
 
 function preStateSwitch() {
@@ -154,3 +169,4 @@ function breakOriginFramerate():Void {
 		Framerate.instance.removeChild(child);
 	}
 }
+
