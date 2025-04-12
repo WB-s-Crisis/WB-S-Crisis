@@ -1,21 +1,21 @@
 #分号前面对应要显示的名字，后面是对应名字的文件夹，用于方便读取
-msZ杨;MS ZYang;痔疮
-闸总不是洗洁精;Xi Jie Jing;副痔疮
-被晒干的橙子;Dry Orange;副副痔疮
+msZ杨;MS_ZYang;痔疮
+闸总不是洗洁精;Xi_Jie_Jing;副痔疮
+被晒干的橙子;Dry_Orange;副副痔疮
 
-尘月;Chen Yue;牢曲师
+尘月;Chen_Yue;牢曲师
 Wacky;Wacker;屌曲师
 Cair;Cair;曲师
 
 BLACKSILENCE00;BLACKSILENCE;牢猪妹
-是祝稿不食猪肝;Pig Liver;猪肝画师
-蓝影懒得说;Blue Shadow;画南梁的画师
+是祝稿不食猪肝;Pig_Liver;猪肝画师
+蓝影懒得说;Blue_Shadow;画南梁的画师
 
 周三;Wednesday;耐拖王（谱师）
 
 qqqeb;QQQEB;耐拖王（编程）
-翻垃圾的雪溪;Xue Xi;福瑞编程
-FNF手机玩家;FNF Mobile phone player;你们好我是贝利亚，我又来入侵地球了
+翻垃圾的雪溪;Xue_Xi;福瑞编程
+FNF手机玩家;FNF_Mobile_phone_player;你们好我是贝利亚，我又来入侵地球了
 
-吉祥物;Sawrd Tom;微距了
-XG;XG;真的是万能的
+吉祥物;Sawrd_Tom;微距了
+XG;XG;微距了
