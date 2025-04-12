@@ -38,6 +38,7 @@ import funkin.backend.assets.Paths;
 import funkin.backend.utils.NativeAPI;
 import funkin.backend.system.Main;
 import flixel.ui.FlxBar;
+import flixel.util.FlxTimer;
 import flixel.ui.FlxBar.FlxBarFillDirection;
 
 #if ALLOW_MULTITHREADING
@@ -172,15 +173,6 @@ class CopyState extends funkin.backend.MusicBeatState
 		}
 		super.update(elapsed);
 	}
-	
-	override function destroy() {
-		super.destroy();
-		
-		#if ALLOW_MULTITHREADING
-		threadPool.shutdown();
-		threadPool = null;
-		#end
-	}
 
 	public function copyAsset()
 	{
@@ -304,11 +296,9 @@ class CopyState extends funkin.backend.MusicBeatState
 #end
 class CNMBD {
 	#if cpp
-	@:functionCode('
-		return std::thread::hardware_concurrency();
-	')
+	@:functionCode('return std::thread::hardware_concurrency();')
 	#end
-	private static function cppCNM():Int {
+	public static function cppCNM():Int {
 		return 1;
 	}
 }
