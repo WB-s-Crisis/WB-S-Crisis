@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-character>
-<character x="-125" y="-250" sprite="Tom1-3" scale="1.55" camy="100" icon="tom-final" holdTime="7" color="#21384D">
+<character x="-125" y="-250" sprite="Tom1-3" scale="1.45" camy="100" icon="tom-final" holdTime="7" color="#21384D">
 	<anim name="idle" anim="idle" x="0" y="0" fps="16" loop="false"/>
 	<anim name="singRIGHT" anim="right" x="0" y="0" fps="24" loop="false"/>
 	<anim name="singLEFT" anim="left" x="0" y="0" fps="24" loop="false"/>
