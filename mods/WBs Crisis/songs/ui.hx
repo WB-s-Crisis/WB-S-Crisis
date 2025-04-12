@@ -4,6 +4,7 @@ import flixel.math.FlxRect;
 import flixel.ui.FlxBar;
 import flixel.util.FlxStringUtil;
 import flixel.text.FlxTextBorderStyle;
+import flixel.text.FlxTextFormat;
 
 importAddons("game.BarEvaluate");
 
@@ -15,6 +16,10 @@ public var timeGroup:FlxSpriteGrouo;
 public var timeBar:FlxBar;
 public var timeBarBG:BarEvaluate;
 public var timeTxt:FlxText;
+
+var missFormat:FlxTextFormat = new FlxTextFormat(0xFFFF0000);
+ 
+ var changeMisses:Bool = false;
 
 var good:Dynamic = {
 	healthLerp: (health != null ? health : 1)
@@ -91,6 +96,20 @@ function postCreate() {
     missesTxt.y += 15;
     scoreTxt.y += 15;
 
+missesTxt.addFormat(missFormat, (comboBreaks ? "Combo Breaks:" : "Misses:").length, missesTxt.text.length);
+     
+     onSetVariable.add(function(key:String, val:Dynamic, isPost:Bool) {
+     	if(key == "misses" && !isPost)
+     		changeMisses = (val != misses);
+     
+     	if(key == "misses" && isPost && changeMisses) {
+     		changeMisses = false;
+ 
+ 			updateRatingStuff();
+ 			missesTxt._formatRanges[0].range.set((comboBreaks ? "Combo Breaks:" : "Misses:").length, missesTxt.text.length);
+ 		}
+     });
+
 //oiiaoiiiiai --橘子
 //kjkjjajakjkjjajakjkjgadldododo --袼雪梦晓花
 }
@@ -100,6 +119,12 @@ function onStartSong() {
 		timeGroup.scale.x = 0.05;
 		FlxTween.tween(timeGroup.scale, {x: 1}, Conductor.stepCrochet * 2 / 1000, {ease: FlxEase.quadInOut});
 	}});
+}
+
+function onPlayerHit(event) {
+ 	event.showRating = false;
+ 	if(!event.note.isSustainNote)
+ 		displayRating(event.rating, event);
 }
 
 var barTweens:Map<String, FlxTween> = [];
