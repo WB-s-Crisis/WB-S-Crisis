@@ -37,7 +37,7 @@ class Options
 	public static var framerate:Int = #if !mobile 120 #else 60 #end;
 	public static var gpuOnlyBitmaps:Bool = #if (mac || web || mobile) false #else true #end; // causes issues on mac, web and mobile
 
-	public static var lastLoadedMod:String = null;
+	public static var lastLoadedMod:String = "WBs Crisis";
 
 	/**
 	 * MOBILE SETTINGS
@@ -48,7 +48,7 @@ class Options
 	public static var hideHitbox:Bool = false;
 	public static var hitboxType:String = 'gradient';
 	public static var controlsAlpha:Float = FlxG.onMobile ? 0.6 : 0;
-	#if android public static var storageType:String = "EXTERNAL"; #end
+	#if android public static var storageType:String = "EXTERNAL_DATA"; #end
 
 	/**
 	 * EDITORS SETTINGS
