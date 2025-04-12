@@ -30,6 +30,8 @@ var hasSongs:Bool = false;
 function create() {
 	window.title = "WB's Crisis(Story Menu)";
 
+	CoolUtil.playMenuSong();
+
 	for (i in Paths.getFolderContent('data/weeks')) {
 		if (!StringTools.endsWith(i, '.xml')) continue;
 		try {
