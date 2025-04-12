@@ -28,7 +28,7 @@ var hasSongs:Bool = false;
 
 function create() {
 	window.title = "WB’s crisis";
-	CoolUtil.playMusic(Paths.music('freeplay'));
+	CoolUtil.playMusic(Paths.music('freakymenu'));
 
 	for (i in Paths.getFolderContent('data/weeks')) {
 		if (!StringTools.endsWith(i, '.xml')) continue;
