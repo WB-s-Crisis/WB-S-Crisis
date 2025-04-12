@@ -239,7 +239,14 @@ function update(elapsed) {
 				songs: [],
 				difficulties: [weekData.difficulty]
 			};
-
+			
+			var cutData = {
+			nextState: new PlayState(),
+			week: convertedData,
+			difficulty: weekData.difficulty,
+			videoPath: Paths.video("cutscene")
+		};
+			
 			for (song in weekData.songs)
 				convertedData.songs.push({
 					name: song,
@@ -250,7 +257,16 @@ function update(elapsed) {
 			FlxTween.tween(camera.scroll, {x: 160, y: 0}, 1.5, {ease: FlxEase.expoInOut});
 
 			PlayState.loadWeek(convertedData, weekData.difficulty);
-			new FlxTimer().start(1, function() {FlxG.switchState(new PlayState());});
+			new FlxTimer().start(1, function() {
+			if(weekData.difficulty == 'TOM')
+			{
+			FlxG.switchState(new ModState("WB/VideoHandler", cutData));
+			}
+			else
+			{
+			FlxG.switchState(new PlayState());
+			}
+			});
 			canSelect = false;
 		} else {
 			CoolUtil.playMenuSFX(2, 0.7);
@@ -259,6 +275,19 @@ function update(elapsed) {
 	} else if (controls.ACCEPT && !canSelect) {
 		FlxG.camera.stopFX();
 		MusicBeatState.skipTransIn = MusicBeatState.skipTransOut = true;
-		FlxG.switchState(new PlayState());
+		var cutData = {
+			nextState: new PlayState(),
+			week: convertedData,
+			difficulty: weekData.difficulty,
+			videoPath: Paths.video("cutscene")
+		};
+		if(weekData.difficulty == 'TOM')
+			{
+			FlxG.switchState(new ModState("WB/VideoHandler", cutData));
+			}
+			else
+			{
+			FlxG.switchState(new PlayState());
+			}
 	}
 }
