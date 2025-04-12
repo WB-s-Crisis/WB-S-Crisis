@@ -1,4 +1,4 @@
-<stage zoom="0.75" startCamPosX="0" startCamPosY="0" folder="stages/1942">
+<stage zoom="0.75" startCamPosX="0" startCamPosY="0" folder="stages/Looney">
 
 	<girlfriend x="400" y="280" />
 	<boyfriend x="800" y="330" camxoffset="-400" camyoffset="-120"/>

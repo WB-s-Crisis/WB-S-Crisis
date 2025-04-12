@@ -57,10 +57,10 @@ function stepHit() {
 
 		switch (curStep) {
 			case 683:
-               FlxTween.tween(bg1, {alpha: 1}, 80);
-               FlxTween.tween(bg22, {alpha: 1}, 80);
-               FlxTween.tween(bg33, {alpha: 1}, 80);
-               FlxTween.tween(bg44, {alpha: 1}, 80);
+               FlxTween.tween(bg1, {alpha: 1}, 65);
+               FlxTween.tween(bg22, {alpha: 1}, 65);
+               FlxTween.tween(bg33, {alpha: 1}, 65);
+               FlxTween.tween(bg44, {alpha: 1}, 65);
 		}
 	}
 	}
