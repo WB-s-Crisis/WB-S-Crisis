@@ -125,6 +125,7 @@ class UnusedVideoState extends FlxState {
 						preFinished = true;
 						finish();
 						realCanSkip = false;
+						break;
 					}
 				}
 				#else
