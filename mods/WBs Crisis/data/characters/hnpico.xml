@@ -1,8 +1,8 @@
 <!DOCTYPE codename-engine-character>
-<character y="-40" sprite="pico" scale="0.85" flipX="true" camx="0" isPlayer="true" icon="pico" color="#B7D855" gameOverChar="pico">
+<character y="-60" sprite="hnpico" scale="0.95" flipX="true" camx="0" isPlayer="true" icon="pico" color="#B7D855" gameOverChar="pico">
 	<anim name="idle" anim="idle" x="0" y="0" fps="24" loop="false"/>
-	<anim name="singLEFT" anim="sing LEFT" x="0" y="-20" fps="18" loop="false"/>
-	<anim name="singRIGHT" anim="sing RIGHT" x="80" y="50" fps="18" loop="false"/>
-	<anim name="singDOWN" anim="sing DOWN" x="-20" y="0" fps="18" loop="false"/>
-	<anim name="singUP" anim="sing UP" x="0" y="0" fps="18" loop="false"/>
+	<anim name="singLEFT" anim="left" x="0" y="-20" fps="18" loop="false"/>
+	<anim name="singRIGHT" anim="right" x="80" y="50" fps="18" loop="false"/>
+	<anim name="singDOWN" anim="down" x="-20" y="0" fps="18" loop="false"/>
+	<anim name="singUP" anim="up" x="0" y="0" fps="18" loop="false"/>
 </character>
