@@ -1,6 +1,7 @@
 import funkin.backend.MusicBeatState;
 import flixel.group.FlxSpriteGroup;
-import Xml;
+//import Xml;
+//不需要以上这个
 
 import flixel.text.FlxText.FlxTextFormat;
 import flixel.text.FlxText.FlxTextFormatMarkerPair;
@@ -28,7 +29,6 @@ var hasSongs:Bool = false;
 
 function create() {
 	window.title = "WB’s crisis";
-	CoolUtil.playMusic(Paths.music('freakymenu'));
 
 	for (i in Paths.getFolderContent('data/weeks')) {
 		if (!StringTools.endsWith(i, '.xml')) continue;
