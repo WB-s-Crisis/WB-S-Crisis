@@ -41,10 +41,10 @@ var allowAnimationIcon:Array<{var name:String; var scale:Float; var x:Float; var
 	},
 	{
 		name: "tom95",
-		scale: 1,
-		x: 1000,
-		y: (Options.downscroll ? 30 : 300)
-	},
+		scale: 0.375,
+		x: 820,
+		y: (Options.downscroll ? -135 : -120)
+	}
 ];
 
 public var animationIconP1:AnimationIcon = null;
