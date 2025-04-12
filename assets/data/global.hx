@@ -1,5 +1,5 @@
-import funkin.backend.assets.ModsFolder;
-
-function preStateSwitch()
-    if (ModsFolder.currentModFolder != 'WBs Crisis')
-      ModsFolder.switchMod('WBs Crisis');
+//import funkin.backend.assets.ModsFolder;
+//懒得说你
+//function preStateSwitch()
+//    if (ModsFolder.currentModFolder != 'WBs Crisis')
+//      ModsFolder.switchMod('WBs Crisis');
