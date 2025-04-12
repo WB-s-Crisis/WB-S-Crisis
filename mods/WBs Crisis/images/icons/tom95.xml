@@ -2,7 +2,7 @@
 <!--
 Created with Free texture packer v0.6.7 http://free-tex-packer.com
 -->
-<TextureAtlas imagePath="1945.png" width="1022" height="1377">
+<TextureAtlas imagePath="tom95.png" width="1022" height="1377">
   <SubTexture name="win0000" x="0" y="0"  width="339" height="539" frameX="-386" frameY="-143" frameWidth="1079" frameHeight="1079"/>
   <SubTexture name="normal0000" x="0" y="539"  width="334" height="498" frameX="-384" frameY="-143" frameWidth="1079" frameHeight="1079"/>
   <SubTexture name="win0002" x="0" y="1037"  width="343" height="340" frameX="-380" frameY="-338" frameWidth="1079" frameHeight="1079"/>
