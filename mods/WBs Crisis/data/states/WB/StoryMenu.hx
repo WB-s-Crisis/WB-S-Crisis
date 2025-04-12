@@ -28,7 +28,7 @@ var canSelect:Bool = true;
 var hasSongs:Bool = false;
 
 function create() {
-	window.title = "WB’s crisis";
+	window.title = "WB's Crisis(Story Menu)";
 
 	for (i in Paths.getFolderContent('data/weeks')) {
 		if (!StringTools.endsWith(i, '.xml')) continue;
