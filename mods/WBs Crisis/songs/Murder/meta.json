@@ -1,0 +1,21 @@
+{
+	"beatsPerMeasure": 4,
+	"opponentModeAllowed": false,
+	"coopAllowed": false,
+	"stepsPerBeat": 4,
+	"bpm": 180,
+	"difficulties": [
+		"TOM"
+	],
+	"needsVoices": true,
+	"parsedColor": -12368550,
+	"displayName": "Murder",
+	"icon": "TOM95",
+	"name": "Murder",
+	"color": "#384347",
+	"customValues": {
+		"iconAnimated": true,
+		"iconScale": 0.4,
+		"iconOffset": [-30, -120]
+	}
+}
