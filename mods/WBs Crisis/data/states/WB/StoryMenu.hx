@@ -279,7 +279,7 @@ function update(elapsed) {
 			nextState: new PlayState(),
 			week: convertedData,
 			difficulty: weekData.difficulty,
-			videoPath: Paths.video("cutscene")
+			videoPath: Paths.video("cutscenes/cutscene1")
 		};
 		if(weekData.difficulty == 'TOM')
 			{
