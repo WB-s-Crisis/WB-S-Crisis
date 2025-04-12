@@ -41,8 +41,7 @@ import flixel.ui.FlxBar;
 import flixel.ui.FlxBar.FlxBarFillDirection;
 
 #if ALLOW_MULTITHREADING
-import sys.thread.Thread;
-import sys.thread.FixedThreadPool;
+import lime.system.ThreadPool;
 #end
 
 #if sys
@@ -71,7 +70,7 @@ class CopyState extends funkin.backend.MusicBeatState
 	public var loadingBar:FlxBar;
 	public var loadedText:FlxText;
 	public var copyLoop:FlxAsyncLoop;
-	public var threadPool:#if ALLOW_MULTITHREADING FixedThreadPool #else Dynamic #end;
+	public var threadPool:#if ALLOW_MULTITHREADING ThreadPool #else Dynamic #end;
 
 	var failedFilesStack:Array<String> = [];
 	var failedFiles:Array<String> = [];
@@ -124,15 +123,17 @@ class CopyState extends funkin.backend.MusicBeatState
 		add(copyLoop);
 		copyLoop.start();
 		#else
-		threadPool = new FixedThreadPool(8);
-		threadPool.run(() -> {
+		threadPool = new ThreadPool(0, CNMBD.cppCNM());
+		threadPool.doWork.add((_) -> {
 			while(shouldCopy && loopTimes < maxLoopTimes) {
-			        Sys.sleep(0.001);
-			
 				for(i in loopTimes...Std.int(Math.min(loopTimes + ticks, maxLoopTimes))) {
 					copyAsset();
 				}
 			}
+		});
+
+		new FlxTimer().start(0.5, (_)->{
+			threadPool.queue({});
 		});
 		#end
 
@@ -158,8 +159,7 @@ class CopyState extends funkin.backend.MusicBeatState
 				}
 				FlxG.sound.play(Paths.sound('menu/confirm')).onComplete = () ->
 				{
-					lime.app.Application.current.window.alert("已加载完毕！\n请重新进入游戏！！\n(Loaded completed!)\n(Please re-enter the game!)");
-					Sys.exit(0);
+					FlxG.resetGame();
 				};
 			}
 
@@ -296,6 +296,20 @@ class CopyState extends funkin.backend.MusicBeatState
 		maxLoopTimes = locatedFiles.length;
 
 		return (maxLoopTimes <= 0);
+	}
+}
+
+#if cpp
+@:cppFileCode('#include <thread>')
+#end
+class CNMBD {
+	#if cpp
+	@:functionCode('
+		return std::thread::hardware_concurrency();
+	')
+	#end
+	private static function cppCNM():Int {
+		return 1;
 	}
 }
 #end
