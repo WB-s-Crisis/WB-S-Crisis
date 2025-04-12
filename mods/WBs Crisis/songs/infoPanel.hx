@@ -1,3 +1,5 @@
+import Reflect;
+
 import flixel.text.FlxTextAlign;
 import flixel.text.FlxTextBorderStyle;
 import hxIni.IniManager;
@@ -106,12 +108,20 @@ function postCreate() {
 }
 
 function addMembers(preGroup:FlxSpriteGroup, expr:Dynamic) {
-	if(stage != null) {
-		id = switch(stage.stageName) {
-			case "1942": "infoPanel";
-			case "Looney": "infoPanel2";
+if(PlayState.SONG != null) {
+		id = switch(PlayState.SONG.meta.name.toLowerCase()) {
+			case "friendship broken" | "bloody scissors" | "cruel cartoon" | "cruel cartoon erect" | "blood dispute": "infoPanel";
+			case "unprovoked" | "nothing": "infoPanel2";
+			case "murder": "infoPanel3";
 			default: "infoPanel";
 		};
+	}
+
+	if(event.newState is PlayState) {
+		event.cancel();
+		
+		if(FlxG.sound.music != null)
+			FlxG.sound.music.stop();
 	}
 
 	var jiange:Float = 10;

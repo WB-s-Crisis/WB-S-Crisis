@@ -1,42 +1,50 @@
+import Reflect;
+
 importAddons("game.AnimationIcon");
 
 var allowAnimationIcon:Array<{var name:String; var scale:Float; var x:Float; var y:Float;}> = [
 	{
 		name: "hnbf",
-		scale: 0.175,
-		x: 45,
-		y: (Options.downscroll ? -5 : -30),
+		scale: 0.15,
+		x: 40,
+		y: (Options.downscroll ? -0 : -15),
 		dgCallback: function(obj:AnimationIcon) {
 			obj.x = TBHealthBar.x + TBHealthBar.width - 165;
 		}
 	},
 	{
 		name: "tom",
-		scale: 0.37,
-		x: 450,
-		y: (Options.downscroll ? -34 : -80)
+		scale: 0.35,
+		x: 460,
+		y: (Options.downscroll ? -30 : -70)
 	},
 	{
 		name: "tom-final",
-		scale: 0.27,
-		x: 550,
-		y: (Options.downscroll ? -5 : -40)
+		scale: 0.25,
+		x: 570,
+		y: (Options.downscroll ? -6 : -30)
 	},
 	{
 		name: "pico",
-		scale: 0.128,
+		scale: 0.115,
 		x: 45,
-		y: (Options.downscroll ? 115 : -35),
+		y: (Options.downscroll ? 110 : -35),
 		dgCallback: function(obj:AnimationIcon) {
 		obj.x = TBHealthBar.x + TBHealthBar.width - 100;
 		}
 	},
 	{
 		name: "bugRabbit",
-		scale: 0.18,
-		x: 925,
-		y: (Options.downscroll ? -5 : -50)
-	}
+		scale: 0.14,
+		x: 940,
+		y: (Options.downscroll ? 10 : -20)
+	},
+	{
+		name: "tom95",
+		scale: 1,
+		x: 1000,
+		y: (Options.downscroll ? 30 : 300)
+	},
 ];
 
 public var animationIconP1:AnimationIcon = null;

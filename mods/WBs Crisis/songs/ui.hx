@@ -1,8 +1,9 @@
+import Reflect;
+
 import flixel.math.FlxRect;
 import flixel.ui.FlxBar;
 import flixel.util.FlxStringUtil;
 import flixel.text.FlxTextBorderStyle;
-import flixel.text.FlxTextFormat;
 
 importAddons("game.BarEvaluate");
 
@@ -22,11 +23,24 @@ var timeManager:Dynamic = {
 	percent: 0.0
 };
 
-var missFormat:FlxTextFormat = new FlxTextFormat(0xFFFF0000);
-
-var changeMisses:Bool = false;
 
 function create() {
+if(PlayState.SONG != null) {
+		id = switch(PlayState.SONG.meta.name.toLowerCase()) {
+			case "friendship broken" | "bloody scissors" | "cruel cartoon" | "cruel cartoon erect" | "blood dispute": "TBHealthBar";
+			case "unprovoked" | "nothing": "TBHealthBar2";
+			case "murder": "TBHealthBar3";
+			default: "TBHealthBar";
+		};
+	}
+
+	if(event.newState is PlayState) {
+		event.cancel();
+		
+		if(FlxG.sound.music != null)
+			FlxG.sound.music.stop();
+	}
+	
 	timeGroup = new FlxSpriteGroup();
 
 	timeBarBG = new BarEvaluate(0, 0, FlxG.width / 3, 25, {
@@ -53,15 +67,7 @@ function create() {
 
 function postCreate() {
 
-	var healthBarAssets:String = switch(stage.stageName) {
-		//Tom的
-		case "1942": "TBHealthBar";
-		//looney的
-		case "Looney": "TBHealthBar2";
-		default: "TBHealthBar";
-	};
-
-    TBHealthBar=new FunkinSprite().loadGraphic(Paths.image('game/' + healthBarAssets));
+    TBHealthBar=new FunkinSprite().loadGraphic(Paths.image("game/" + id));
     TBHealthBar.scale.set(0.6, 0.6);
     TBHealthBar.alpha = 1;
     TBHealthBar.updateHitbox();
@@ -72,7 +78,7 @@ function postCreate() {
 
     remove(healthBarBG);
     healthBar.scale.x = 1.18;
-    healthBar.scale.y = 1.4;
+    healthBar.scale.y = 1.6;
     healthBar.setParent(good, "healthLerp");
     
     strumLines.members[0].onHit.add(function(event) {
@@ -84,44 +90,16 @@ function postCreate() {
     accuracyTxt.y += 15;
     missesTxt.y += 15;
     scoreTxt.y += 15;
-    
-    missesTxt.addFormat(missFormat, (comboBreaks ? "Combo Breaks:" : "Misses:").length, missesTxt.text.length);
-    
-    onSetVariable.add(function(key:String, val:Dynamic, isPost:Bool) {
-    	if(key == "misses" && !isPost)
-    		changeMisses = (val != misses);
-    
-    	if(key == "misses" && isPost && changeMisses) {
-    		changeMisses = false;
-
-			updateRatingStuff();
-			missesTxt._formatRanges[0].range.set((comboBreaks ? "Combo Breaks:" : "Misses:").length, missesTxt.text.length);
-		}
-    });
 
 //oiiaoiiiiai --橘子
 //kjkjjajakjkjjajakjkjgadldododo --袼雪梦晓花
 }
-
-/*function onNoteCreation(event) {
-	if(!event.note.isSustainNote) {
-		event.note.scrollSpeed = scrollSpeed + FlxG.random.float(-1, 1);
-	}else {
-		event.note.scrollSpeed = event.note.prevNote.scrollSpeed;
-	}
-}*/
 
 function onStartSong() {
 	FlxTween.tween(timeGroup, {alpha: 1}, Conductor.stepCrochet * 2 / 1000, {onStart: function(tween:FlxTween) {
 		timeGroup.scale.x = 0.05;
 		FlxTween.tween(timeGroup.scale, {x: 1}, Conductor.stepCrochet * 2 / 1000, {ease: FlxEase.quadInOut});
 	}});
-}
-
-function onPlayerHit(event) {
-	event.showRating = false;
-	if(!event.note.isSustainNote)
-		displayRating(event.rating, event);
 }
 
 var barTweens:Map<String, FlxTween> = [];
