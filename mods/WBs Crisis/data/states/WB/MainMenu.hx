@@ -8,8 +8,10 @@ import flixel.effects.FlxFlicker;
 import funkin.menus.credits.CreditsMain;
 import funkin.options.OptionsMenu;
 import funkin.backend.system.framerate.Framerate;
+import openfl.geom.Rectangle;
+import openfl.geom.Point;
+import openfl.display.BitmapData;
 import lime.app.Application;
-import Type;
 
 importAddons("shader.OldTV");
 
@@ -281,10 +283,10 @@ function fuckYourMom() {
 //添加史诗级渐变废物
 function addGradientFW(spr:FlxSprite) {
 	var bitmapData:BitmapData = Assets.getBitmapData(Paths.image("menus/mainmenu/bg/warehouse"));
+	var realBitmapData:BitmapData = new BitmapData(bitmapData.width, bitmapData.height, true, 0x00000000);
+	realBitmapData.draw(bitmapData);
 
-	for(i in 0...4) {
-		bitmapData.draw(FlxGradient.createGradientBitmapData(bitmapData.width, bitmapData.height, [0x00000000, 0x00000000, 0x00000000, 0x00000000, 0xFF000000], 1, 90 * (1 + i)));
-	}
-	
-	spr.loadGraphic(bitmapData);
+	for(i in 0...4) realBitmapData.draw(FlxGradient.createGradientBitmapData(bitmapData.width, bitmapData.height, [0x00000000, 0x00000000, 0x00000000, 0x00000000, 0xFF000000], 1, 90 * i));
+
+	spr.loadGraphic(realBitmapData);
 }

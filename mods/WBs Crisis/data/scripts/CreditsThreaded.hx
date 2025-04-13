@@ -1,4 +1,5 @@
 import sys.thread.Mutex;
+import openfl.display.BitmapData;
 
 var mutex = new Mutex();
 
@@ -18,9 +19,13 @@ function onLoad(length:Int) {
 
 			mutex.tryAcquire();
 			
-			var bd = Assets.getBitmapData(imagePath("stuffix/" + dir + "/icon"));
-			
-			if(bd == null) continue;
+			var assetsBD = Assets.getBitmapData(imagePath("stuffix/" + dir + "/icon"));
+			var bd = null;
+
+			if(assetsBD != null) {
+				bd = new BitmapData(assetsBD.width, assetsBD.height, true, 0x00000000);
+				bd.draw(assetsBD);
+			}else bd = new BitmapData(150, 150, true, 0xFF000000);
 		
 			if(!Reflect.hasField(stuffixData[i], "color") || stuffixData[i].color == null) {
 				var newColor = BitmapUtil.getMostPresentSaturatedColor(bd);
