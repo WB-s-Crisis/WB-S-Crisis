@@ -25,7 +25,7 @@ var versionTxt:FlxText;
 var tvShader:OldTV;
 
 var canSelected:Bool = false;
-var canAccessCheat = true;
+var canAccessCheat = false;
 
 /*看你妈呢*/
 
