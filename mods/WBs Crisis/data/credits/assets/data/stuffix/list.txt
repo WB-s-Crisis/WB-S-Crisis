@@ -10,7 +10,7 @@ Cair;Cair;曲师
 BLACKSILENCE00;BLACKSILENCE;牢猪妹
 是祝稿不食猪肝;Pig_Liver;猪肝画师
 蓝影懒得说;Blue_Shadow;画南梁的画师
-曦凉面;Xi Liangmian;画师
+曦凉面;Xi_Liangmian;画师
 
 周三;Wednesday;耐拖王（谱师）
 
@@ -21,4 +21,4 @@ FNF手机玩家;FNF_Mobile_phone_player;你们好我是贝利亚，我又来入�
 吉祥物;Sawrd_Tom;微距了
 XG;XG;微距了
 
-妳粽;nizong;六百六十六
+妳粽;Ni_Zong;六百六十六
