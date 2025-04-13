@@ -145,7 +145,7 @@ class CopyState extends funkin.backend.MusicBeatState
 	{
 		if (shouldCopy #if !ALLOW_MULTITHREADING && copyLoop != null #end)
 		{
-			loadingBar.percent = FlxMath.bound(FlxMath.lerp(loadingBar.percent, loopTimes / maxLoopTimes * 100, Math.exp(-elapsed / 0.0133)), 0, 100);
+			loadingBar.percent = FlxMath.bound(loopTimes / maxLoopTimes * 100, 0, 100);
 			if (#if ALLOW_MULTITHREADING loopTimes == maxLoopTimes #else copyLoop.finished #end && canUpdate)
 			{
 				canUpdate = false;
