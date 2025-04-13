@@ -10,6 +10,7 @@ Cair;Cair;曲师
 BLACKSILENCE00;BLACKSILENCE;牢猪妹
 是祝稿不食猪肝;Pig_Liver;猪肝画师
 蓝影懒得说;Blue_Shadow;画南梁的画师
+曦凉面;Xi Liangmian;画师
 
 周三;Wednesday;耐拖王（谱师）
 
