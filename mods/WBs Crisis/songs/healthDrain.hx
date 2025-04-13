@@ -15,13 +15,11 @@ function create() {
 		 * 打个巅峰巅峰前百前十都是相当轻松的😋
 		 */
 		var drain:{var max:Float; var min:Float;} = switch(SONG.meta.name.toLowerCase()) {
-    		case "friendship broken": {max: 0.06, min: 0.007};
-    		case "bloody scissors": {max: 0.105, min: 0.005};
+    		case "friendship broken": {max: 0.02, min: 0.007};
+    		case "bloody scissors": {max: 0.055, min: 0.005};
     		case "he died unjustly" | "cruel cartoon": {max: 0.08, min: 0.005};
-    		case "cruel cartoon erect": {max: 0.130, min: 0};
-    		case "blood dispute": {max: 0.130, min: 0};
-    		case "unprovoked": {max: 0.05, min: 0.007};
-    		case "murder": {max: 0.05, min: 0.007};
+    		case "cruel cartoon erect": {max: 0.10, min: 0};
+    		case "blood dispute": {max: 0.10, min: 0};
     		default: {max: 0, min: 0};
 		};
 	
