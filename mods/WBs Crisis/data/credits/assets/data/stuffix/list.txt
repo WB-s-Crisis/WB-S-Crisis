@@ -7,32 +7,15 @@ msZ杨;MS_ZYang;痔疮
 Wacky;Wacker;屌曲师
 Cair;Cair;曲师
 
-Lbox;Lbox;主美
 BLACKSILENCE00;BLACKSILENCE;牢猪妹
 是祝稿不食猪肝;Pig_Liver;猪肝画师
 蓝影懒得说;Blue_Shadow;画南梁的画师
-哥莫拉Gomora;Gomora;画师
-ZTtom;ZTtom;画师
-品星;Pinxing;画师
-慕斯;HHH;画师
-耗柏;Haobai;画师
-提枝code;Tizhi code;画师
-我是pizza;HLS;画师
-0711-菌;0711-Jun;画师
-曦凉面;XiLiang mian;画师
-青橙co;Qingcheng co;画师
-
-小布;Xiaobu;k帧
-henrry-hunt;henrry-hunt;k帧
-笑长;Xiaozhang;k帧
-晓峰;Xiaofeng;k帧
-Zozzz;Zozzz;k帧
 
 周三;Wednesday;耐拖王（谱师）
 
 qqqeb;QQQEB;耐拖王（编程）
 翻垃圾的雪溪;Xue_Xi;福瑞编程
-FNF手机玩家;FNF_Mobile_phone_player;你们好我是贝利亚，我又来入侵地球了;编程
+FNF手机玩家;FNF_Mobile_phone_player;你们好我是贝利亚，我又来入侵地球了
 
-吉祥物;Sawrd_Tom;微距了;谱师
-XG;XG;微距了：写xml
+吉祥物;Sawrd_Tom;微距了
+XG;XG;微距了
