@@ -20,6 +20,8 @@ function create() {
     		case "he died unjustly" | "cruel cartoon": {max: 0.08, min: 0.005};
     		case "cruel cartoon erect": {max: 0.10, min: 0};
     		case "blood dispute": {max: 0.10, min: 0};
+		case "unprovoked": {max: 0.05, min: 0.007};
+     		case "murder": {max: 0.05, min: 0.007};
     		default: {max: 0, min: 0};
 		};
 	
