@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-character>
-<character y="-60" sprite="hnpico" scale="0.95" flipX="true" isPlayer="true" icon="pico" color="#B7D855" gameOverChar="pico">
+<character x="-40" y="0" sprite="hnpico" scale="0.95" flipX="true" isPlayer="true" icon="pico" color="#B7D855" gameOverChar="pico">
 	<anim name="singUP" anim="up" x="0" y="0" fps="18" loop="false"/>
 	<anim name="idle" anim="idle" x="0" y="0" fps="24" loop="false"/>
 	<anim name="singLEFT" anim="left" x="0" y="-20" fps="18" loop="false"/>
