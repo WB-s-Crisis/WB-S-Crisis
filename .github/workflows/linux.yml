@@ -1,14 +1,22 @@
-
 name: Linux Build
-on: workflow_dispatch
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+env: 
+  BuildMods: "true"
+
 jobs:
   build:
     name: Linux Build
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
-      - name: Pulling the source
+      - name: Pulling the new commit
         uses: actions/checkout@v2
+        with:
+          submodules: ${{ env.BuildMods }}
       - name: Setting up Haxe
         uses: krdlab/setup-haxe@v1
         with:
@@ -34,12 +42,12 @@ jobs:
         run: |
           haxelib run lime build linux
       - name: Tar files
-        run: tar -zcvf WBsCrisis.tar.gz -C export/release/linux/bin .
+        run: tar -zcvf CodenameEngine.tar.gz -C export/release/linux/bin .
       - name: Uploading artifact (entire build)
         uses: actions/upload-artifact@v4
         with:
-          name: "WB's Crisis"
-          path: WBsCrisis.tar.gz
+          name: WBs Crisis Linux
+          path: CodenameEngine.tar.gz
       # - name: Uploading artifact (executable)
       #   uses: actions/upload-artifact@v4
       #   with:

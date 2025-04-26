@@ -1,5 +1,12 @@
 name: iOS Build
-on: workflow_dispatch
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+env: 
+  BuildMods: "true"
+
 jobs:
   build:
     name: iOS Build
@@ -8,6 +15,8 @@ jobs:
     steps:
       - name: Pulling the new commit
         uses: actions/checkout@v2
+        with:
+          submodules: ${{ env.BuildMods }}
       - name: Setting up Haxe
         uses: krdlab/setup-haxe@v1
         with:
@@ -25,7 +34,6 @@ jobs:
       - name: Installing/Updating libraries
         run: |
           haxe -cp commandline -D analyzer-optimize --run Main setup -s --lib=./libs.mobile.xml
-      
       - name: Building the game
         run: haxelib run lime build ios -nosign
       - name: Clearing already existing cache
@@ -56,7 +64,7 @@ jobs:
       - name: Uploading artifact
         uses: actions/upload-artifact@v4
         with:
-          name: "WB's Crisis"
+          name: WBs Crisis IOS
           path: export/release/ios/build/Release-iphoneos/*.ipa
       - name: Uploading new cache
         uses: actions/cache@v3

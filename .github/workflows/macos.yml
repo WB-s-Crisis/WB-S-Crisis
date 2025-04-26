@@ -1,6 +1,12 @@
-
 name: Mac OS Build
-on: workflow_dispatch
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+env: 
+  BuildMods: "true"
+
 jobs:
   build:
     name: Mac OS Build
@@ -9,6 +15,8 @@ jobs:
     steps:
       - name: Pulling the new commit
         uses: actions/checkout@v2
+        with:
+          submodules: ${{ env.BuildMods }}
       - name: Setting up Haxe
         uses: krdlab/setup-haxe@v1
         with:
@@ -31,12 +39,12 @@ jobs:
         run: |
           haxelib run lime build mac
       - name: Tar files
-        run: tar -zcvf WBsCrisis.tar.gz -C export/release/macos/bin .
+        run: tar -zcvf CodenameEngine.tar.gz -C export/release/macos/bin .
       - name: Uploading artifact (entire build)
         uses: actions/upload-artifact@v4
         with:
-          name: "WB's Crisis"
-          path: WBsCrisis.tar.gz
+          name: WBs Crisis Mac OS
+          path: CodenameEngine.tar.gz
       # - name: Uploading artifact (executable)
       #   uses: actions/upload-artifact@v4
       #   with:

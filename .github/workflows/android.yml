@@ -1,5 +1,12 @@
 name: Android Build
-on: workflow_dispatch
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+env: 
+  BuildMods: "true"
+
 jobs:
   build:
     name: Android Build
@@ -8,10 +15,18 @@ jobs:
     steps:
       - name: Pulling the new commit
         uses: actions/checkout@v2
-      - name: Setup Haxe
+        with:
+          submodules: ${{ env.BuildMods }}
+      - name: Setting up Haxe
         uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.2.5
+      #- name: Setting up Android NDK
+      #  id: setup-ndk
+      #  uses: nttld/setup-ndk@main
+      #  with:
+      #    ndk-version: r27c
+      #    add-to-path: false
       - name: Restore existing build cache for faster compilation
         uses: actions/cache@v3
         with:
@@ -26,7 +41,6 @@ jobs:
       - name: Installing/Updating libraries
         run: |
           haxe -cp commandline -D analyzer-optimize --run Main setup -s --lib=./libs.mobile.xml
-      
       - name: Configuring Android
         run: |
           haxelib run lime config ANDROID_SDK $ANDROID_HOME
@@ -38,7 +52,7 @@ jobs:
       - name: Uploading artifact
         uses: actions/upload-artifact@v4
         with:
-          name: "WB's Crisis"
+          name: WBs Crisis Android
           path: export/release/android/bin/app/build/outputs/apk/release/*.apk
       - name: Clearing already existing cache
         uses: actions/github-script@v6
