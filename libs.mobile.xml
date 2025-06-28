@@ -2,7 +2,7 @@
 <libraries>
 	<!-- OpenFL & Lime (Required for Flixel) -->
 	<lib name="openfl" version="9.2.2" />
-	<git name="lime" url="haxelib git lime https://github.com/tchcfhvgd/lime" />
+	<git name="lime" url="https://github.com/tchcfhvgd/lime" />
 
 	<!-- Lime Building Dependencies -->
 	<lib name="hxp" version="1.3.0" />
@@ -14,7 +14,7 @@
 
 	<!-- Other Libraries -->
 	<git name="hscript-improved" url="https://github.com/VapireMox/hscript-improved/" ref="custom-classes" />
-	<git name="linc_luajit" url="haxelib git linc_luajit https://github.com/th2l-devs/linc_luajit" />
+	<git name="linc_luajit" url="https://github.com/th2l-devs/linc_luajit" />
 	<git name="flxanimate" url="https://github.com/CodenameCrew/cne-flxanimate" />
 	<lib name="hxvlc" version="1.9.3" skipDeps="true" />
 	<lib name="hxIni" version="" />
@@ -25,5 +25,5 @@
 	<!-- <lib name="dox" /> -->
 	<lib name="markdown" />
 
-	<git name="hxcpp" url="haxelib git hxcpp https://github.com/th2l-devs/hxcpp" />
+	<git name="hxcpp" url="https://github.com/th2l-devs/hxcpp" />
 </libraries>
