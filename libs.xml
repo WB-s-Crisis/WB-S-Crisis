@@ -10,7 +10,7 @@
 
 	<!-- Other Libraries -->
 	<git name="hscript-improved" url="https://github.com/VapireMox/hscript-improved/" ref="custom-classes" />
-	<git name="linc_luajit" url="https://github.com/MobilePorting/linc_luajit" />
+	<git name="linc_luajit" url="https://github.com/th2l-devs/linc_luajit" />
 	<git name="flxanimate" url="https://github.com/CodenameCrew/cne-flxanimate" />
 	<git name="hxdiscord_rpc" url="https://github.com/CodenameCrew/cne-hxdiscord_rpc" />
 	<lib name="hxvlc" version="1.9.3" skipDeps="true" />
