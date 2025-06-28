@@ -195,8 +195,6 @@
 	<haxelib name="hxdiscord_rpc" if="DISCORD_RPC"/>
 	<haxelib name="markdown" />
 
-	<haxelib name="extension-androidtools" if="android" />
-
 	<!-- _________________________________ Additional stuff _______________________________ -->
 
 	<section if="COMPILE_ALL_CLASSES">
@@ -214,6 +212,9 @@
 	<haxedef name="HXCPP_DEBUG_LINK" if="release" />
 	<haxedef name="HXCPP_CATCH_SEGV" />
 
+	<!-- Allow Access to Engine Files in IOS -->
+	<haxedef name="SHARE_MOBILE_FILES" if="ios" />
+		
 	<haxedef name="hscriptPos" /> <!-- for logging -->
 
 	<!-- _________________________________ Mobile stuff _______________________________ -->
